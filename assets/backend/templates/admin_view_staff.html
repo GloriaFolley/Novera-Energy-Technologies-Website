@@ -1,0 +1,742 @@
+```html
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Staff Details | {{ company_name }}</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('assets', filename='css/style.css') }}">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            background:
+                linear-gradient(
+                    135deg,
+                    #f8fbff 0%,
+                    #eef5ff 50%,
+                    #ffffff 100%
+                );
+            color: #172033;
+        }
+
+        /* ================================
+           NAVIGATION
+        ================================= */
+
+        .nav {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.96);
+            border-bottom: 1px solid #dce7f5;
+            box-shadow: 0 3px 15px rgba(30, 80, 140, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-inner {
+            min-height: 78px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: #123d70;
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .brand img {
+            width: 52px;
+            height: 52px;
+            object-fit: contain;
+            display: block;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* ================================
+           MAIN CONTENT
+        ================================= */
+
+        .dashboard {
+            min-height: calc(100vh - 78px);
+            padding: 45px 20px 70px;
+        }
+
+        .container {
+            width: min(1100px, 100%);
+            margin: 0 auto;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            color: #1769aa;
+            text-decoration: none;
+            font-weight: 600;
+            margin-bottom: 25px;
+        }
+
+        .back-link:hover {
+            color: #0d4f85;
+            text-decoration: underline;
+        }
+
+        .page-header {
+            margin-bottom: 28px;
+        }
+
+        .page-header h1 {
+            margin: 0 0 8px;
+            color: #123d70;
+            font-size: clamp(28px, 4vw, 40px);
+        }
+
+        .page-header p {
+            margin: 0;
+            color: #65758b;
+        }
+
+        /* ================================
+           STAFF CARD
+        ================================= */
+
+        .staff-card {
+            background: rgba(255, 255, 255, 0.98);
+            border: 1px solid #dbe7f5;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(27, 76, 125, 0.10);
+        }
+
+        .staff-card-header {
+            background: linear-gradient(
+                135deg,
+                #0d4f85,
+                #1769aa
+            );
+            color: white;
+            padding: 28px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .staff-identity {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .staff-avatar {
+            width: 68px;
+            height: 68px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.18);
+            border: 2px solid rgba(255, 255, 255, 0.55);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 25px;
+            font-weight: 700;
+        }
+
+        .staff-identity h2 {
+            margin: 0 0 5px;
+            font-size: 24px;
+        }
+
+        .staff-identity span {
+            opacity: 0.85;
+            font-size: 14px;
+        }
+
+        /* ================================
+           DETAILS
+        ================================= */
+
+        .staff-details {
+            padding: 30px;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .detail-item {
+            background: #f7faff;
+            border: 1px solid #e2ebf6;
+            border-radius: 12px;
+            padding: 18px;
+        }
+
+        .detail-label {
+            display: block;
+            color: #718096;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 7px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .detail-value {
+            color: #172033;
+            font-size: 16px;
+            font-weight: 600;
+            word-break: break-word;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        /* ================================
+           STATUS
+        ================================= */
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 7px 13px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .badge.Pending {
+            background: #fff4d6;
+            color: #946200;
+        }
+
+        .badge.Active {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .badge.Disabled {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .badge.Rejected {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        /* ================================
+           ACTIONS
+        ================================= */
+
+        .staff-actions {
+            padding: 0 30px 30px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            border-top: 1px solid #e5edf7;
+            padding-top: 25px;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 9px;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-primary {
+            background: #1769aa;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0d4f85;
+        }
+
+        .btn-success {
+            background: #15803d;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #166534;
+        }
+
+        .btn-danger {
+            background: #dc2626;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #b91c1c;
+        }
+
+        .btn-secondary {
+            background: #eaf2fb;
+            color: #174a78;
+        }
+
+        .btn-secondary:hover {
+            background: #dceafa;
+        }
+
+        form {
+            margin: 0;
+        }
+
+        /* ================================
+           RESPONSIVE
+        ================================= */
+
+        @media (max-width: 700px) {
+
+            .nav-inner {
+                padding: 12px 18px;
+                min-height: 70px;
+            }
+
+            .brand span {
+                display: none;
+            }
+
+            .brand img {
+                width: 48px;
+                height: 48px;
+            }
+
+            .dashboard {
+                padding: 30px 15px 50px;
+            }
+
+            .staff-card-header {
+                padding: 22px;
+                align-items: flex-start;
+            }
+
+            .staff-identity h2 {
+                font-size: 20px;
+            }
+
+            .staff-details {
+                padding: 20px;
+                grid-template-columns: 1fr;
+            }
+
+            .full-width {
+                grid-column: auto;
+            }
+
+            .staff-actions {
+                padding: 20px;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- =========================================
+     NAVIGATION
+========================================= -->
+
+<nav class="nav">
+    <div class="container nav-inner">
+
+        <a class="brand" href="{{ url_for('admin_dashboard') }}">
+
+            <!-- Novera JPG Logo -->
+            <img
+                src="{{ url_for('logo') }}"
+                alt="{{ company_name }} Logo"
+            >
+
+            <span>Novera</span>
+
+        </a>
+
+        <div class="nav-actions">
+
+            <a
+                class="btn btn-secondary"
+                href="{{ url_for('admin_staff') }}"
+            >
+                Staff List
+            </a>
+
+            <a
+                class="btn btn-primary"
+                href="{{ url_for('admin_dashboard') }}"
+            >
+                Dashboard
+            </a>
+
+        </div>
+
+    </div>
+</nav>
+
+
+<!-- =========================================
+     STAFF DETAILS
+========================================= -->
+
+<main class="dashboard">
+
+    <div class="container">
+
+        <a
+            class="back-link"
+            href="{{ url_for('admin_staff') }}"
+        >
+            ← Back to Staff List
+        </a>
+
+
+        <div class="page-header">
+
+            <h1>Staff Details</h1>
+
+            <p>
+                View and manage this Novera staff account.
+            </p>
+
+        </div>
+
+
+        <div class="staff-card">
+
+            <!-- HEADER -->
+
+            <div class="staff-card-header">
+
+                <div class="staff-identity">
+
+                    <div class="staff-avatar">
+                        {{ staff["first_name"][0]|upper }}{{ staff["last_name"][0]|upper }}
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            {{ staff["first_name"] }}
+                            {{ staff["last_name"] }}
+                        </h2>
+
+                        <span>
+                            Staff ID: {{ staff["staff_id"] }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div>
+                    <span class="badge {{ staff['status'] }}">
+                        {{ staff["status"] }}
+                    </span>
+                </div>
+
+            </div>
+
+
+            <!-- DETAILS -->
+
+            <div class="staff-details">
+
+                <div class="detail-item">
+
+                    <span class="detail-label">
+                        Staff ID
+                    </span>
+
+                    <span class="detail-value">
+                        {{ staff["staff_id"] }}
+                    </span>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <span class="detail-label">
+                        Status
+                    </span>
+
+                    <span class="detail-value">
+                        <span class="badge {{ staff['status'] }}">
+                            {{ staff["status"] }}
+                        </span>
+                    </span>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <span class="detail-label">
+                        First Name
+                    </span>
+
+                    <span class="detail-value">
+                        {{ staff["first_name"] }}
+                    </span>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <span class="detail-label">
+                        Last Name
+                    </span>
+
+                    <span class="detail-value">
+                        {{ staff["last_name"] }}
+                    </span>
+
+                </div>
+
+
+                <div class="detail-item full-width">
+
+                    <span class="detail-label">
+                        Official Work Email
+                    </span>
+
+                    <span class="detail-value">
+                        {{ staff["email"] }}
+                    </span>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <span class="detail-label">
+                        Phone Number
+                    </span>
+
+                    <span class="detail-value">
+                        {{ staff["phone"] }}
+                    </span>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <span class="detail-label">
+                        Department
+                    </span>
+
+                    <span class="detail-value">
+                        {{ staff["department"] }}
+                    </span>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <span class="detail-label">
+                        Position
+                    </span>
+
+                    <span class="detail-value">
+                        {{ staff["position"] }}
+                    </span>
+
+                </div>
+
+
+                <div class="detail-item">
+
+                    <span class="detail-label">
+                        Registered
+                    </span>
+
+                    <span class="detail-value">
+                        {{ staff["created_at"] }}
+                    </span>
+
+                </div>
+
+
+                {% if staff["approved_at"] %}
+
+                <div class="detail-item full-width">
+
+                    <span class="detail-label">
+                        Approved
+                    </span>
+
+                    <span class="detail-value">
+                        {{ staff["approved_at"] }}
+                    </span>
+
+                </div>
+
+                {% endif %}
+
+                {% if staff["last_login"] %}
+
+                <div class="detail-item full-width">
+
+                    <span class="detail-label">
+                        Last Login
+                    </span>
+
+                    <span class="detail-value">
+                        {{ staff["last_login"] }}
+                    </span>
+
+                </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- ACTIONS -->
+
+            <div class="staff-actions">
+
+                {% if staff["status"] == "Pending" %}
+
+                    <form
+                        method="post"
+                        action="{{ url_for(
+                            'admin_staff_action',
+                            staff_db_id=staff['id'],
+                            action='approve'
+                        ) }}"
+                    >
+
+                        <button
+                            type="submit"
+                            class="btn btn-success"
+                        >
+                            ✓ Approve Staff
+                        </button>
+
+                    </form>
+
+
+                    <form
+                        method="post"
+                        action="{{ url_for(
+                            'admin_staff_action',
+                            staff_db_id=staff['id'],
+                            action='reject'
+                        ) }}"
+                    >
+
+                        <button
+                            type="submit"
+                            class="btn btn-danger"
+                        >
+                            ✕ Reject Registration
+                        </button>
+
+                    </form>
+
+
+                {% elif staff["status"] == "Active" %}
+
+                    <form
+                        method="post"
+                        action="{{ url_for(
+                            'admin_staff_action',
+                            staff_db_id=staff['id'],
+                            action='disable'
+                        ) }}"
+                    >
+
+                        <button
+                            type="submit"
+                            class="btn btn-danger"
+                        >
+                            Disable Account
+                        </button>
+
+                    </form>
+
+
+                {% elif staff["status"] == "Disabled" or staff["status"] == "Rejected" %}
+
+                    <form
+                        method="post"
+                        action="{{ url_for(
+                            'admin_staff_action',
+                            staff_db_id=staff['id'],
+                            action='activate'
+                        ) }}"
+                    >
+
+                        <button
+                            type="submit"
+                            class="btn btn-success"
+                        >
+                            Activate Account
+                        </button>
+
+                    </form>
+
+                {% endif %}
+
+
+                <a
+                    href="{{ url_for('admin_staff') }}"
+                    class="btn btn-secondary"
+                >
+                    ← Back to Staff
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+</body>
+</html>
+```
+

@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Staff Registration | {{ company_name }}</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('assets', filename='css/style.css') }}">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(135deg, #eef6ff 0%, #ffffff 50%, #dcecff 100%);
+            color: #172033;
+        }
+
+        .register-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Decorative blue background */
+        .register-page::before {
+            content: "";
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: rgba(30, 91, 160, 0.08);
+            border-radius: 50%;
+            top: -220px;
+            right: -180px;
+        }
+
+        .register-page::after {
+            content: "";
+            position: absolute;
+            width: 420px;
+            height: 420px;
+            background: rgba(30, 91, 160, 0.06);
+            border-radius: 50%;
+            bottom: -220px;
+            left: -180px;
+        }
+
+        .register-card {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 760px;
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 22px;
+            padding: 38px;
+            box-shadow: 0 20px 60px rgba(18, 55, 95, 0.15);
+            border: 1px solid rgba(30, 91, 160, 0.12);
+        }
+
+        .logo-area {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .logo-area img {
+            display: block;
+            width: 110px;
+            height: 110px;
+            object-fit: contain;
+            margin: 0 auto 12px auto;
+        }
+
+        .brand-name {
+            font-size: 28px;
+            font-weight: 800;
+            color: #173f6b;
+            letter-spacing: 0.5px;
+        }
+
+        .tagline {
+            margin-top: 5px;
+            font-size: 13px;
+            color: #6d7785;
+            letter-spacing: 1px;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 10px 0 8px;
+            color: #173f6b;
+            font-size: 30px;
+        }
+
+        .intro {
+            text-align: center;
+            color: #667085;
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 0 auto 28px;
+            max-width: 600px;
+        }
+
+        .flash {
+            padding: 12px 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .flash.success {
+            background: #e9f8ef;
+            color: #18723c;
+        }
+
+        .flash.danger {
+            background: #fdecec;
+            color: #a32626;
+        }
+
+        .flash.warning {
+            background: #fff7df;
+            color: #8a6500;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #26364a;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #ccd6e2;
+            border-radius: 10px;
+            background: #ffffff;
+            font-size: 15px;
+            outline: none;
+            transition: 0.2s ease;
+        }
+
+        input:focus {
+            border-color: #1e5ba0;
+            box-shadow: 0 0 0 3px rgba(30, 91, 160, 0.10);
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .btn-register {
+            width: 100%;
+            border: none;
+            padding: 14px 20px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #174f87, #2474bd);
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .btn-register:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(30, 91, 160, 0.20);
+        }
+
+        .bottom-links {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #e6ebf1;
+            line-height: 2;
+            font-size: 14px;
+        }
+
+        .bottom-links a {
+            color: #1e5ba0;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .bottom-links a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 650px) {
+            .register-card {
+                padding: 25px 20px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .full-width {
+                grid-column: auto;
+            }
+
+            .logo-area img {
+                width: 90px;
+                height: 90px;
+            }
+
+            h1 {
+                font-size: 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="register-page">
+
+    <div class="register-card">
+
+        <!-- NOVERA LOGO -->
+        <div class="logo-area">
+
+            <!-- IMPORTANT:
+                 Replace novera-logo.jpg below with the EXACT
+                 filename of your JPG inside the assets folder.
+            -->
+            <img
+                src="{{ url_for('assets', filename='novera-logo.jpg') }}"
+                alt="Novera Energy & Technologies Logo"
+                onerror="this.style.display='none';"
+            >
+
+            <div class="brand-name">Novera</div>
+
+            <div class="tagline">
+                {{ company_tagline }}
+            </div>
+
+        </div>
+
+        <h1>Staff Registration</h1>
+
+        <p class="intro">
+            Register for a Novera staff account.
+            Your Staff ID and official work email will be generated
+            automatically after registration.
+        </p>
+
+        <!-- FLASH MESSAGES -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="flash {{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endwith %}
+
+        <!-- REGISTRATION FORM -->
+        <form method="post">
+
+            <div class="form-grid">
+
+                <div class="form-group">
+                    <label for="first_name">First Name *</label>
+                    <input
+                        id="first_name"
+                        type="text"
+                        name="first_name"
+                        autocomplete="given-name"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="last_name">Last Name *</label>
+                    <input
+                        id="last_name"
+                        type="text"
+                        name="last_name"
+                        autocomplete="family-name"
+                        required
+                    >
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="phone">Phone *</label>
+                    <input
+                        id="phone"
+                        type="tel"
+                        name="phone"
+                        autocomplete="tel"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="department">Department *</label>
+                    <input
+                        id="department"
+                        type="text"
+                        name="department"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="position">Position *</label>
+                    <input
+                        id="position"
+                        type="text"
+                        name="position"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password *</label>
+                    <input
+                        id="password"
+                        type="password"
+                        name="password"
+                        minlength="8"
+                        autocomplete="new-password"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm_password">Confirm Password *</label>
+                    <input
+                        id="confirm_password"
+                        type="password"
+                        name="confirm_password"
+                        minlength="8"
+                        autocomplete="new-password"
+                        required
+                    >
+                </div>
+
+            </div>
+
+            <button class="btn-register" type="submit">
+                Register Staff Account
+            </button>
+
+        </form>
+
+        <div class="bottom-links">
+
+            Already registered?
+            <a href="{{ url_for('staff_login') }}">
+                Staff Login
+            </a>
+
+            <br>
+
+            <a href="{{ url_for('md_login') }}">
+                MD Login
+            </a>
+
+            &nbsp; · &nbsp;
+
+            <a href="{{ url_for('admin_login') }}">
+                Admin Login
+            </a>
+
+            <br>
+
+            <a href="{{ url_for('index') }}">
+                Back to Novera Website
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
+```
+

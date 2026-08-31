@@ -1,0 +1,706 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>MD Registration | {{ company_name }}</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('assets', filename='css/style.css') }}">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #172033;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #061a3a 0%,
+                    #0b3d91 45%,
+                    #eef5ff 100%
+                );
+
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Novera logo watermark */
+        body::before {
+            content: "";
+
+            position: fixed;
+
+            width: 680px;
+            height: 680px;
+
+            top: 50%;
+            left: 50%;
+
+            transform: translate(-50%, -50%);
+
+            background-image:
+                url("{{ url_for('logo') }}");
+
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+
+            opacity: 0.055;
+
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Decorative background glow */
+        body::after {
+            content: "";
+
+            position: fixed;
+
+            width: 500px;
+            height: 500px;
+
+            right: -200px;
+            top: -200px;
+
+            border-radius: 50%;
+
+            background:
+                rgba(255, 255, 255, 0.12);
+
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Page */
+        .form-page {
+            min-height: 100vh;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 45px 20px;
+
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Main card */
+        .form-card {
+            width: min(650px, 100%);
+
+            padding: 38px;
+
+            background:
+                rgba(255, 255, 255, 0.98);
+
+            border-radius: 24px;
+
+            border:
+                1px solid rgba(255, 255, 255, 0.8);
+
+            box-shadow:
+                0 25px 70px rgba(0, 20, 60, 0.25);
+
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Blue top border */
+        .form-card::before {
+            content: "";
+
+            position: absolute;
+
+            top: 0;
+            left: 0;
+            right: 0;
+
+            height: 5px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #061a3a,
+                    #0b3d91,
+                    #4b8fe8
+                );
+        }
+
+        /* Brand */
+        .brand {
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            gap: 13px;
+
+            margin-bottom: 25px;
+
+            color: #08285f;
+
+            font-size: 23px;
+            font-weight: 800;
+        }
+
+        .brand img {
+            width: 68px;
+            height: 68px;
+
+            object-fit: contain;
+
+            display: block;
+
+            border-radius: 10px;
+        }
+
+        /* Heading */
+        h1 {
+            margin: 0 0 10px;
+
+            text-align: center;
+
+            color: #092d68;
+
+            font-size: 34px;
+            line-height: 1.2;
+        }
+
+        .intro {
+            margin: 0 auto 25px;
+
+            max-width: 500px;
+
+            text-align: center;
+
+            color: #68758a;
+
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* Flash messages */
+        .flash {
+            padding: 13px 16px;
+
+            margin-bottom: 18px;
+
+            border-radius: 11px;
+
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .flash.success {
+            background: #ecfdf3;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+        }
+
+        .flash.warning {
+            background: #fff7ed;
+            border: 1px solid #fed7aa;
+            color: #c2410c;
+        }
+
+        .flash.danger {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #b91c1c;
+        }
+
+        /* Important notice */
+        .alert-box {
+            padding: 17px 18px;
+
+            border-radius: 13px;
+
+            background: #eff6ff;
+
+            border:
+                1px solid #bfdbfe;
+
+            color: #1e3a5f;
+
+            font-size: 13px;
+
+            line-height: 1.65;
+        }
+
+        .alert-box strong {
+            color: #0b3d91;
+        }
+
+        /* Form */
+        form {
+            margin-top: 22px;
+        }
+
+        .grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 17px;
+        }
+
+        .form-group label {
+            display: block;
+
+            margin-bottom: 7px;
+
+            color: #253b5e;
+
+            font-size: 13px;
+
+            font-weight: 800;
+        }
+
+        .form-group input {
+            width: 100%;
+
+            height: 48px;
+
+            padding: 0 14px;
+
+            border: 1px solid #cbd8e9;
+
+            border-radius: 10px;
+
+            background: #ffffff;
+
+            color: #172033;
+
+            font-size: 14px;
+
+            outline: none;
+
+            transition:
+                border-color 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .form-group input:focus {
+            border-color: #0b3d91;
+
+            box-shadow:
+                0 0 0 3px rgba(11, 61, 145, 0.10);
+        }
+
+        .form-group input::placeholder {
+            color: #9aa7b8;
+        }
+
+        /* Registration key */
+        .key-group {
+            background: #f7faff;
+
+            border: 1px solid #e1eaf6;
+
+            border-radius: 13px;
+
+            padding: 16px;
+
+            margin-top: 2px;
+        }
+
+        .key-group .form-group {
+            margin-bottom: 0;
+        }
+
+        .key-help {
+            display: block;
+
+            margin-top: 7px;
+
+            color: #7b8799;
+
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        /* Button */
+        .btn {
+            width: 100%;
+
+            min-height: 50px;
+
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border: none;
+
+            border-radius: 11px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0b3d91,
+                    #062d70
+                );
+
+            color: white;
+
+            font-size: 15px;
+
+            font-weight: 800;
+
+            text-decoration: none;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 10px 25px rgba(11, 61, 145, 0.25);
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 15px 30px rgba(11, 61, 145, 0.32);
+        }
+
+        /* Bottom links */
+        .bottom-links {
+            margin-top: 22px;
+
+            text-align: center;
+
+            color: #718096;
+
+            font-size: 13px;
+
+            line-height: 1.8;
+        }
+
+        .bottom-links a {
+            color: #0b3d91;
+
+            font-weight: 700;
+
+            text-decoration: none;
+        }
+
+        .bottom-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        .portal-note {
+            margin-top: 20px;
+
+            text-align: center;
+
+            color: #9aa5b5;
+
+            font-size: 11px;
+        }
+
+        /* Mobile */
+        @media (max-width: 650px) {
+
+            .form-page {
+                padding: 25px 15px;
+            }
+
+            .form-card {
+                padding: 30px 20px;
+
+                border-radius: 20px;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .brand img {
+                width: 58px;
+                height: 58px;
+            }
+
+            .brand {
+                font-size: 20px;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            body::before {
+                width: 450px;
+                height: 450px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="form-page">
+
+    <div class="form-card">
+
+        <!-- Novera Logo -->
+        <div class="brand">
+
+            <img
+                src="{{ url_for('logo') }}"
+                alt="{{ company_name }} Logo"
+                onerror="this.style.display='none';"
+            >
+
+            <span>Novera</span>
+
+        </div>
+
+
+        <!-- Heading -->
+        <h1>
+            MD Registration
+        </h1>
+
+        <p class="intro">
+            Create the Managing Director account for the
+            Novera Management Portal.
+        </p>
+
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+
+            {% for category, message in messages %}
+
+                <div class="flash {{ category }}">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        {% endwith %}
+
+
+        <!-- Important Notice -->
+        <div class="alert-box">
+
+            <strong>Important:</strong>
+
+            Only one MD account can be registered.
+
+            Once the first MD account is created, MD registration
+            will automatically close.
+
+            A new MD account can only be created after an
+            administrator makes an appropriate database change.
+
+        </div>
+
+
+        <!-- Registration Form -->
+        <form method="post">
+
+            <div class="grid">
+
+                <div class="form-group">
+
+                    <label for="first_name">
+                        First Name *
+                    </label>
+
+                    <input
+                        id="first_name"
+                        name="first_name"
+                        type="text"
+                        autocomplete="given-name"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="last_name">
+                        Last Name *
+                    </label>
+
+                    <input
+                        id="last_name"
+                        name="last_name"
+                        type="text"
+                        autocomplete="family-name"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="email">
+                    Official Email *
+                </label>
+
+                <input
+                    id="email"
+                    type="email"
+                    name="email"
+                    autocomplete="email"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="phone">
+                    Phone *
+                </label>
+
+                <input
+                    id="phone"
+                    type="tel"
+                    name="phone"
+                    autocomplete="tel"
+                    required
+                >
+
+            </div>
+
+
+            <div class="grid">
+
+                <div class="form-group">
+
+                    <label for="password">
+                        Password *
+                    </label>
+
+                    <input
+                        id="password"
+                        type="password"
+                        name="password"
+                        minlength="8"
+                        autocomplete="new-password"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label for="confirm_password">
+                        Confirm Password *
+                    </label>
+
+                    <input
+                        id="confirm_password"
+                        type="password"
+                        name="confirm_password"
+                        minlength="8"
+                        autocomplete="new-password"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- Registration Key -->
+            <div class="key-group">
+
+                <div class="form-group">
+
+                    <label for="registration_key">
+                        MD Registration Key
+                    </label>
+
+                    <input
+                        id="registration_key"
+                        type="password"
+                        name="registration_key"
+                        placeholder="Enter registration key"
+                        autocomplete="off"
+                    >
+
+                    <span class="key-help">
+                        A registration key is required only if
+                        MD_REGISTRATION_KEY has been configured
+                        in your .env file.
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <button
+                class="btn"
+                type="submit"
+                style="margin-top: 20px;"
+            >
+                Create MD Account
+            </button>
+
+        </form>
+
+
+        <!-- Navigation -->
+        <div class="bottom-links">
+
+            Already registered?
+
+            <a href="{{ url_for('md_login') }}">
+                MD Login
+            </a>
+
+            <br>
+
+            <a href="{{ url_for('index') }}">
+                ← Back to Novera Website
+            </a>
+
+        </div>
+
+
+        <div class="portal-note">
+
+            {{ company_name }} · {{ company_tagline }}
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
+```
+

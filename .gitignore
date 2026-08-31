@@ -1,7 +1,22 @@
-.ipynb_checkpoints/
-instance/
-*.db
-assets/
-.env
+# Python
 __pycache__/
 *.pyc
+.ipynb_checkpoints/
+
+# Environment / secrets
+.env
+assets/backend/.env
+credentials.json
+assets/backend/credentials.json
+gmail_token.json
+assets/backend/gmail_token.json
+
+# Databases
+*.db
+novera.db
+assets/backend/novera.db
+assets/backend/instance/
+
+# Backend local/private data
+assets/backend/instance/
+assets/Backend/

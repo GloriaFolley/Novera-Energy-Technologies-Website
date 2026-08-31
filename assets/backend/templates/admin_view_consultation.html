@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        View Consultation | Novera Administration
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --navy: #0b2d5c;
+            --blue: #1769aa;
+            --blue-dark: #0b4f87;
+            --light-blue: #eaf3fb;
+            --background: #f4f7fb;
+            --white: #ffffff;
+            --border: #e2e8f0;
+            --text: #172033;
+            --muted: #697586;
+            --green: #16803c;
+            --green-bg: #e8f7ee;
+            --orange: #856404;
+            --orange-bg: #fff3cd;
+            --red: #b42318;
+            --red-bg: #fdecec;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--background);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* =========================
+           TOPBAR
+        ========================= */
+
+        .topbar {
+            height: 75px;
+            background: white;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 35px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand img {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .brand-name {
+            font-size: 21px;
+            font-weight: 800;
+            color: var(--navy);
+        }
+
+        .brand-name span {
+            display: block;
+            font-size: 10px;
+            letter-spacing: 1.2px;
+            color: #3b82c4;
+            margin-top: 3px;
+        }
+
+        .admin-label {
+            color: #526174;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* =========================
+           PAGE
+        ========================= */
+
+        .container {
+            width: 94%;
+            max-width: 1200px;
+            margin: 35px auto 60px;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .page-title h1 {
+            color: var(--navy);
+            font-size: 28px;
+            margin-bottom: 7px;
+        }
+
+        .page-title p {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 11px 16px;
+            border-radius: 9px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .btn-dashboard {
+            background: white;
+            color: var(--navy);
+            border: 1px solid #d9e0e8;
+        }
+
+        .btn-dashboard:hover {
+            background: var(--light-blue);
+            color: var(--blue);
+        }
+
+        .btn-primary {
+            background: var(--blue);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--blue-dark);
+        }
+
+        .btn-danger {
+            background: var(--red);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #8e1c13;
+        }
+
+        /* =========================
+           FLASH
+        ========================= */
+
+        .flash {
+            padding: 14px 17px;
+            border-radius: 10px;
+            margin-bottom: 18px;
+            font-size: 13px;
+        }
+
+        .flash.success {
+            background: var(--green-bg);
+            color: var(--green);
+            border: 1px solid #c7ead5;
+        }
+
+        .flash.danger {
+            background: var(--red-bg);
+            color: var(--red);
+            border: 1px solid #f4c7c3;
+        }
+
+        .flash.warning {
+            background: var(--orange-bg);
+            color: var(--orange);
+            border: 1px solid #f1df9f;
+        }
+
+        /* =========================
+           MAIN GRID
+        ========================= */
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1.35fr .65fr;
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(11,45,92,.04);
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            padding: 19px 22px;
+            border-bottom: 1px solid #e8edf3;
+        }
+
+        .card-header h2 {
+            color: var(--navy);
+            font-size: 17px;
+        }
+
+        .card-header p {
+            color: var(--muted);
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .card-body {
+            padding: 22px;
+        }
+
+        /* =========================
+           CLIENT PROFILE
+        ========================= */
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 22px;
+        }
+
+        .avatar {
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            background: var(--light-blue);
+            color: var(--blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .profile-name {
+            color: var(--navy);
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .profile-email {
+            color: var(--muted);
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        /* =========================
+           INFORMATION
+        ========================= */
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 18px;
+        }
+
+        .info-item {
+            padding: 14px;
+            background: #f8fafc;
+            border: 1px solid #edf1f5;
+            border-radius: 10px;
+        }
+
+        .info-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            color: var(--muted);
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+
+        .info-value {
+            color: var(--text);
+            font-size: 13px;
+            line-height: 1.5;
+            word-break: break-word;
+        }
+
+        /* =========================
+           MESSAGE
+        ========================= */
+
+        .message-box {
+            background: #f8fafc;
+            border: 1px solid #edf1f5;
+            border-radius: 10px;
+            padding: 17px;
+            line-height: 1.7;
+            font-size: 13px;
+            color: #334155;
+            white-space: pre-wrap;
+            min-height: 120px;
+        }
+
+        /* =========================
+           FORM
+        ========================= */
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--navy);
+            margin-bottom: 7px;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px 13px;
+            border: 1px solid #d9e0e8;
+            border-radius: 9px;
+            background: white;
+            font-size: 13px;
+            outline: none;
+            font-family: inherit;
+        }
+
+        textarea {
+            min-height: 130px;
+            resize: vertical;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--blue);
+            box-shadow: 0 0 0 3px rgba(23,105,170,.08);
+        }
+
+        .save-button {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 9px;
+            background: var(--blue);
+            color: white;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .save-button:hover {
+            background: var(--blue-dark);
+        }
+
+        /* =========================
+           STATUS
+        ========================= */
+
+        .current-status {
+            display: inline-flex;
+            padding: 7px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 800;
+            background: var(--light-blue);
+            color: var(--blue);
+        }
+
+        /* =========================
+           DANGER ZONE
+        ========================= */
+
+        .danger-card {
+            border-color: #f1cccc;
+        }
+
+        .danger-card .card-header {
+            background: #fff8f8;
+        }
+
+        .delete-warning {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+            text-align: center;
+            color: #8993a1;
+            font-size: 12px;
+            padding: 25px;
+        }
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 900px) {
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+        @media (max-width: 700px) {
+
+            .topbar {
+                padding: 0 18px;
+            }
+
+            .admin-label {
+                display: none;
+            }
+
+            .container {
+                width: 92%;
+                margin-top: 25px;
+            }
+
+            .page-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .header-actions {
+                width: 100%;
+            }
+
+            .header-actions .btn {
+                flex: 1;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .brand-name {
+                font-size: 18px;
+            }
+
+            .brand img {
+                width: 42px;
+                height: 42px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<header class="topbar">
+
+    <div class="brand">
+
+        <img
+            src="{{ url_for('logo') }}"
+            alt="Novera Energy & Technologies Logo"
+            onerror="this.style.display='none';"
+        >
+
+        <div class="brand-name">
+
+            Novera
+
+            <span>
+                LIGHT · MOTION · INTELLIGENCE
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <div class="admin-label">
+
+        <i class="fa-solid fa-shield-halved"></i>
+
+        Administration
+
+    </div>
+
+</header>
+
+
+<main class="container">
+
+
+    <!-- PAGE HEADER -->
+
+    <div class="page-header">
+
+        <div class="page-title">
+
+            <h1>
+                Consultation Request
+            </h1>
+
+            <p>
+                Review, assign and update this client request.
+            </p>
+
+        </div>
+
+
+        <div class="header-actions">
+
+            <a
+                href="{{ url_for('admin_consultations') }}"
+                class="btn btn-dashboard"
+            >
+
+                <i class="fa-solid fa-arrow-left"></i>
+
+                Consultation Requests
+
+            </a>
+
+
+            <a
+                href="{{ url_for('admin_dashboard') }}"
+                class="btn btn-dashboard"
+            >
+
+                <i class="fa-solid fa-gauge-high"></i>
+
+                Dashboard
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- FLASH -->
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+
+        {% if messages %}
+
+            {% for category, message in messages %}
+
+                <div class="flash {{ category }}">
+
+                    {{ message }}
+
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+    {% endwith %}
+
+
+    <div class="content-grid">
+
+
+        <!-- =========================
+             LEFT COLUMN
+        ========================= -->
+
+        <div>
+
+
+            <!-- CLIENT INFORMATION -->
+
+            <section class="card">
+
+                <div class="card-header">
+
+                    <h2>
+                        Client Information
+                    </h2>
+
+                    <p>
+                        Details submitted with the consultation request.
+                    </p>
+
+                </div>
+
+
+                <div class="card-body">
+
+
+                    <div class="profile">
+
+                        <div class="avatar">
+
+                            {{
+                                (consultation.name or "?")[0]
+                                |upper
+                            }}
+
+                        </div>
+
+
+                        <div>
+
+                            <div class="profile-name">
+
+                                {{ consultation.name or "Unnamed Client" }}
+
+                            </div>
+
+                            <div class="profile-email">
+
+                                {{ consultation.email or "No email provided" }}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="info-grid">
+
+
+                        <div class="info-item">
+
+                            <div class="info-label">
+                                Phone
+                            </div>
+
+                            <div class="info-value">
+                                {{ consultation.phone or "Not provided" }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="info-item">
+
+                            <div class="info-label">
+                                Company
+                            </div>
+
+                            <div class="info-value">
+                                {{ consultation.company or "Not provided" }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="info-item">
+
+                            <div class="info-label">
+                                Service
+                            </div>
+
+                            <div class="info-value">
+                                {{ consultation.service or "Not specified" }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="info-item">
+
+                            <div class="info-label">
+                                Date Received
+                            </div>
+
+                            <div class="info-value">
+                                {{ consultation.created_at or "N/A" }}
+                            </div>
+
+                        </div>
+
+
+                        {% if consultation.location %}
+
+                        <div class="info-item">
+
+                            <div class="info-label">
+                                Location
+                            </div>
+
+                            <div class="info-value">
+                                {{ consultation.location }}
+                            </div>
+
+                        </div>
+
+                        {% endif %}
+
+
+                        {% if consultation.preferred_date %}
+
+                        <div class="info-item">
+
+                            <div class="info-label">
+                                Preferred Date
+                            </div>
+
+                            <div class="info-value">
+                                {{ consultation.preferred_date }}
+                            </div>
+
+                        </div>
+
+                        {% endif %}
+
+
+                        {% if consultation.preferred_time %}
+
+                        <div class="info-item">
+
+                            <div class="info-label">
+                                Preferred Time
+                            </div>
+
+                            <div class="info-value">
+                                {{ consultation.preferred_time }}
+                            </div>
+
+                        </div>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- CLIENT MESSAGE -->
+
+            <section class="card">
+
+                <div class="card-header">
+
+                    <h2>
+                        Consultation Details
+                    </h2>
+
+                    <p>
+                        The message or requirements submitted by the client.
+                    </p>
+
+                </div>
+
+
+                <div class="card-body">
+
+                    <div class="message-box">
+
+                        {{ consultation.message or "No additional message was provided." }}
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ADMIN NOTES -->
+
+            <section class="card">
+
+                <div class="card-header">
+
+                    <h2>
+                        Internal Notes
+                    </h2>
+
+                    <p>
+                        Add notes for your administration or technical team.
+                    </p>
+
+                </div>
+
+
+                <div class="card-body">
+
+                    <form
+                        method="POST"
+                        action="{{ url_for('update_admin_consultation', consultation_id=consultation.id) }}"
+                    >
+
+
+                        <div class="form-group">
+
+                            <label for="admin_notes">
+                                Internal Notes
+                            </label>
+
+                            <textarea
+                                id="admin_notes"
+                                name="admin_notes"
+                                placeholder="Enter internal notes..."
+                            >{{ consultation.admin_notes or '' }}</textarea>
+
+                        </div>
+
+
+                        <button
+                            type="submit"
+                            class="save-button"
+                        >
+
+                            <i class="fa-solid fa-floppy-disk"></i>
+
+                            Save Notes
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </section>
+
+
+        </div>
+
+
+        <!-- =========================
+             RIGHT COLUMN
+        ========================= -->
+
+        <div>
+
+
+            <!-- MANAGEMENT -->
+
+            <section class="card">
+
+                <div class="card-header">
+
+                    <h2>
+                        Request Management
+                    </h2>
+
+                    <p>
+                        Update the status and staff assignment.
+                    </p>
+
+                </div>
+
+
+                <div class="card-body">
+
+                    <form
+                        method="POST"
+                        action="{{ url_for('update_admin_consultation', consultation_id=consultation.id) }}"
+                    >
+
+
+                        <!-- STATUS -->
+
+                        <div class="form-group">
+
+                            <label for="status">
+                                Status
+                            </label>
+
+                            <select
+                                id="status"
+                                name="status"
+                            >
+
+                                <option
+                                    value="New"
+                                    {% if (consultation.status or 'New')|lower == 'new' %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    New
+                                </option>
+
+                                <option
+                                    value="In Progress"
+                                    {% if (consultation.status or '')|lower == 'in progress' %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    In Progress
+                                </option>
+
+                                <option
+                                    value="Completed"
+                                    {% if (consultation.status or '')|lower == 'completed' %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Completed
+                                </option>
+
+                                <option
+                                    value="Closed"
+                                    {% if (consultation.status or '')|lower == 'closed' %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Closed
+                                </option>
+
+                                <option
+                                    value="Cancelled"
+                                    {% if (consultation.status or '')|lower == 'cancelled' %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    Cancelled
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- ASSIGNMENT -->
+
+                        <div class="form-group">
+
+                            <label for="assigned_to">
+                                Assign To Staff
+                            </label>
+
+                            <select
+                                id="assigned_to"
+                                name="assigned_to"
+                            >
+
+                                <option value="">
+                                    -- Not Assigned --
+                                </option>
+
+
+                                {% for staff in staff_members %}
+
+                                    <option
+                                        value="{{ staff.id }}"
+                                        {% if consultation.assigned_to == staff.id %}
+                                            selected
+                                        {% endif %}
+                                    >
+
+                                        {{ staff.first_name or "" }}
+                                        {{ staff.last_name or "" }}
+
+                                        {% if staff.staff_code %}
+                                            — {{ staff.staff_code }}
+                                        {% endif %}
+
+                                    </option>
+
+                                {% endfor %}
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- NOTES -->
+
+                        <div class="form-group">
+
+                            <label for="management_notes">
+                                Management Note
+                            </label>
+
+                            <textarea
+                                id="management_notes"
+                                name="management_notes"
+                                placeholder="Add an update about this request..."
+                            >{{ consultation.management_notes or '' }}</textarea>
+
+                        </div>
+
+
+                        <button
+                            type="submit"
+                            class="save-button"
+                        >
+
+                            <i class="fa-solid fa-floppy-disk"></i>
+
+                            Update Consultation
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </section>
+
+
+            <!-- CURRENT STATUS -->
+
+            <section class="card">
+
+                <div class="card-header">
+
+                    <h2>
+                        Current Status
+                    </h2>
+
+                </div>
+
+
+                <div class="card-body">
+
+                    <div class="current-status">
+
+                        <i class="fa-solid fa-circle"></i>
+
+                        {{ consultation.status or "New" }}
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- DELETE -->
+
+            <section class="card danger-card">
+
+                <div class="card-header">
+
+                    <h2>
+                        Delete Request
+                    </h2>
+
+                </div>
+
+
+                <div class="card-body">
+
+                    <p class="delete-warning">
+
+                        Deleting this consultation permanently removes
+                        the request from the administration system.
+
+                    </p>
+
+
+                    <form
+                        method="POST"
+                        action="{{ url_for('delete_admin_consultation', consultation_id=consultation.id) }}"
+                        onsubmit="return confirm('Are you sure you want to permanently delete this consultation request? This action cannot be undone.');"
+                    >
+
+                        <button
+                            type="submit"
+                            class="btn btn-danger"
+                            style="width:100%;"
+                        >
+
+                            <i class="fa-solid fa-trash"></i>
+
+                            Delete Consultation
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </section>
+
+
+        </div>
+
+
+    </div>
+
+</main>
+
+
+<footer>
+
+    © 2026 Novera Energy & Technologies.
+    All rights reserved.
+
+</footer>
+
+
+</body>
+
+</html>
+```
+

@@ -1,0 +1,4192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Novera Energy & Technologies </title>
+
+<meta name="description"
+      content="Novera Energy & Technologies  provides professional security, electrical, automation, PA system and fire alarm solutions for homes and businesses in Ghana.">
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+
+<style>
+
+/* =========================================================
+   RESET
+========================================================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:"Segoe UI",Arial,Helvetica,sans-serif;
+}
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    background:#f4f7fb;
+    color:#222;
+    line-height:1.6;
+    overflow-x:hidden;
+}
+
+img{
+    max-width:100%;
+    display:block;
+}
+
+a{
+    text-decoration:none;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.topbar{
+    background:linear-gradient(90deg,#003b82,#0072ff);
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    padding:14px 8%;
+
+    position:sticky;
+    top:0;
+
+    z-index:1000;
+
+    box-shadow:0 5px 20px rgba(0,0,0,.15);
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.logo-box img{
+    width:52px;
+    height:52px;
+    object-fit:cover;
+    border-radius:10px;
+    border:2px solid white;
+}
+
+.brand-text h1{
+    color:white;
+    font-size:21px;
+    letter-spacing:3px;
+    font-weight:800;
+}
+
+.brand-text p{
+    color:#dbeafe;
+    font-size:11px;
+    letter-spacing:1px;
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+nav{
+    display:flex;
+    align-items:center;
+    flex-wrap:wrap;
+}
+
+nav a{
+    color:white;
+    font-weight:600;
+    font-size:14px;
+    padding:8px 10px;
+    margin-left:5px;
+    transition:.3s;
+}
+
+nav a:hover,
+nav a.active{
+    color:#00eaff;
+}
+
+
+/* =========================================================
+   LANGUAGE DROPDOWN
+========================================================= */
+
+.language-wrapper{
+    position:relative;
+    margin-left:18px;
+}
+
+.language-toggle{
+    display:flex;
+    align-items:center;
+    gap:7px;
+
+    background:rgba(255,255,255,.12);
+
+    color:white;
+
+    border:1px solid rgba(255,255,255,.5);
+
+    padding:8px 12px;
+
+    border-radius:7px;
+
+    cursor:pointer;
+
+    font-size:12px;
+
+    font-weight:700;
+
+    transition:.3s;
+}
+
+.language-toggle:hover{
+    background:white;
+    color:#0066ff;
+}
+
+.language-menu{
+    position:absolute;
+
+    top:calc(100% + 10px);
+
+    right:0;
+
+    width:175px;
+
+    background:white;
+
+    border-radius:12px;
+
+    padding:8px;
+
+    box-shadow:0 15px 40px rgba(0,0,0,.18);
+
+    display:none;
+
+    z-index:3000;
+}
+
+.language-menu.show{
+    display:block;
+    animation:languageMenu .2s ease;
+}
+
+@keyframes languageMenu{
+
+    from{
+        opacity:0;
+        transform:translateY(-7px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+
+}
+
+.language-menu button{
+    width:100%;
+
+    border:none;
+
+    background:transparent;
+
+    color:#333;
+
+    text-align:left;
+
+    padding:10px 12px;
+
+    border-radius:7px;
+
+    cursor:pointer;
+
+    font-size:13px;
+
+    font-weight:600;
+
+    transition:.2s;
+}
+
+.language-menu button:hover,
+.language-menu button.active{
+    background:#eaf3ff;
+    color:#0066ff;
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero{
+    min-height:88vh;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    text-align:center;
+
+    color:white;
+
+    position:relative;
+
+    overflow:hidden;
+
+    background:#003b82;
+}
+
+.hero-slides{
+    position:absolute;
+    inset:0;
+    z-index:0;
+}
+
+.hero-slide{
+    position:absolute;
+    inset:0;
+
+    opacity:0;
+
+    transition:opacity 1s ease;
+}
+
+.hero-slide.active{
+    opacity:1;
+}
+
+.hero-slide img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    filter:brightness(.42);
+}
+
+.hero::before{
+    content:"";
+
+    position:absolute;
+
+    width:500px;
+    height:500px;
+
+    background:rgba(0,234,255,.12);
+
+    border-radius:50%;
+
+    filter:blur(5px);
+
+    top:-180px;
+    right:-120px;
+
+    z-index:1;
+}
+
+.hero::after{
+    content:"";
+
+    position:absolute;
+
+    width:400px;
+    height:400px;
+
+    background:rgba(255,255,255,.06);
+
+    border-radius:50%;
+
+    bottom:-180px;
+    left:-100px;
+
+    z-index:1;
+}
+
+.hero-overlay{
+    position:absolute;
+    inset:0;
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(0,45,100,.82),
+            rgba(0,114,255,.62)
+        );
+
+    z-index:1;
+}
+
+.hero-content{
+    position:relative;
+    z-index:3;
+
+    max-width:850px;
+
+    padding:20px;
+}
+
+.hero h1{
+    font-size:52px;
+    line-height:1.2;
+    margin-bottom:20px;
+}
+
+.hero p{
+    max-width:700px;
+    margin:auto;
+
+    font-size:17px;
+    line-height:1.7;
+
+    color:#eaf3ff;
+}
+
+.hero-actions{
+    margin-top:30px;
+
+    display:flex;
+    justify-content:center;
+
+    gap:15px;
+
+    flex-wrap:wrap;
+}
+
+.btn{
+    background:white;
+
+    color:#0057c7;
+
+    padding:13px 28px;
+
+    border-radius:30px;
+
+    font-weight:700;
+
+    transition:.3s;
+}
+
+.btn:hover{
+    transform:translateY(-3px);
+
+    box-shadow:0 10px 25px rgba(0,0,0,.25);
+}
+
+.btn-outline{
+    border:2px solid white;
+
+    color:white;
+
+    padding:13px 28px;
+
+    border-radius:30px;
+
+    font-weight:700;
+
+    transition:.3s;
+}
+
+.btn-outline:hover{
+    background:white;
+    color:#0057c7;
+}
+
+.hero-dots{
+    position:absolute;
+
+    bottom:25px;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    z-index:4;
+
+    display:flex;
+
+    gap:8px;
+}
+
+.hero-dot{
+    width:10px;
+    height:10px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:rgba(255,255,255,.5);
+
+    cursor:pointer;
+
+    padding:0;
+}
+
+.hero-dot.active{
+    background:white;
+    transform:scale(1.2);
+}
+
+
+/* =========================================================
+   SECTIONS
+========================================================= */
+
+section{
+    padding:85px 10%;
+}
+
+.section-title{
+    text-align:center;
+
+    color:#003b82;
+
+    font-size:34px;
+
+    margin-bottom:40px;
+
+    font-weight:750;
+}
+
+.section-title::after{
+    content:"";
+
+    display:block;
+
+    width:65px;
+    height:4px;
+
+    margin:12px auto 0;
+
+    background:#0072ff;
+
+    border-radius:10px;
+}
+
+
+/* =========================================================
+   ABOUT
+========================================================= */
+
+.about-wrapper{
+    display:grid;
+
+    grid-template-columns:1fr 1fr;
+
+    gap:50px;
+
+    align-items:center;
+}
+
+.about-container{
+    line-height:1.85;
+}
+
+.about-container h3{
+    color:#003b82;
+
+    font-size:25px;
+
+    margin-bottom:18px;
+}
+
+.about-container p{
+    margin-bottom:15px;
+}
+
+.about-badges{
+    margin-top:22px;
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:10px;
+}
+
+.about-badges span{
+    padding:7px 12px;
+
+    color:white;
+
+    border-radius:20px;
+
+    font-size:11px;
+
+    font-weight:600;
+}
+
+.about-badges span:nth-child(1){
+    background:#003b82;
+}
+
+.about-badges span:nth-child(2){
+    background:#0072ff;
+}
+
+.about-badges span:nth-child(3){
+    background:#111;
+}
+
+.iec-link{
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:7px;
+
+    padding:7px 12px;
+
+    background:white;
+
+    color:#003b82;
+
+    border:1px solid #dce7f5;
+
+    border-radius:20px;
+
+    font-size:11px;
+
+    font-weight:700;
+
+    transition:.3s;
+}
+
+.iec-link:hover{
+    background:#00eaff;
+
+    color:#003b82;
+
+    transform:translateY(-2px);
+}
+
+.image-wrapper{
+    position:relative;
+
+    overflow:hidden;
+
+    border-radius:18px;
+
+    box-shadow:0 18px 45px rgba(0,0,0,.16);
+}
+
+.image-wrapper img{
+    width:100%;
+
+    height:420px;
+
+    object-fit:cover;
+}
+
+.quote-overlay{
+    position:absolute;
+
+    bottom:0;
+
+    left:0;
+
+    right:0;
+
+    background:rgba(0,59,130,.9);
+
+    color:white;
+
+    padding:22px;
+}
+
+.quote-overlay p{
+    margin-bottom:10px;
+
+    line-height:1.7;
+}
+
+
+/* =========================================================
+   SERVICES & PRODUCTS
+========================================================= */
+
+.services-intro{
+    text-align:center;
+
+    max-width:800px;
+
+    margin:0 auto 40px;
+}
+
+.services-intro h3{
+    color:#003b82;
+
+    margin-bottom:10px;
+}
+
+.services-intro p{
+    color:#666;
+}
+
+.services{
+    display:grid;
+
+    grid-template-columns:
+        repeat(auto-fit,minmax(260px,1fr));
+
+    gap:28px;
+}
+
+.card{
+    background:white;
+
+    border-radius:16px;
+
+    padding:20px;
+
+    box-shadow:
+        0 10px 30px rgba(0,0,0,.07);
+
+    border:1px solid #edf0f5;
+
+    transition:.35s ease;
+}
+
+.card:hover{
+    transform:translateY(-7px);
+
+    box-shadow:
+        0 18px 40px rgba(0,80,180,.14);
+}
+
+.card img{
+    width:100%;
+
+    height:210px;
+
+    object-fit:cover;
+
+    border-radius:12px;
+
+    margin-bottom:15px;
+}
+
+.card h3{
+    color:#003b82;
+
+    margin-bottom:9px;
+
+    font-size:19px;
+}
+
+.card p{
+    color:#555;
+
+    font-size:14px;
+
+    line-height:1.7;
+}
+
+.service-link{
+    display:inline-block;
+
+    margin-top:12px;
+
+    color:#0066ff;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+    border:none;
+
+    background:none;
+
+    padding:0;
+
+    font-size:14px;
+}
+
+.service-link:hover{
+    color:#003b82;
+    transform:translateX(3px);
+}
+
+.service-details{
+    display:none;
+
+    margin-top:16px;
+
+    padding-top:16px;
+
+    border-top:1px solid #e7ebf0;
+}
+
+.service-details.show{
+    display:block;
+
+    animation:serviceOpen .3s ease;
+}
+
+@keyframes serviceOpen{
+
+    from{
+        opacity:0;
+        transform:translateY(-5px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+
+}
+
+.service-details h4{
+    margin:15px 0 10px;
+
+    color:#003b82;
+
+    font-size:15px;
+}
+
+.service-details ul{
+    padding-left:20px;
+
+    margin-bottom:15px;
+}
+
+.service-details li{
+    margin-bottom:7px;
+
+    color:#555;
+
+    font-size:14px;
+}
+
+.details-btn{
+    display:inline-block;
+
+    background:#003b82;
+
+    color:white;
+
+    padding:10px 17px;
+
+    border-radius:8px;
+
+    font-size:13px;
+
+    font-weight:700;
+
+    transition:.3s;
+}
+
+.details-btn:hover{
+    background:#0072ff;
+}
+
+.price{
+    margin-top:14px;
+
+    font-weight:700;
+
+    color:#0066ff;
+}
+
+
+/* =========================================================
+   PROCESS
+========================================================= */
+
+.process-intro{
+    text-align:center;
+
+    max-width:800px;
+
+    margin:-20px auto 35px;
+
+    color:#666;
+}
+
+.process-grid{
+    display:grid;
+
+    grid-template-columns:
+        repeat(auto-fit,minmax(220px,1fr));
+
+    gap:24px;
+}
+
+.process-card{
+    background:white;
+
+    padding:28px;
+
+    border-radius:16px;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.07);
+
+    border:1px solid #edf0f5;
+}
+
+.step-number{
+    color:#0072ff;
+
+    font-size:30px;
+
+    font-weight:800;
+
+    margin-bottom:10px;
+}
+
+.process-card h3{
+    color:#003b82;
+
+    margin-bottom:10px;
+}
+
+.process-card p{
+    color:#666;
+
+    line-height:1.7;
+}
+
+
+/* =========================================================
+   ACADEMY
+========================================================= */
+
+.academy-container{
+    display:grid;
+
+    grid-template-columns:1fr 1.4fr;
+
+    gap:40px;
+
+    align-items:center;
+}
+
+.academy-text{
+    background:
+        linear-gradient(
+            135deg,
+            #003b82,
+            #0072ff
+        );
+
+    color:white;
+
+    padding:35px;
+
+    border-radius:18px;
+}
+
+.academy-text h3{
+    font-size:27px;
+
+    margin-bottom:15px;
+}
+
+.academy-text p{
+    color:#e5f0ff;
+
+    margin-bottom:17px;
+}
+
+.academy-btn{
+    display:inline-block;
+
+    margin-top:10px;
+
+    background:white;
+
+    color:#003b82;
+
+    padding:12px 22px;
+
+    border-radius:25px;
+
+    font-weight:700;
+}
+
+.academy-courses{
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:18px;
+}
+
+.academy-card{
+    background:white;
+
+    padding:25px 20px;
+
+    border-radius:15px;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.07);
+
+    text-align:center;
+}
+
+.academy-card i{
+    width:55px;
+    height:55px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    background:#eaf3ff;
+
+    color:#0066ff;
+
+    border-radius:14px;
+
+    margin:0 auto 15px;
+
+    font-size:23px;
+}
+
+.academy-card h4{
+    color:#003b82;
+
+    margin-bottom:8px;
+}
+
+.academy-card p{
+    color:#666;
+
+    font-size:13px;
+}
+
+
+/* =========================================================
+   CONTACT
+========================================================= */
+
+.contact-grid{
+    display:grid;
+
+    grid-template-columns:1fr 1.2fr;
+
+    gap:40px;
+
+    align-items:start;
+}
+
+.contact-left,
+.contact-form{
+    background:white;
+
+    padding:32px;
+
+    border-radius:18px;
+
+    box-shadow:0 12px 35px rgba(0,0,0,.08);
+}
+
+.contact-left h2{
+    color:#003b82;
+
+    margin-bottom:15px;
+}
+
+.contact-left p{
+    margin:16px 0;
+
+    line-height:1.7;
+}
+
+.contact-left a{
+    color:#0066ff;
+}
+
+.contact-form h3{
+    color:#003b82;
+
+    margin-bottom:18px;
+}
+
+.contact-form input,
+.contact-form select,
+.contact-form textarea{
+    width:100%;
+
+    padding:14px;
+
+    margin-bottom:13px;
+
+    border:1px solid #dfe4eb;
+
+    border-radius:9px;
+
+    outline:none;
+
+    font-size:14px;
+
+    background:#fbfcfe;
+}
+
+.contact-form input:focus,
+.contact-form select:focus,
+.contact-form textarea:focus{
+    border-color:#0072ff;
+
+    box-shadow:
+        0 0 0 3px rgba(0,114,255,.12);
+}
+
+.contact-form textarea{
+    resize:vertical;
+}
+
+.contact-form button{
+    width:100%;
+
+    padding:14px;
+
+    border:none;
+
+    border-radius:30px;
+
+    background:#0066ff;
+
+    color:white;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.contact-form button:hover{
+    background:#003b82;
+}
+
+.contact-form button:disabled{
+    opacity:.7;
+    cursor:not-allowed;
+}
+
+.social-icons{
+    display:flex;
+
+    gap:12px;
+
+    margin-top:10px;
+}
+
+.icon{
+    width:42px;
+    height:42px;
+
+    display:flex;
+
+    justify-content:center;
+    align-items:center;
+
+    border-radius:50%;
+
+    color:white !important;
+
+    transition:.3s;
+}
+
+.ig{
+    background:#e1306c;
+}
+
+.fb{
+    background:#1877f2;
+}
+
+.tt{
+    background:#111;
+}
+
+.icon:hover{
+    transform:translateY(-4px);
+}
+
+
+/* =========================================================
+   FORM STATUS
+========================================================= */
+
+.form-status{
+    display:none;
+
+    margin-top:15px;
+
+    padding:12px 15px;
+
+    border-radius:9px;
+
+    font-size:14px;
+
+    font-weight:600;
+}
+
+.form-status.show{
+    display:block;
+}
+
+.form-status.success{
+    background:#e8f7ee;
+    color:#16733d;
+    border:1px solid #b9e6c9;
+}
+
+.form-status.error{
+    background:#fff0f0;
+    color:#b42318;
+    border:1px solid #f3b5b5;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+footer{
+    background:
+        linear-gradient(
+            135deg,
+            #002b66,
+            #0066ff
+        );
+
+    color:white;
+
+    padding:60px 10% 20px;
+}
+
+.footer-container{
+    display:grid;
+
+    grid-template-columns:
+        1.2fr 1fr 1fr;
+
+    gap:50px;
+}
+
+.footer-column h3{
+    color:white;
+
+    margin-bottom:18px;
+}
+
+.footer-brand img{
+    width:62px;
+
+    height:62px;
+
+    object-fit:cover;
+
+    border-radius:12px;
+
+    margin-bottom:10px;
+}
+
+.footer-logo-title{
+    font-size:31px;
+
+    letter-spacing:4px;
+
+    font-weight:900;
+
+    margin-bottom:2px !important;
+}
+
+.footer-brand h4{
+    color:#dbeafe;
+
+    margin-bottom:15px;
+}
+
+.footer-brand p{
+    color:#dbeafe;
+
+    line-height:1.7;
+
+    font-size:14px;
+}
+
+.footer-social{
+    display:flex;
+
+    gap:12px;
+
+    margin-top:22px;
+}
+
+.footer-social a{
+    width:42px;
+    height:42px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    background:#0072ff;
+
+    color:white;
+
+    border-radius:50%;
+
+    transition:.3s;
+}
+
+.footer-social a:hover{
+    background:white;
+
+    color:#003b82;
+
+    transform:translateY(-4px);
+}
+
+.footer-column ul{
+    list-style:none;
+}
+
+.footer-column li{
+    margin-bottom:10px;
+
+    color:#dbeafe;
+
+    font-size:14px;
+}
+
+.footer-column li a{
+    color:#dbeafe;
+}
+
+.footer-column li a:hover{
+    color:white;
+}
+
+.service-title{
+    margin-top:25px;
+}
+
+.footer-contact p{
+    margin-bottom:13px;
+
+    color:#dbeafe;
+
+    font-size:14px;
+}
+
+.footer-contact i{
+    width:23px;
+
+    color:white;
+}
+
+.footer-contact p a{
+    color:white !important;
+}
+
+.footer-contact p a:hover{
+    color:#00eaff !important;
+}
+
+.footer-contact .footer-btn{
+    display:inline-block;
+
+    margin-top:15px;
+
+    padding:12px 20px;
+
+    background:white;
+
+    color:#003b82 !important;
+
+    border-radius:25px;
+
+    font-weight:700;
+
+    transition:.3s;
+}
+
+.footer-contact .footer-btn:hover{
+    background:#00eaff;
+
+    color:#003b82 !important;
+}
+
+.footer-bottom{
+    border-top:
+        1px solid rgba(255,255,255,.25);
+
+    margin-top:45px;
+
+    padding-top:20px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    gap:15px;
+
+    flex-wrap:wrap;
+
+    color:#dbeafe;
+
+    font-size:13px;
+}
+
+.footer-bottom a{
+    color:white;
+
+    margin-left:15px;
+}
+
+.footer-bottom a:hover{
+    color:#00eaff;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:1000px){
+
+    .topbar{
+        padding:14px 5%;
+    }
+
+    .academy-container{
+        grid-template-columns:1fr;
+    }
+
+    .academy-courses{
+        grid-template-columns:repeat(3,1fr);
+    }
+
+}
+
+@media(max-width:800px){
+
+    .topbar{
+        flex-wrap:wrap;
+        gap:15px;
+    }
+
+    nav{
+        order:3;
+        width:100%;
+
+        justify-content:center;
+    }
+
+    nav a{
+        margin:2px 5px;
+    }
+
+    .language-wrapper{
+        margin-left:auto;
+    }
+
+    .hero h1{
+        font-size:38px;
+    }
+
+    .hero p{
+        font-size:15px;
+    }
+
+    .about-wrapper,
+    .contact-grid{
+        grid-template-columns:1fr;
+    }
+
+    .academy-courses{
+        grid-template-columns:1fr;
+    }
+
+    .footer-container{
+        grid-template-columns:1fr;
+        gap:35px;
+    }
+
+    .footer-bottom{
+        flex-direction:column;
+        text-align:center;
+    }
+
+}
+
+@media(max-width:560px){
+
+    section{
+        padding:60px 5%;
+    }
+
+    .hero{
+        min-height:78vh;
+    }
+
+    .hero h1{
+        font-size:31px;
+    }
+
+    .hero-actions{
+        flex-direction:column;
+    }
+
+    .btn,
+    .btn-outline{
+        width:100%;
+    }
+
+    .section-title{
+        font-size:28px;
+    }
+
+    .image-wrapper img{
+        height:300px;
+    }
+
+    .language-wrapper{
+        margin-left:0;
+    }
+
+    .language-menu{
+        right:auto;
+        left:0;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     HEADER
+========================================================= -->
+
+<header class="topbar">
+
+    <div class="brand">
+
+        <div class="logo-box">
+
+            <img src="assets/logo.jpg"
+                 alt="Novera Energy & Technologies Logo">
+
+        </div>
+
+        <div class="brand-text">
+
+            <h1>NOVERA</h1>
+
+            <p>
+                Light · Motion · Intelligence
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <nav>
+
+        <a href="#about"
+           data-en="About"
+           data-fr="À propos"
+           data-de="Über uns"
+           data-es="Sobre nosotros"
+           data-tw="Yɛn Ho"
+           data-ee="Mía ŋu"
+           data-da="Mia ŋu">
+            About
+        </a>
+
+        <a href="#services"
+           data-en="Services"
+           data-fr="Services"
+           data-de="Dienstleistungen"
+           data-es="Servicios"
+           data-tw="Yɛn Nnwuma"
+           data-ee="Mía ƒe Dɔwɔnuwo"
+           data-da="Mia Dɔwɔnu">
+            Services
+        </a>
+
+        <a href="#products"
+           data-en="Products"
+           data-fr="Produits"
+           data-de="Produkte"
+           data-es="Productos"
+           data-tw="Nneɛma"
+           data-ee="Nuwo"
+           data-da="Núwo">
+            Products
+        </a>
+
+        <a href="#academy"
+           data-en="Academy"
+           data-fr="Académie"
+           data-de="Akademie"
+           data-es="Academia"
+           data-tw="Adesua"
+           data-ee="Akademi"
+           data-da="Adesua">
+            Academy
+        </a>
+
+        <a href="#contact"
+           data-en="Contact"
+           data-fr="Contact"
+           data-de="Kontakt"
+           data-es="Contacto"
+           data-tw="Nkitahodi"
+           data-ee="Nɔnɔmetata"
+           data-da="Nɔŋɔ">
+            Contact
+        </a>
+
+    </nav>
+
+
+    <!-- LANGUAGE -->
+
+    <div class="language-wrapper">
+
+        <button type="button"
+                class="language-toggle"
+                id="languageToggle"
+                aria-expanded="false">
+
+            <i class="fa-solid fa-globe"></i>
+
+            <span id="currentLanguageLabel">
+                English
+            </span>
+
+            <i class="fa-solid fa-chevron-down"></i>
+
+        </button>
+
+
+        <div class="language-menu"
+             id="languageMenu">
+
+            <button type="button"
+                    data-language="en">
+                English
+            </button>
+
+            <button type="button"
+                    data-language="fr">
+                Français
+            </button>
+
+            <button type="button"
+                    data-language="de">
+                Deutsch
+            </button>
+
+            <button type="button"
+                    data-language="es">
+                Español
+            </button>
+
+            <button type="button"
+                    data-language="tw">
+                Twi
+            </button>
+            
+            <button type="button"
+                    data-language="ee">
+                Ewe
+            </button>
+
+            <button type="button"
+                    data-language="da">
+                Dangme
+            </button>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- =====================================================
+     HERO
+========================================================= -->
+
+<section class="hero">
+
+    <div class="hero-slides">
+
+        <div class="hero-slide active">
+            <img src="assets/hero/hero-cctv.jpg"
+                 alt="CCTV Installation">
+        </div>
+
+        <div class="hero-slide">
+            <img src="assets/hero/hero-gate.jpg"
+                 alt="Automatic Gate">
+        </div>
+
+        <div class="hero-slide">
+            <img src="assets/hero/hero-wiring.jpg"
+                 alt="Electrical Wiring">
+        </div>
+
+        <div class="hero-slide">
+            <img src="assets/hero/hero-fire-alarm.jpg"
+                 alt="Fire Alarm System">
+        </div>
+
+        <div class="hero-slide">
+            <img src="assets/hero/hero-access.jpg"
+                 alt="Access Control">
+        </div>
+
+    </div>
+
+
+    <div class="hero-overlay"></div>
+
+
+    <div class="hero-content">
+
+        <h1
+            data-en="Secure Spaces.<br>Installed Professionally."
+            data-fr="Des espaces sécurisés.<br>Installés professionnellement."
+            data-de="Sichere Räume.<br>Professionell installiert."
+            data-es="Espacios seguros.<br>Instalados profesionalmente."
+            data-tw="Fa ahotɔ no.<br>Yɛde adwuma no yie."
+            data-ee="Aƒeviwo kple nɔƒewo me dzidzedze.<br>Yɛwɔ dɔ nyuie."
+            data-da="Nɔ̃ɔ nɔ ŋmɛ.<br>Yɛ yɛ dɔ nyuie.">
+
+            Secure Spaces.<br>
+            Installed Professionally.
+
+        </h1>
+
+
+        <p
+            data-en="Professional security, electrical, automation and smart technology solutions for homes and businesses in Ghana."
+            data-fr="Des solutions professionnelles de sécurité, d'électricité, d'automatisation et de technologies intelligentes pour les maisons et les entreprises au Ghana."
+            data-de="Professionelle Lösungen für Sicherheit, Elektroinstallationen, Automatisierung und intelligente Technologien für Häuser und Unternehmen in Ghana."
+            data-es="Soluciones profesionales de seguridad, electricidad, automatización y tecnología inteligente para hogares y empresas en Ghana."
+            data-tw="Yɛma professional security, electrical, automation ne smart technology solutions ma afie ne nnwuma wɔ Ghana."
+            data-ee="Míena security, electrical, automation kple smart technology ƒe nɔnɔme vɛ afima kple dɔwɔƒewo le Ghana."
+            data-da="Mia security, electrical, automation kple smart technology dɔwɔnu ma afie kple nnwuma le Ghana.">
+
+            Professional security, electrical, automation and smart
+            technology solutions for homes and businesses in Ghana.
+
+        </p>
+
+
+        <div class="hero-actions">
+
+            <a href="#contact"
+               class="btn"
+               data-en="Request Consultation"
+               data-fr="Demander une consultation"
+               data-de="Beratung anfordern"
+               data-es="Solicitar consulta"
+               data-tw="Bisa yɛn afotu"
+               data-ee="Ɖe biabia"
+               data-da="Bisa nɔŋɔ">
+                Request Consultation
+            </a>
+
+
+            <a href="#products"
+               class="btn-outline"
+               data-en="View Products"
+               data-fr="Voir les produits"
+               data-de="Produkte ansehen"
+               data-es="Ver productos"
+               data-tw="Hwɛ nneɛma"
+               data-ee="Kpɔ nuwo"
+               data-da="Kpɔ núwo">
+                View Products
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="hero-dots">
+
+        <button class="hero-dot active"
+                data-slide="0">
+        </button>
+
+        <button class="hero-dot"
+                data-slide="1">
+        </button>
+
+        <button class="hero-dot"
+                data-slide="2">
+        </button>
+
+        <button class="hero-dot"
+                data-slide="3">
+        </button>
+
+        <button class="hero-dot"
+                data-slide="4">
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     ABOUT
+========================================================= -->
+
+<section id="about">
+
+    <h2 class="section-title"
+        data-en="About Novera"
+        data-fr="À propos de Novera"
+        data-de="Über Novera"
+        data-es="Sobre Novera"
+        data-tw="Novera Ho"
+        data-ee="Novera ŋu"
+        data-da="Novera ŋu">
+        About Novera
+    </h2>
+
+
+    <div class="about-wrapper">
+
+
+        <div class="about-container">
+
+
+            <h3
+                data-en="Professional installers, trained and certified."
+                data-fr="Installateurs professionnels, formés et certifiés."
+                data-de="Professionelle, geschulte und zertifizierte Installateure."
+                data-es="Instaladores profesionales, capacitados y certificados."
+                data-tw="Adwumayɛfo a wɔatete wɔn na wɔanya adansedi."
+                data-ee="Dɔwɔla si wɔ trained eye certified."
+                data-da="Dɔwɔla si wɔ trained eye certified.">
+                Professional installers, trained and certified.
+            </h3>
+
+
+            <p
+                data-en="Novera Energy & Technologies is a Ghanaian security, electrical and technology installation company."
+                data-fr="Novera Energy & Technologies est une entreprise ghanéenne spécialisée dans les installations de sécurité, électriques et technologiques."
+                data-de="Novera Energy & Technologies ist ein ghanaisches Unternehmen für Sicherheits-, Elektro- und Technologieinstallationen."
+                data-es="Novera Energy & Technologies es una empresa ghanesa especializada en instalaciones de seguridad, eléctricas y tecnológicas."
+                data-tw="Novera Energy & Technologies yɛ Ghana adwuma a ɛyɛ security, electricity ne technology installation."
+                data-ee="Novera Energy & Technologies nye Ghana ƒe dɔwɔƒe si wɔa security, electricity kple technology installation."
+                data-da="Novera Energy & Technologies yɛ Ghana dɔwɔƒe si yɛ security, electricity kple technology installation.">
+                Novera Energy & Technologies is a Ghanaian security,
+                electrical and technology installation company.
+            </p>
+
+
+            <p
+                data-en="We design, install and maintain CCTV, video intercom, access control, automatic gates, electric fencing, electrical systems, PA systems and fire alarm systems for homes and businesses across Ghana."
+                data-fr="Nous concevons, installons et entretenons des systèmes CCTV, interphones vidéo, contrôle d'accès, portails automatiques, clôtures électriques, systèmes électriques, sonorisation et alarmes incendie au Ghana."
+                data-de="Wir planen, installieren und warten CCTV, Video-Gegensprechanlagen, Zutrittskontrollen, automatische Tore, Elektrozäune, elektrische Anlagen, PA-Systeme und Brandmeldesysteme in Ghana."
+                data-es="Diseñamos, instalamos y mantenemos CCTV, videoporteros, control de acceso, portones automáticos, cercas eléctricas, sistemas eléctricos, sistemas PA y alarmas contra incendios en Ghana."
+                data-tw="Yɛyɛ CCTV, video intercom, access control, automatic gates, electric fencing, electrical systems, PA systems ne fire alarm systems ma afie ne nnwuma wɔ Ghana."
+                data-ee="Míeɖoa CCTV, video intercom, access control, automatic gates, electric fencing, electrical systems, PA systems kple fire alarm systems le Ghana."
+                data-da="Mia yɛ CCTV, video intercom, access control, automatic gates, electric fencing, electrical systems, PA systems kple fire alarm systems ma afie kple nnwuma le Ghana.">
+                We design, install and maintain CCTV, video intercom,
+                access control, automatic gates, electric fencing,
+                electrical systems, PA systems and fire alarm systems
+                for homes and businesses across Ghana.
+            </p>
+
+
+            <p>
+                <strong>
+                    Hikvision Certified Security Associates
+                </strong>
+            </p>
+
+
+            <p
+                data-en="Every project is executed with discipline, precision, neatness and attention to detail."
+                data-fr="Chaque projet est réalisé avec discipline, précision, propreté et souci du détail."
+                data-de="Jedes Projekt wird mit Disziplin, Präzision, Sauberkeit und Liebe zum Detail ausgeführt."
+                data-es="Cada proyecto se ejecuta con disciplina, precisión, limpieza y atención al detalle."
+                data-tw="Yɛyɛ project biara wɔ discipline, precision, ahotɔ ne detail ho adwene mu."
+                data-ee="Míewɔ dɔ sia dɔ le dzɔdzɔme, kpɔkpɔme kple ŋugbedodo me."
+                data-da="Mia yɛ project biara wɔ precision kple detail ho adwene mu.">
+                Every project is executed with discipline,
+                precision, neatness and attention to detail.
+            </p>
+
+
+            <p>
+
+                <strong
+                    data-en="Note:"
+                    data-fr="Remarque :"
+                    data-de="Hinweis:"
+                    data-es="Nota:"
+                    data-tw="Hyɛ no nsow:"
+                    data-ee="Ɖo ŋku edzi:"
+                    data-da="Hyɛ no nsow:">
+                    Note:
+                </strong>
+
+
+                <span
+                    data-en=" Novera is a professional installation company. We are not a distributor or reseller of Hikvision or Centurion Systems products."
+                    data-fr=" Novera est une entreprise d'installation professionnelle. Nous ne sommes pas distributeur ou revendeur des produits Hikvision ou Centurion Systems."
+                    data-de=" Novera ist ein professionelles Installationsunternehmen und kein Distributor oder Wiederverkäufer von Hikvision- oder Centurion-Systems-Produkten."
+                    data-es=" Novera es una empresa profesional de instalaciones. No somos distribuidores ni revendedores de productos Hikvision o Centurion Systems."
+                    data-tw=" Novera yɛ professional installation company. Yɛnyɛ distributor anaa reseller wɔ Hikvision anaa Centurion Systems products ho."
+                    data-ee=" Novera nye professional installation company. Míenye distributor alo reseller na Hikvision alo Centurion Systems products."
+                    data-da=" Novera yɛ professional installation company. Míenye distributor alo reseller wɔ Hikvision ne Centurion Systems products ho.">
+                    Novera is a professional installation company.
+                    We are not a distributor or reseller of Hikvision
+                    or Centurion Systems products.
+                </span>
+
+            </p>
+
+
+            <div class="about-badges">
+
+                <span>
+                    Hikvision Certified Security Associate
+                </span>
+
+
+                <span
+                    data-en="Ghana • Professional Installers"
+                    data-fr="Ghana • Installateurs professionnels"
+                    data-de="Ghana • Professionelle Installateure"
+                    data-es="Ghana • Instaladores profesionales"
+                    data-tw="Ghana • Professional Installers"
+                    data-ee="Ghana • Professional Dɔwɔla"
+                    data-da="Ghana • Professional Dɔwɔla">
+                    Ghana • Professional Installers
+                </span>
+
+
+                <span
+                    data-en="Est. 2026 • A New Standard"
+                    data-fr="Créée en 2026 • Un nouveau standard"
+                    data-de="Gegr. 2026 • Ein neuer Standard"
+                    data-es="Est. 2026 • Un nuevo estándar"
+                    data-tw="Est. 2026 • Gyinapɛn Foforo"
+                    data-ee="Est. 2026 • Nɔnɔme Yeye"
+                    data-da="Est. 2026 • Nɔnɔme Yeye">
+                    Est. 2026 • A New Standard
+                </span>
+
+
+                <a href="https://www.iec.ch/about-standards"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="iec-link">
+
+                    <i class="fa-solid fa-globe"></i>
+
+                    IEC Standards
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="image-wrapper">
+
+            <img src="assets/control-panel-Pie5Yi4r.png"
+                 alt="Novera Technology Installation">
+
+            <div class="quote-overlay">
+
+                <p>
+                    “We built Novera to bring world-class home
+                    intelligence, solar, and security to Ghana —
+                    engineered for our climate, our homes, our people.”
+                </p>
+
+                <p>
+                    <strong>— The Novera Team</strong>
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     SERVICES
+========================================================= -->
+
+<section id="services">
+
+    <h2 class="section-title"
+        data-en="Our Services"
+        data-fr="Nos Services"
+        data-de="Unsere Dienstleistungen"
+        data-es="Nuestros Servicios"
+        data-tw="Yɛn Nnwuma"
+        data-ee="Mía ƒe Dɔwɔnuwo"
+        data-da="Mia Dɔwɔnu">
+        Our Services
+    </h2>
+
+
+    <div class="services-intro">
+
+        <h3
+            data-en="Installed with care.<br>Maintained on request."
+            data-fr="Installé avec soin.<br>Maintenance sur demande."
+            data-de="Sorgfältig installiert.<br>Wartung auf Anfrage."
+            data-es="Instalado con cuidado.<br>Mantenimiento bajo solicitud."
+            data-tw="Yɛde ahotɔ si.<br>Maintenance sɛ ɛho hia."
+            data-ee="Míeɖoa nuwo nyuie.<br>Míewɔ maintenance ne wòhiã."
+            data-da="Mia si wɔ yie.<br>Maintenance sɛ ɛhia.">
+            Installed with care.<br>
+            Maintained on request.
+        </h3>
+
+
+        <p
+            data-en="We provide professional security, electrical, automation, communication and safety technology solutions."
+            data-fr="Nous fournissons des solutions professionnelles de sécurité, d'électricité, d'automatisation, de communication et de sécurité incendie."
+            data-de="Wir bieten professionelle Lösungen für Sicherheit, Elektroinstallation, Automatisierung, Kommunikation und Sicherheitstechnik."
+            data-es="Ofrecemos soluciones profesionales de seguridad, electricidad, automatización, comunicación y tecnología de seguridad."
+            data-tw="Yɛma professional security, electrical, automation, communication ne safety technology solutions."
+            data-ee="Míena professional security, electrical, automation, communication kple safety technology solutions."
+            data-da="Mia ma professional security, electrical, automation, communication kple safety technology solutions.">
+            We provide professional security, electrical, automation,
+            communication and safety technology solutions.
+        </p>
+
+    </div>
+
+
+    <div class="services">
+        <div class="card service-card">
+
+            <img src="assets/Services/service-wiring-2.png"
+                 alt="Domestic Wiring">
+
+            <h3
+                data-en="Domestic Wiring"
+                data-fr="Installation électrique domestique"
+                data-de="Elektroinstallation für Wohngebäude"
+                data-es="Instalación eléctrica doméstica"
+                data-tw="Domestic Wiring"
+                data-ee="Ŋkɔƒe Electrical Wiring"
+                data-da="Afɔ̃ Electrical Wiring">
+                Domestic Wiring
+            </h3>
+
+            <p
+                data-en="We install safe and reliable electrical wiring for homes, including lighting, sockets, switches and power connections."
+                data-fr="Nous installons des systèmes électriques sûrs et fiables pour les maisons, notamment l'éclairage, les prises, les interrupteurs et les connexions électriques."
+                data-de="Wir installieren sichere und zuverlässige Elektroinstallationen für Häuser, einschließlich Beleuchtung, Steckdosen, Schalter und Stromanschlüsse."
+                data-es="Instalamos cableado eléctrico seguro y fiable para viviendas, incluyendo iluminación, enchufes, interruptores y conexiones eléctricas."
+                data-tw="Yɛde safe ne reliable electrical wiring si afie mu, a ɛka lighting, sockets, switches ne power connections ho."
+                data-ee="Míeɖoa electricity wiring si le aƒewo me, si ka lighting, sockets, switches kple power connections ho."
+                data-da="Mia si safe electrical wiring ma afie, si ka lighting, sockets ne switches ho.">
+                We install safe and reliable electrical wiring for homes,
+                including lighting, sockets, switches and power connections.
+            </p>
+
+            <button type="button"
+                    class="service-link"
+                    onclick="toggleService(this)"
+                    data-en="Learn More"
+                    data-fr="En savoir plus"
+                    data-de="Mehr erfahren"
+                    data-es="Más información"
+                    data-tw="Kɔ so sua ho"
+                    data-ee="Kpɔ nu geɖe"
+                    data-da="Kɔ nɔɔ nɛ">
+                Learn More
+            </button>
+
+
+            <div class="service-details">
+
+                <p>
+                    We design and install the electrical connections
+                    your home needs for safe and reliable everyday power.
+                </p>
+
+                <h4>What We Cover</h4>
+
+                <ul>
+
+                    <li>Lighting and switch points</li>
+                    <li>Socket and appliance connections</li>
+                    <li>Organized power distribution</li>
+                    <li>Neat and professional wiring</li>
+                    <li>Electrical testing and support</li>
+
+                </ul>
+
+                <a href="#contact"
+                   class="details-btn">
+                    Request Consultation
+                </a>
+
+            </div>
+
+        </div>
+        <div class="card service-card">
+
+            <img src="assets/Services/service-cctv.png"
+                 alt="CCTV Surveillance">
+
+            <h3
+                data-en="CCTV & Surveillance"
+                data-fr="CCTV & Vidéosurveillance"
+                data-de="CCTV & Überwachung"
+                data-es="CCTV y Videovigilancia"
+                data-tw="CCTV & Ahotɔ Hwɛ"
+                data-ee="CCTV & Ƒomekpɔkpɔ"
+                data-da="CCTV & Hwɛyeli">
+                CCTV & Surveillance
+            </h3>
+
+            <p
+                data-en="We install surveillance systems that help you monitor and protect your home, office or business."
+                data-fr="Nous installons des systèmes de vidéosurveillance qui vous aident à surveiller et protéger votre maison, votre bureau ou votre entreprise."
+                data-de="Wir installieren Überwachungssysteme, mit denen Sie Ihr Haus, Büro oder Unternehmen überwachen und schützen können."
+                data-es="Instalamos sistemas de vigilancia que le ayudan a supervisar y proteger su hogar, oficina o negocio."
+                data-tw="Yɛde surveillance systems si a ɛboa wo ma wohwɛ na wode wo fie anaa business bɔ ho ban."
+                data-ee="Míeɖoa surveillance systems si akpe ɖe ŋuwɔwɔ kple ŋgɔgɔme ƒe ŋu."
+                data-da="Mia si surveillance systems ma woanya nɔŋɔɔ kple bɔbɔ.">
+                We install surveillance systems that help you monitor
+                and protect your home, office or business.
+            </p>
+
+            <button type="button"
+                    class="service-link"
+                    onclick="toggleService(this)"
+                    data-en="Learn More"
+                    data-fr="En savoir plus"
+                    data-de="Mehr erfahren"
+                    data-es="Más información"
+                    data-tw="Kɔ so sua ho"
+                    data-ee="Kpɔ nu geɖe"
+                    data-da="Kɔ nɔɔ nɛ">
+                Learn More
+            </button>
+
+
+            <div class="service-details">
+
+                <p>
+                    We assess your property and install CCTV systems
+                    designed to provide effective coverage of important areas.
+                </p>
+
+                <h4>What We Cover</h4>
+
+                <ul>
+
+                    <li>Indoor and outdoor cameras</li>
+                    <li>DVR and NVR installation</li>
+                    <li>Camera positioning and coverage</li>
+                    <li>Night vision surveillance</li>
+                    <li>Remote mobile viewing</li>
+                    <li>System testing and support</li>
+
+                </ul>
+
+                <a href="#contact"
+                   class="details-btn">
+                    Request Consultation
+                </a>
+
+            </div>
+
+        </div>
+        <div class="card service-card">
+
+            <img src="assets/Services/service-intercom.png"
+                 alt="Video Intercom">
+
+            <h3
+                data-en="Video Intercom"
+                data-fr="Interphone vidéo"
+                data-de="Video-Gegensprechanlage"
+                data-es="Videoportero"
+                data-tw="Video Intercom"
+                data-ee="Video Intercom"
+                data-da="Video Intercom">
+                Video Intercom
+            </h3>
+
+            <p>
+                Modern visitor communication and door access solutions
+                for homes, offices and commercial properties.
+            </p>
+
+            <button type="button"
+                    class="service-link"
+                    onclick="toggleService(this)"
+                    data-en="Learn More"
+                    data-fr="En savoir plus"
+                    data-de="Mehr erfahren"
+                    data-es="Más información"
+                    data-tw="Kɔ so sua ho"
+                    data-ee="Kpɔ nu geɖe"
+                    data-da="Kɔ nɔɔ nɛ">
+                Learn More
+            </button>
+
+            <div class="service-details">
+
+                <p>
+                    Our video intercom systems allow you to see
+                    and communicate with visitors before granting access.
+                </p>
+
+                <h4>What We Cover</h4>
+
+                <ul>
+
+                    <li>Indoor monitor installation</li>
+                    <li>Outdoor door stations</li>
+                    <li>Two-way visitor communication</li>
+                    <li>Door unlocking integration</li>
+                    <li>System configuration</li>
+                    <li>Testing and user guidance</li>
+
+                </ul>
+
+                <a href="#contact"
+                   class="details-btn">
+                    Request Consultation
+                </a>
+
+            </div>
+
+        </div>
+        <div class="card service-card">
+
+            <img src="assets/Services/access-control.png"
+                 alt="Access Control">
+
+            <h3
+                data-en="Access Control"
+                data-fr="Contrôle d'accès"
+                data-de="Zutrittskontrolle"
+                data-es="Control de acceso"
+                data-tw="Access Control"
+                data-ee="Access Control"
+                data-da="Access Control">
+                Access Control
+            </h3>
+
+            <p>
+                Biometric, fingerprint, PIN and RFID systems
+                for managing authorized access to your property.
+            </p>
+
+            <button type="button"
+                    class="service-link"
+                    onclick="toggleService(this)"
+                    data-en="Learn More"
+                    data-fr="En savoir plus"
+                    data-de="Mehr erfahren"
+                    data-es="Más información"
+                    data-tw="Kɔ so sua ho"
+                    data-ee="Kpɔ nu geɖe"
+                    data-da="Kɔ nɔɔ nɛ">
+                Learn More
+            </button>
+
+            <div class="service-details">
+
+                <p>
+                    We install modern access control systems that help
+                    you manage who can enter specific areas.
+                </p>
+
+                <h4>What We Cover</h4>
+
+                <ul>
+
+                    <li>Fingerprint access systems</li>
+                    <li>RFID cards and key fobs</li>
+                    <li>PIN-based access</li>
+                    <li>Door access management</li>
+                    <li>User registration and configuration</li>
+                    <li>System testing and support</li>
+
+                </ul>
+
+                <a href="#contact"
+                   class="details-btn">
+                    Request Consultation
+                </a>
+
+            </div>
+
+        </div>
+        <div class="card service-card">
+
+            <img src="assets/Services/service-gate.png"
+                 alt="Automatic Gates">
+
+            <h3
+                data-en="Automatic Gates"
+                data-fr="Portails automatiques"
+                data-de="Automatische Tore"
+                data-es="Portones automáticos"
+                data-tw="Automatic Gates"
+                data-ee="Automatic Gates"
+                data-da="Automatic Gates">
+                Automatic Gates
+            </h3>
+
+            <p>
+                Gate automation solutions that provide convenient
+                and controlled access for residential and commercial properties.
+            </p>
+
+            <button type="button"
+                    class="service-link"
+                    onclick="toggleService(this)"
+                    data-en="Learn More"
+                    data-fr="En savoir plus"
+                    data-de="Mehr erfahren"
+                    data-es="Más información"
+                    data-tw="Kɔ so sua ho"
+                    data-ee="Kpɔ nu geɖe"
+                    data-da="Kɔ nɔɔ nɛ">
+                Learn More
+            </button>
+
+            <div class="service-details">
+
+                <p>
+                    We install gate automation systems selected
+                    according to your gate type, property layout
+                    and access requirements.
+                </p>
+
+                <h4>What We Cover</h4>
+
+                <ul>
+
+                    <li>Sliding gate automation</li>
+                    <li>Gate motor installation</li>
+                    <li>Remote control setup</li>
+                    <li>Access control integration</li>
+                    <li>Safety system configuration</li>
+                    <li>Testing and commissioning</li>
+
+                </ul>
+
+                <a href="#contact"
+                   class="details-btn">
+                    Request Consultation
+                </a>
+
+            </div>
+
+        </div>
+        <div class="card service-card">
+
+            <img src="assets/Services/service-fence.png"
+                 alt="Electric Fencing">
+
+            <h3
+                data-en="Electric Fencing"
+                data-fr="Clôture électrique"
+                data-de="Elektrozaun"
+                data-es="Cerca eléctrica"
+                data-tw="Electric Fencing"
+                data-ee="Electric Fencing"
+                data-da="Electric Fencing">
+                Electric Fencing
+            </h3>
+
+            <p>
+                Professional perimeter security solutions designed
+                to strengthen protection around homes and businesses.
+            </p>
+
+            <button type="button"
+                    class="service-link"
+                    onclick="toggleService(this)"
+                    data-en="Learn More"
+                    data-fr="En savoir plus"
+                    data-de="Mehr erfahren"
+                    data-es="Más información"
+                    data-tw="Kɔ so sua ho"
+                    data-ee="Kpɔ nu geɖe"
+                    data-da="Kɔ nɔɔ nɛ">
+                Learn More
+            </button>
+
+            <div class="service-details">
+
+                <p>
+                    We design and install electric fencing solutions
+                    to add another layer of perimeter protection.
+                </p>
+
+                <h4>What We Cover</h4>
+
+                <ul>
+
+                    <li>Perimeter assessment</li>
+                    <li>Electric fence installation</li>
+                    <li>Energizer installation</li>
+                    <li>System testing</li>
+                    <li>Warning signage</li>
+                    <li>Maintenance and support</li>
+
+                </ul>
+
+                <a href="#contact"
+                   class="details-btn">
+                    Request Consultation
+                </a>
+
+            </div>
+
+        </div>
+        <div class="card service-card">
+
+            <img src="assets/Services/service-pa-system.png"
+                 alt="PA System">
+
+            <h3
+                data-en="PA Systems"
+                data-fr="Systèmes de sonorisation"
+                data-de="Beschallungssysteme"
+                data-es="Sistemas de megafonía"
+                data-tw="PA Systems"
+                data-ee="PA Systems"
+                data-da="PA Systems">
+                PA Systems
+            </h3>
+
+            <p>
+                Professional public address systems for clear
+                announcements, communication and sound coverage.
+            </p>
+
+            <button type="button"
+                    class="service-link"
+                    onclick="toggleService(this)"
+                    data-en="Learn More"
+                    data-fr="En savoir plus"
+                    data-de="Mehr erfahren"
+                    data-es="Más información"
+                    data-tw="Kɔ so sua ho"
+                    data-ee="Kpɔ nu geɖe"
+                    data-da="Kɔ nɔɔ nɛ">
+                Learn More
+            </button>
+
+            <div class="service-details">
+
+                <p>
+                    We design and install PA systems according to
+                    the size and purpose of your space.
+                </p>
+
+                <h4>What We Cover</h4>
+
+                <ul>
+
+                    <li>Indoor and outdoor speakers</li>
+                    <li>Amplifiers and microphones</li>
+                    <li>Public announcement systems</li>
+                    <li>Speaker positioning and cabling</li>
+                    <li>System configuration and testing</li>
+
+                </ul>
+
+                <a href="#contact"
+                   class="details-btn">
+                    Request Consultation
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="card service-card">
+
+            <img src="assets/Services/service-fire-alarm.png"
+                 alt="Fire Alarm System">
+
+            <h3
+                data-en="Fire Alarm Systems"
+                data-fr="Systèmes d'alarme incendie"
+                data-de="Brandmeldesysteme"
+                data-es="Sistemas de alarma contra incendios"
+                data-tw="Fire Alarm Systems"
+                data-ee="Fire Alarm Systems"
+                data-da="Fire Alarm Systems">
+                Fire Alarm Systems
+            </h3>
+
+            <p>
+                Fire detection and alarm solutions designed
+                to provide early warning of potential fire emergencies.
+            </p>
+
+            <button type="button"
+                    class="service-link"
+                    onclick="toggleService(this)"
+                    data-en="Learn More"
+                    data-fr="En savoir plus"
+                    data-de="Mehr erfahren"
+                    data-es="Más información"
+                    data-tw="Kɔ so sua ho"
+                    data-ee="Kpɔ nu geɖe"
+                    data-da="Kɔ nɔɔ nɛ">
+                Learn More
+            </button>
+
+            <div class="service-details">
+
+                <p>
+                    We install fire alarm systems designed to detect
+                    potential fire conditions and provide timely alerts.
+                </p>
+
+                <h4>What We Cover</h4>
+
+                <ul>
+
+                    <li>Smoke and heat detection</li>
+                    <li>Fire alarm control panels</li>
+                    <li>Manual call points</li>
+                    <li>Audible and visual alarms</li>
+                    <li>System testing and maintenance</li>
+
+                </ul>
+
+                <a href="#contact"
+                   class="details-btn">
+                    Request Consultation
+                </a>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     PRODUCTS
+========================================================= -->
+
+<section id="products">
+
+    <h2 class="section-title"
+        data-en="Security Products & Systems"
+        data-fr="Produits et systèmes de sécurité"
+        data-de="Sicherheitsprodukte und -systeme"
+        data-es="Productos y sistemas de seguridad"
+        data-tw="Security Products ne Systems"
+        data-ee="Security Products kple Systems"
+        data-da="Security Products kple Systems">
+        Security Products & Systems
+    </h2>
+
+
+    <p class="services-intro">
+        Professional-grade security equipment used in our installations.
+        We provide full consultation, system design and installation support.
+    </p>
+
+
+    <div class="services">
+
+
+        <div class="card">
+
+            <img src="assets/Products/product-cctv-dome.png"
+                 alt="Hikvision Dome Camera">
+
+            <h3>
+                Hikvision Dome Camera
+            </h3>
+
+            <p>
+                4MP indoor/outdoor dome camera with night vision
+                and wide-angle coverage.
+            </p>
+
+            <div class="price">
+                Price on request
+            </div>
+
+            <a class="service-link"
+               href="https://wa.me/233543026065?text=I%20need%20CCTV%20Dome%20Camera%20installation"
+               target="_blank">
+                Request Installation
+            </a>
+
+        </div>
+
+
+        <div class="card">
+
+            <img src="assets/Products/product-cctv-bullet.png"
+                 alt="Hikvision Bullet Camera">
+
+            <h3>
+                Hikvision Bullet Camera
+            </h3>
+
+            <p>
+                Outdoor HD bullet camera with long-range
+                infrared night vision.
+            </p>
+
+            <div class="price">
+                Price on request
+            </div>
+
+            <a class="service-link"
+               href="https://wa.me/233543026065?text=I%20need%20Bullet%20Camera%20installation"
+               target="_blank">
+                Request Installation
+            </a>
+
+        </div>
+
+
+        <div class="card">
+
+            <img src="assets/Products/product-intercom.png"
+                 alt="Video Intercom">
+
+            <h3>
+                Video Intercom System
+            </h3>
+
+            <p>
+                Two-way communication system with indoor screen
+                and remote door unlocking.
+            </p>
+
+            <div class="price">
+                Technical Installation Required
+            </div>
+
+            <a class="service-link"
+               href="https://wa.me/233543026065?text=I%20need%20Video%20Intercom%20installation"
+               target="_blank">
+                Request Installation
+            </a>
+
+        </div>
+
+
+        <div class="card">
+
+            <img src="assets/Products/product-access-fingerprint.png"
+                 alt="Fingerprint Access">
+
+            <h3>
+                Fingerprint Access Control
+            </h3>
+
+            <p>
+                Biometric entry system with PIN backup
+                for secure access management.
+            </p>
+
+            <div class="price">
+                System Installation Required
+            </div>
+
+            <a class="service-link"
+               href="https://wa.me/233543026065?text=I%20need%20Fingerprint%20Access%20system"
+               target="_blank">
+                Request Installation
+            </a>
+
+        </div>
+
+
+        <div class="card">
+
+            <img src="assets/Products/product-access-card.png"
+                 alt="RFID Access">
+
+            <h3>
+                RFID Card Access System
+            </h3>
+
+            <p>
+                Contactless access system using cards
+                or fobs for controlled entry management.
+            </p>
+
+            <div class="price">
+                Integration Required
+            </div>
+
+            <a class="service-link"
+               href="https://wa.me/233543026065?text=I%20need%20RFID%20Access%20installation"
+               target="_blank">
+                Request Installation
+            </a>
+
+        </div>
+
+
+        <div class="card">
+
+            <img src="assets/Products/Centurion gate motor.jpg"
+                 alt="Centurion Gate Motor">
+
+            <h3>
+                Centurion Gate Motor
+            </h3>
+
+            <p>
+                Heavy-duty sliding gate automation system
+                for residential and commercial use.
+            </p>
+
+            <div class="price">
+                Installation Required
+            </div>
+
+            <a class="service-link"
+               href="https://wa.me/233543026065?text=I%20need%20Gate%20Motor%20installation"
+               target="_blank">
+                Request Installation
+            </a>
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     PROCESS
+========================================================= -->
+
+<section id="process">
+
+    <h2 class="section-title"
+        data-en="The Novera Process"
+        data-fr="Le processus Novera"
+        data-de="Der Novera-Prozess"
+        data-es="El proceso Novera"
+        data-tw="Novera Process"
+        data-ee="Novera ƒe Dɔwɔwɔ"
+        data-da="Novera ƒe Dɔwɔwɔ">
+        The Novera Process
+    </h2>
+
+
+    <p class="process-intro">
+        Meticulous planning yields effortless results.
+        We work cleanly, communicate clearly and finish on time.
+    </p>
+
+
+    <div class="process-grid">
+
+
+        <div class="process-card">
+
+            <div class="step-number">
+                01
+            </div>
+
+            <h3
+                data-en="Consultation"
+                data-fr="Consultation"
+                data-de="Beratung"
+                data-es="Consulta"
+                data-tw="Afotu"
+                data-ee="Biabia"
+                data-da="Nɔŋɔ">
+                Consultation
+            </h3>
+
+            <p>
+                We discuss your needs, property layout
+                and security goals.
+            </p>
+
+        </div>
+
+
+        <div class="process-card">
+
+            <div class="step-number">
+                02
+            </div>
+
+            <h3
+                data-en="Design & Planning"
+                data-fr="Conception et planification"
+                data-de="Design & Planung"
+                data-es="Diseño y planificación"
+                data-tw="Design ne Planning"
+                data-ee="Design kple Planning"
+                data-da="Design kple Planning">
+                Design & Planning
+            </h3>
+
+            <p>
+                We create a practical installation plan
+                aligned with your property and requirements.
+            </p>
+
+        </div>
+
+
+        <div class="process-card">
+
+            <div class="step-number">
+                03
+            </div>
+
+            <h3
+                data-en="Installation"
+                data-fr="Installation"
+                data-de="Installation"
+                data-es="Instalación"
+                data-tw="Installation"
+                data-ee="Installation"
+                data-da="Installation">
+                Installation
+            </h3>
+
+            <p>
+                Our technicians deliver clean, precise
+                installation with attention to detail.
+            </p>
+
+        </div>
+
+
+        <div class="process-card">
+
+            <div class="step-number">
+                04
+            </div>
+
+            <h3
+                data-en="Handover & Support"
+                data-fr="Remise et assistance"
+                data-de="Übergabe & Support"
+                data-es="Entrega y soporte"
+                data-tw="Handover ne Support"
+                data-ee="Handover kple Support"
+                data-da="Handover kple Support">
+                Handover & Support
+            </h3>
+
+            <p>
+                We demonstrate your system and remain
+                available for maintenance and support.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     ACADEMY
+========================================================= -->
+
+<section id="academy">
+
+    <h2 class="section-title"
+        data-en="Novera Academy"
+        data-fr="Académie Novera"
+        data-de="Novera Akademie"
+        data-es="Academia Novera"
+        data-tw="Novera Academy"
+        data-ee="Novera ƒe Akɔdada"
+        data-da="Novera ƒe Adesua">
+        Novera Academy
+    </h2>
+
+
+    <div class="academy-container">
+
+
+        <div class="academy-text">
+
+            <h3
+                data-en="Building Future Technology Professionals"
+                data-fr="Former les futurs professionnels de la technologie"
+                data-de="Die Technologieexperten von morgen ausbilden"
+                data-es="Formando a los futuros profesionales de la tecnología"
+                data-tw="Yɛnresin technology professionals a wɔbɛba daakye"
+                data-ee="Míeɖoa dɔwɔla siwo ava tso technology me"
+                data-da="Mia yɛ dɔwɔla siwo ava tso technology me">
+                Building Future Technology Professionals
+            </h3>
+
+
+            <p>
+                Novera Academy provides practical training
+                in security technology, electrical systems,
+                automation, networking and smart solutions.
+            </p>
+
+
+            <p>
+                Our programs combine classroom knowledge
+                with hands-on technical skills.
+            </p>
+
+
+            <a href="#contact"
+               class="academy-btn"
+               data-en="Join Our Training Program"
+               data-fr="Rejoindre notre programme de formation"
+               data-de="An unserem Ausbildungsprogramm teilnehmen"
+               data-es="Únase a nuestro programa de formación"
+               data-tw="Kɔ yɛn training program mu"
+               data-ee="Va mia nufiala me"
+               data-da="Kɔ mia adesua me">
+                Join Our Training Program
+            </a>
+
+        </div>
+
+
+        <div class="academy-courses">
+
+
+            <div class="academy-card">
+
+                <i class="fa-solid fa-camera"></i>
+
+                <h4
+                    data-en="CCTV Installation"
+                    data-fr="Installation CCTV"
+                    data-de="CCTV-Installation"
+                    data-es="Instalación CCTV"
+                    data-tw="CCTV Installation"
+                    data-ee="CCTV Installation"
+                    data-da="CCTV Installation">
+                    CCTV Installation
+                </h4>
+
+                <p>
+                    Learn camera installation,
+                    DVR/NVR setup and troubleshooting.
+                </p>
+
+            </div>
+
+
+            <div class="academy-card">
+
+                <i class="fa-solid fa-bolt"></i>
+
+                <h4
+                    data-en="Electrical Systems"
+                    data-fr="Systèmes électriques"
+                    data-de="Elektrische Systeme"
+                    data-es="Sistemas eléctricos"
+                    data-tw="Electrical Systems"
+                    data-ee="Electrical Systems"
+                    data-da="Electrical Systems">
+                    Electrical Systems
+                </h4>
+
+                <p>
+                    Practical house wiring and
+                    electrical safety training.
+                </p>
+
+            </div>
+
+
+            <div class="academy-card">
+
+                <i class="fa-solid fa-network-wired"></i>
+
+                <h4
+                    data-en="Networking"
+                    data-fr="Réseaux informatiques"
+                    data-de="Netzwerke"
+                    data-es="Redes"
+                    data-tw="Networking"
+                    data-ee="Networking"
+                    data-da="Networking">
+                    Networking
+                </h4>
+
+                <p>
+                    Learn IP networking and security
+                    system connections.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     CONTACT
+========================================================= -->
+
+<section id="contact">
+
+    <h2 class="section-title"
+        data-en="Start a Conversation"
+        data-fr="Commencer une conversation"
+        data-de="Kontakt aufnehmen"
+        data-es="Comencemos una conversación"
+        data-tw="Hyɛ Nkitahodi Ase"
+        data-ee="Ɖe nɔnɔmetata gɔme"
+        data-da="Hyɛ nɔŋɔ ase">
+        Start a Conversation
+    </h2>
+
+
+    <div class="contact-grid">
+
+
+        <div class="contact-left">
+
+            <h2
+                data-en="Ready to secure your space?"
+                data-fr="Prêt à sécuriser votre espace ?"
+                data-de="Bereit, Ihren Raum zu sichern?"
+                data-es="¿Listo para proteger su espacio?"
+                data-tw="Woasiesie sɛ yɛbɛma wo bea no ahotɔ?"
+                data-ee="Èwɔ dzesi be míadzra wò nɔƒe?"
+                data-da="Wo siesie be yɛma wo nɔ̃ɔ ahotɔ?">
+                Ready to secure your space?
+            </h2>
+
+
+            <p>
+                We provide CCTV surveillance, electrical wiring,
+                smart home systems, access control, gates,
+                intercoms, PA systems, fire alarm systems
+                and perimeter security solutions.
+            </p>
+
+
+            <p>
+
+                <i class="fa-solid fa-phone"></i>
+
+                <a href="tel:+233242928606">
+                    +233 24 292 8606
+                </a>
+
+                <br>
+
+                <i class="fa-solid fa-phone"></i>
+
+                <a href="tel:+233543026065">
+                    +233 54 302 6065
+                </a>
+
+                <br>
+
+                <i class="fa-solid fa-envelope"></i>
+
+                <a href="mailto:noveratech001@gmail.com">
+                    noveratech001@gmail.com
+                </a>
+
+            </p>
+
+
+            <p>
+
+                <i class="fa-brands fa-whatsapp"></i>
+
+                <a href="https://wa.me/233242928606"
+                   target="_blank">
+                    WhatsApp Us
+                </a>
+
+            </p>
+
+
+            <p>
+
+                <strong
+                    data-en="Follow Us"
+                    data-fr="Suivez-nous"
+                    data-de="Folgen Sie uns"
+                    data-es="Síganos"
+                    data-tw="Di Yɛn Akyi"
+                    data-ee="Dzɔ mia yome"
+                    data-da="Di mia yome">
+                    Follow Us
+                </strong>
+
+            </p>
+
+
+            <div class="social-icons">
+
+                <a class="icon ig"
+                   href="https://instagram.com/noveraenergytech"
+                   target="_blank">
+
+                    <i class="fa-brands fa-instagram"></i>
+
+                </a>
+
+
+                <a class="icon fb"
+                   href="https://facebook.com/novera.energy.and.technologies"
+                   target="_blank">
+
+                    <i class="fa-brands fa-facebook"></i>
+
+                </a>
+
+
+                <a class="icon tt"
+                   href="https://tiktok.com/@novera093"
+                   target="_blank">
+
+                    <i class="fa-brands fa-tiktok"></i>
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- FORM -->
+
+        <div class="contact-form">
+
+            <h3
+                data-en="Consultation Form"
+                data-fr="Formulaire de consultation"
+                data-de="Beratungsformular"
+                data-es="Formulario de consulta"
+                data-tw="Consultation Form"
+                data-ee="Biabia ƒe Form"
+                data-da="Nɔŋɔ ƒe Form">
+                Consultation Form
+            </h3>
+
+
+            <form id="consultationForm">
+
+
+                <input type="hidden"
+                       name="language"
+                       id="selectedLanguage"
+                       value="en">
+
+
+                <input type="text"
+                       name="name"
+                       placeholder="Full Name"
+                       data-placeholder-en="Full Name"
+                       data-placeholder-fr="Nom complet"
+                       data-placeholder-de="Vollständiger Name"
+                       data-placeholder-es="Nombre completo"
+                       data-placeholder-tw="Wo Din"
+                       data-placeholder-ga="Wo din"
+                       data-placeholder-ee="Ŋkɔ"
+                       data-placeholder-da="Wo Din"
+                       required>
+
+
+                <input type="email"
+                       name="email"
+                       placeholder="Email"
+                       data-placeholder-en="Email"
+                       data-placeholder-fr="E-mail"
+                       data-placeholder-de="E-Mail"
+                       data-placeholder-es="Correo electrónico"
+                       data-placeholder-tw="Email"
+                       data-placeholder-ga="Email"
+                       data-placeholder-ee="Email"
+                       data-placeholder-da="Email">
+
+
+                <input type="tel"
+                       name="phone"
+                       placeholder="Phone Number"
+                       data-placeholder-en="Phone Number"
+                       data-placeholder-fr="Numéro de téléphone"
+                       data-placeholder-de="Telefonnummer"
+                       data-placeholder-es="Número de teléfono"
+                       data-placeholder-tw="Phone Number"
+                       data-placeholder-ga="Telefon nɔmba"
+                       data-placeholder-ee="Telefon Nɔmba"
+                       data-placeholder-da="Phone Number"
+                       required>
+
+
+                <select name="service"
+                        required>
+
+                    <option value=""
+                            data-en="Select Service Required"
+                            data-fr="Sélectionnez le service requis"
+                            data-de="Dienst auswählen"
+                            data-es="Seleccione el servicio requerido"
+                            data-tw="Select Service Required"
+                            data-ee="Tia dɔwɔnu"
+                            data-da="Tia dɔwɔnu">
+                        Select Service Required
+                    </option>
+
+
+                    <option value="Domestic Wiring"
+                            data-en="Domestic Wiring"
+                            data-fr="Installation électrique domestique"
+                            data-de="Elektroinstallation"
+                            data-es="Instalación eléctrica doméstica"
+                            data-tw="Domestic Wiring"
+                            data-ee="Domestic Wiring"
+                            data-da="Domestic Wiring">
+                        Domestic Wiring
+                    </option>
+
+
+                    <option value="CCTV Surveillance"
+                            data-en="CCTV Surveillance"
+                            data-fr="Vidéosurveillance CCTV"
+                            data-de="CCTV-Überwachung"
+                            data-es="Videovigilancia CCTV"
+                            data-tw="CCTV Surveillance"
+                            data-ee="CCTV Surveillance"
+                            data-da="CCTV Surveillance">
+                        CCTV Surveillance
+                    </option>
+
+
+                    <option value="Video Intercom"
+                            data-en="Video Intercom"
+                            data-fr="Interphone vidéo"
+                            data-de="Video-Gegensprechanlage"
+                            data-es="Videoportero"
+                            data-tw="Video Intercom"
+                            data-ee="Video Intercom"
+                            data-da="Video Intercom">
+                        Video Intercom
+                    </option>
+
+
+                    <option value="Access Control"
+                            data-en="Access Control"
+                            data-fr="Contrôle d'accès"
+                            data-de="Zutrittskontrolle"
+                            data-es="Control de acceso"
+                            data-tw="Access Control"
+                            data-ee="Access Control"
+                            data-da="Access Control">
+                        Access Control
+                    </option>
+
+
+                    <option value="Automatic Gates"
+                            data-en="Automatic Gates"
+                            data-fr="Portails automatiques"
+                            data-de="Automatische Tore"
+                            data-es="Portones automáticos"
+                            data-tw="Automatic Gates"
+                            data-ee="Automatic Gates"
+                            data-da="Automatic Gates">
+                        Automatic Gates
+                    </option>
+
+
+                    <option value="Electric Fencing"
+                            data-en="Electric Fencing"
+                            data-fr="Clôture électrique"
+                            data-de="Elektrozaun"
+                            data-es="Cerca eléctrica"
+                            data-tw="Electric Fencing"
+                            data-ee="Electric Fencing"
+                            data-da="Electric Fencing">
+                        Electric Fencing
+                    </option>
+
+
+                    <option value="PA System"
+                            data-en="PA System"
+                            data-fr="Système de sonorisation"
+                            data-de="Beschallungssystem"
+                            data-es="Sistema de megafonía"
+                            data-tw="PA System"
+                            data-ee="PA System"
+                            data-da="PA System">
+                        PA System
+                    </option>
+
+
+                    <option value="Fire Alarm System"
+                            data-en="Fire Alarm System"
+                            data-fr="Système d'alarme incendie"
+                            data-de="Brandmeldesystem"
+                            data-es="Sistema de alarma contra incendios"
+                            data-tw="Fire Alarm System"
+                            data-ee="Fire Alarm System"
+                            data-da="Fire Alarm System">
+                        Fire Alarm System
+                    </option>
+
+
+                    <option value="Smart Home Integration"
+                            data-en="Smart Home Integration"
+                            data-fr="Intégration domotique"
+                            data-de="Smart-Home-Integration"
+                            data-es="Integración de hogar inteligente"
+                            data-tw="Smart Home Integration"
+                            data-ee="Smart Home Integration"
+                            data-da="Smart Home Integration">
+                        Smart Home Integration
+                    </option>
+
+
+                    <option value="Solar Power Solutions"
+                            data-en="Solar Power Solutions"
+                            data-fr="Solutions d'énergie solaire"
+                            data-de="Solarenergielösungen"
+                            data-es="Soluciones de energía solar"
+                            data-tw="Solar Power Solutions"
+                            data-ee="Solar Power Solutions"
+                            data-da="Solar Power Solutions">
+                        Solar Power Solutions
+                    </option>
+
+
+                    <option value="Maintenance & Support"
+                            data-en="Maintenance & Support"
+                            data-fr="Maintenance et assistance"
+                            data-de="Wartung & Support"
+                            data-es="Mantenimiento y soporte"
+                            data-tw="Maintenance & Support"
+                            data-ee="Maintenance & Support"
+                            data-da="Maintenance & Support">
+                        Maintenance & Support
+                    </option>
+
+
+                    <option value="Novera Academy Training"
+                            data-en="Novera Academy Training"
+                            data-fr="Formation Novera Academy"
+                            data-de="Novera Academy Ausbildung"
+                            data-es="Formación de Novera Academy"
+                            data-tw="Novera Academy Training"
+                            data-ee="Novera Academy Training"
+                            data-da="Novera Academy Training">
+                        Novera Academy Training
+                    </option>
+
+
+                    <option value="Other Technical Requirements"
+                            data-en="Other Technical Requirements"
+                            data-fr="Autres besoins techniques"
+                            data-de="Andere technische Anforderungen"
+                            data-es="Otros requisitos técnicos"
+                            data-tw="Other Technical Requirements"
+                            data-ee="Other Technical Requirements"
+                            data-da="Other Technical Requirements">
+                        Other Technical Requirements
+                    </option>
+
+                </select>
+
+
+                <textarea name="message"
+                          rows="5"
+                          placeholder="Project Details"
+                          data-placeholder-en="Project Details"
+                          data-placeholder-fr="Détails du projet"
+                          data-placeholder-de="Projektdetails"
+                          data-placeholder-es="Detalles del proyecto"
+                          data-placeholder-tw="Project Details"
+                          data-placeholder-ga="Dɔ no ho nsɛm"
+                          data-placeholder-ee="Dɔ ŋuti nyawo"
+                          data-placeholder-da="Project Details"></textarea>
+
+
+                <button type="submit"
+                        data-en="Request Consultation"
+                        data-fr="Demander une consultation"
+                        data-de="Beratung anfordern"
+                        data-es="Solicitar consulta"
+                        data-tw="Bisa yɛn afotu"
+                        data-ee="Ɖe biabia"
+                        data-da="Bisa nɔŋɔ">
+                    Request Consultation
+                </button>
+
+
+                <div id="formStatus"
+                     class="form-status">
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     FOOTER
+========================================================= -->
+
+<footer>
+
+    <div class="footer-container">
+
+
+        <div class="footer-column footer-brand">
+
+            <img src="assets/logo.jpg"
+                 alt="Novera Logo">
+
+            <h3 class="footer-logo-title">
+                NOVERA
+            </h3>
+
+            <h4>
+                Energy & Technologies Ltd
+            </h4>
+
+            <p>
+                Professional security, electrical,
+                automation and smart technology solutions
+                for homes and businesses across Ghana.
+            </p>
+
+
+            <div class="footer-social">
+
+                <a href="https://facebook.com/novera.energy.and.technologies"
+                   target="_blank">
+                    <i class="fa-brands fa-facebook"></i>
+                </a>
+
+                <a href="https://instagram.com/noveraenergytech"
+                   target="_blank">
+                    <i class="fa-brands fa-instagram"></i>
+                </a>
+
+                <a href="https://tiktok.com/@novera093"
+                   target="_blank">
+                    <i class="fa-brands fa-tiktok"></i>
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="footer-column">
+
+            <h3
+                data-en="Quick Links"
+                data-fr="Liens rapides"
+                data-de="Schnellzugriff"
+                data-es="Enlaces rápidos"
+                data-tw="Quick Links"
+                data-ee="Ƒo ƒome"
+                data-da="Nɔŋɔ ƒome">
+                Quick Links
+            </h3>
+
+            <ul>
+
+                <li>
+                    <a href="#about">About Us</a>
+                </li>
+
+                <li>
+                    <a href="#services">Our Services</a>
+                </li>
+
+                <li>
+                    <a href="#products">Products</a>
+                </li>
+
+                <li>
+                    <a href="#process">Our Process</a>
+                </li>
+
+                <li>
+                    <a href="#academy">Novera Academy</a>
+                </li>
+
+                <li>
+                    <a href="#contact">Contact</a>
+                </li>
+
+            </ul>
+
+
+            <h3 class="service-title">
+                Services
+            </h3>
+
+            <ul>
+
+                <li>CCTV Surveillance</li>
+                <li>Access Control</li>
+                <li>Domestic Wiring</li>
+                <li>Automatic Gates</li>
+                <li>Electric Fencing</li>
+                <li>PA Systems</li>
+                <li>Fire Alarm Systems</li>
+
+            </ul>
+
+        </div>
+
+
+        <div class="footer-column footer-contact">
+
+            <h3
+                data-en="Contact Us"
+                data-fr="Contactez-nous"
+                data-de="Kontakt"
+                data-es="Contáctenos"
+                data-tw="Yɛka Yɛn Ho"
+                data-ee="Ɖo nɔnɔmetata"
+                data-da="Yɛka Yɛn Ho">
+                Contact Us
+            </h3>
+
+
+            <p>
+
+                <i class="fa-solid fa-phone"></i>
+
+                <a href="tel:+233242928606">
+                    +233 24 292 8606
+                </a>
+
+            </p>
+
+
+            <p>
+
+                <i class="fa-solid fa-phone"></i>
+
+                <a href="tel:+233543026065">
+                    +233 54 302 6065
+                </a>
+
+            </p>
+
+
+            <p>
+
+                <i class="fa-solid fa-envelope"></i>
+
+                <a href="mailto:noveratech001@gmail.com">
+                    noveratech001@gmail.com
+                </a>
+
+            </p>
+
+
+            <p>
+
+                <i class="fa-solid fa-location-dot"></i>
+
+                Ghana
+
+            </p>
+
+
+            <a href="#contact"
+               class="footer-btn"
+               data-en="Request Consultation"
+               data-fr="Demander une consultation"
+               data-de="Beratung anfordern"
+               data-es="Solicitar consulta"
+               data-tw="Bisa yɛn afotu"
+               data-ee="Ɖe biabia"
+               data-da="Bisa nɔŋɔ">
+                Request Consultation
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <div class="footer-bottom">
+
+        <p>
+            © 2026 Novera Energy & Technologies Ltd.
+            All Rights Reserved.
+        </p>
+
+        <div>
+
+            <a href="#">
+                Terms
+            </a>
+
+            <a href="#">
+                Privacy Policy
+            </a>
+
+        </div>
+
+    </div>
+
+</footer>
+
+
+
+<script>
+
+/* =========================================================
+   CONFIGURATION
+========================================================= */
+
+const API_URL = "/api/consultation";
+
+
+/* =========================================================
+   LANGUAGES
+========================================================= */
+
+const SUPPORTED_LANGUAGES = [
+    "en",
+    "fr",
+    "de",
+    "es",
+    "tw",
+    "ee",
+    "da"
+];
+
+const LANGUAGE_NAMES = {
+    en: "English",
+    fr: "Français",
+    de: "Deutsch",
+    es: "Español",
+    tw: "Twi",
+    ee: "Ewe",
+    da: "Dangme"
+};
+
+let currentLanguage =
+    localStorage.getItem("noveraLanguage") || "en";
+
+if(!SUPPORTED_LANGUAGES.includes(currentLanguage)){
+    currentLanguage = "en";
+}
+
+
+/* =========================================================
+   FORM MESSAGES
+========================================================= */
+
+const formMessages = {
+
+    en:{
+        sending:"Sending...",
+        success:"Thank you. Your consultation request has been received.",
+        error:"We could not process your request. Please try again.",
+        connection:"Could not connect to the Novera server.",
+        nameRequired:"Please enter your name.",
+        phoneRequired:"Please enter your phone number.",
+        serviceRequired:"Please select a service."
+    },
+
+    fr:{
+        sending:"Envoi...",
+        success:"Merci. Votre demande de consultation a été reçue.",
+        error:"Nous n'avons pas pu traiter votre demande.",
+        connection:"Impossible de se connecter au serveur Novera.",
+        nameRequired:"Veuillez entrer votre nom.",
+        phoneRequired:"Veuillez entrer votre numéro de téléphone.",
+        serviceRequired:"Veuillez sélectionner un service."
+    },
+
+    de:{
+        sending:"Wird gesendet...",
+        success:"Vielen Dank. Ihre Beratungsanfrage wurde erhalten.",
+        error:"Ihre Anfrage konnte nicht verarbeitet werden.",
+        connection:"Verbindung zum Novera-Server konnte nicht hergestellt werden.",
+        nameRequired:"Bitte geben Sie Ihren Namen ein.",
+        phoneRequired:"Bitte geben Sie Ihre Telefonnummer ein.",
+        serviceRequired:"Bitte wählen Sie eine Dienstleistung."
+    },
+
+    es:{
+        sending:"Enviando...",
+        success:"Gracias. Hemos recibido su solicitud de consulta.",
+        error:"No pudimos procesar su solicitud.",
+        connection:"No se pudo conectar con el servidor de Novera.",
+        nameRequired:"Introduzca su nombre.",
+        phoneRequired:"Introduzca su número de teléfono.",
+        serviceRequired:"Seleccione un servicio."
+    },
+
+    tw:{
+        sending:"Rekɔ...",
+        success:"Yɛda wo ase. Yɛagye wo consultation request no.",
+        error:"Yɛantumi anyɛ wo request no.",
+        connection:"Yɛantumi anka Novera server no ho.",
+        nameRequired:"Yɛsrɛ wo, kyerɛ wo din.",
+        phoneRequired:"Yɛsrɛ wo, kyerɛ wo phone number.",
+        serviceRequired:"Yɛsrɛ wo, paw service bi."
+    },
+
+    ee:{
+        sending:"Ele ɖom...",
+        success:"Akpe. Míxɔ wò biabia la.",
+        error:"Míete ŋu wɔ wò biabia la.",
+        connection:"Míete ŋu kplɔ Novera server la gbɔ.",
+        nameRequired:"Taflatse ŋlɔ wò ŋkɔ.",
+        phoneRequired:"Taflatse ŋlɔ wò telefon nɔmba.",
+        serviceRequired:"Taflatse tia dɔwɔnu aɖe."
+    },
+
+    da:{
+        sending:"Eja...",
+        success:"Oyiwaladɔŋ. Yɛagye wo nɔŋɔ request no.",
+        error:"Yɛantumi anyɛ wo request no.",
+        connection:"Yɛantumi anka Novera server no ho.",
+        nameRequired:"Yɛsrɛ wo, kyerɛ wo din.",
+        phoneRequired:"Yɛsrɛ wo, kyerɛ wo phone number.",
+        serviceRequired:"Yɛsrɛ wo, paw service bi."
+    }
+};
+
+function getFormMessage(language, type){
+    const messages = formMessages[language] || formMessages.en;
+    return messages[type] || formMessages.en[type];
+}
+
+
+/* =========================================================
+   LANGUAGE ELEMENTS
+========================================================= */
+
+const languageToggle = document.getElementById("languageToggle");
+const languageMenu = document.getElementById("languageMenu");
+const currentLanguageLabel = document.getElementById("currentLanguageLabel");
+
+
+/* =========================================================
+   LANGUAGE DROPDOWN
+========================================================= */
+
+if(languageToggle && languageMenu){
+
+    languageToggle.addEventListener("click", function(event){
+        event.stopPropagation();
+
+        const isOpen = languageMenu.classList.contains("show");
+
+        languageMenu.classList.toggle("show");
+        languageToggle.setAttribute("aria-expanded", String(!isOpen));
+    });
+}
+
+document.addEventListener("click", function(){
+
+    if(languageMenu){
+        languageMenu.classList.remove("show");
+    }
+
+    if(languageToggle){
+        languageToggle.setAttribute("aria-expanded", "false");
+    }
+});
+
+
+/* =========================================================
+   SERVICE BUTTON LABELS
+========================================================= */
+
+const serviceLabels = {
+    en:{more:"Learn More",less:"Show Less"},
+    fr:{more:"En savoir plus",less:"Réduire"},
+    de:{more:"Mehr erfahren",less:"Weniger anzeigen"},
+    es:{more:"Más información",less:"Mostrar menos"},
+    tw:{more:"Kɔ so sua ho",less:"Fa no"},
+    ee:{more:"Kpɔ nu geɖe",less:"Fa nu"},
+    da:{more:"Kɔ nɔɔ nɛ",less:"Fa nɛ"}
+};
+
+function updateServiceButtons(language){
+
+    const labels = serviceLabels[language] || serviceLabels.en;
+
+    document.querySelectorAll(".service-card").forEach(card => {
+
+        const details = card.querySelector(".service-details");
+        const button = card.querySelector(".service-link");
+
+        if(!details || !button){
+            return;
+        }
+
+        button.textContent =
+            details.classList.contains("show")
+                ? labels.less
+                : labels.more;
+    });
+}
+
+function toggleService(button){
+
+    const card = button.closest(".service-card");
+
+    if(!card){
+        return;
+    }
+
+    const details = card.querySelector(".service-details");
+
+    if(!details){
+        return;
+    }
+
+    const isOpen = details.classList.contains("show");
+
+    document.querySelectorAll(".service-card .service-details").forEach(otherDetails => {
+        if(otherDetails !== details){
+            otherDetails.classList.remove("show");
+        }
+    });
+
+    details.classList.toggle("show", !isOpen);
+    updateServiceButtons(currentLanguage);
+}
+
+
+/* =========================================================
+   CHANGE LANGUAGE
+========================================================= */
+
+function setLanguage(language){
+
+    if(!SUPPORTED_LANGUAGES.includes(language)){
+        language = "en";
+    }
+
+    currentLanguage = language;
+
+    localStorage.setItem("noveraLanguage", language);
+    document.documentElement.lang = language;
+
+    document.querySelectorAll("[data-en]").forEach(element => {
+
+        const translation = element.getAttribute(`data-${language}`);
+
+        if(translation !== null){
+            element.innerHTML = translation;
+        }
+    });
+
+    document.querySelectorAll("[data-placeholder-en]").forEach(element => {
+
+        const placeholder = element.getAttribute(`data-placeholder-${language}`);
+
+        if(placeholder !== null){
+            element.placeholder = placeholder;
+        }
+    });
+
+    document.querySelectorAll("select option").forEach(option => {
+
+        const translation = option.getAttribute(`data-${language}`);
+
+        if(translation !== null){
+            option.textContent = translation;
+        }
+    });
+
+    if(currentLanguageLabel){
+        currentLanguageLabel.textContent = LANGUAGE_NAMES[language];
+    }
+
+    document.querySelectorAll(".language-menu button").forEach(button => {
+        button.classList.toggle(
+            "active",
+            button.dataset.language === language
+        );
+    });
+
+    const languageInput = document.getElementById("selectedLanguage");
+
+    if(languageInput){
+        languageInput.value = language;
+    }
+
+    updateServiceButtons(language);
+
+    if(languageMenu){
+        languageMenu.classList.remove("show");
+    }
+
+    if(languageToggle){
+        languageToggle.setAttribute("aria-expanded", "false");
+    }
+}
+
+document.querySelectorAll(".language-menu button").forEach(button => {
+
+    button.addEventListener("click", function(event){
+        event.stopPropagation();
+        setLanguage(this.dataset.language);
+    });
+});
+
+
+/* =========================================================
+   HERO SLIDESHOW
+========================================================= */
+
+function initializeHeroSlideshow(){
+
+    const slides = document.querySelectorAll(".hero-slide");
+    const dots = document.querySelectorAll(".hero-dot");
+
+    if(slides.length === 0){
+        return;
+    }
+
+    let currentSlide = 0;
+    let timer = null;
+
+    function showSlide(index){
+
+        slides.forEach((slide, slideIndex) => {
+            slide.classList.toggle("active", slideIndex === index);
+        });
+
+        dots.forEach((dot, dotIndex) => {
+            dot.classList.toggle("active", dotIndex === index);
+        });
+
+        currentSlide = index;
+    }
+
+    function nextSlide(){
+        showSlide((currentSlide + 1) % slides.length);
+    }
+
+    function startSlideshow(){
+
+        if(timer){
+            clearInterval(timer);
+        }
+
+        timer = setInterval(nextSlide, 5000);
+    }
+
+    dots.forEach(dot => {
+
+        dot.addEventListener("click", function(){
+
+            const index = Number(this.dataset.slide);
+
+            if(index >= 0 && index < slides.length){
+                showSlide(index);
+                startSlideshow();
+            }
+        });
+    });
+
+    showSlide(0);
+    startSlideshow();
+}
+
+
+/* =========================================================
+   ACTIVE NAVIGATION
+========================================================= */
+
+function initializeNavigation(){
+
+    const sections = document.querySelectorAll("section[id]");
+    const links = document.querySelectorAll("nav a");
+
+    function updateNavigation(){
+
+        let current = "";
+
+        sections.forEach(section => {
+
+            const top = section.offsetTop - 160;
+
+            if(window.scrollY >= top){
+                current = section.id;
+            }
+        });
+
+        links.forEach(link => {
+
+            link.classList.toggle(
+                "active",
+                link.getAttribute("href") === "#" + current
+            );
+        });
+    }
+
+    window.addEventListener("scroll", updateNavigation);
+    updateNavigation();
+}
+
+
+/* =========================================================
+   SMOOTH SCROLL
+========================================================= */
+
+document.querySelectorAll('a[href^="#"]').forEach(link => {
+
+    link.addEventListener("click", function(event){
+
+        const id = this.getAttribute("href");
+
+        if(!id || id === "#"){
+            return;
+        }
+
+        const target = document.querySelector(id);
+
+        if(target){
+            event.preventDefault();
+            target.scrollIntoView({behavior:"smooth"});
+        }
+    });
+});
+
+
+/* =========================================================
+   FORM STATUS
+========================================================= */
+
+function showFormStatus(message, type){
+
+    const status = document.getElementById("formStatus");
+
+    if(!status){
+        return;
+    }
+
+    status.textContent = message;
+    status.className = "form-status show " + type;
+}
+
+function clearFormStatus(){
+
+    const status = document.getElementById("formStatus");
+
+    if(status){
+        status.textContent = "";
+        status.className = "form-status";
+    }
+}
+
+
+/* =========================================================
+   CONSULTATION FORM
+   Sends the request to Flask.
+
+   Flask should:
+   1. Save the request in the database for the Novera portal.
+   2. Send an email to noveratech001@gmail.com.
+========================================================= */
+
+const consultationForm = document.getElementById("consultationForm");
+
+if(consultationForm){
+
+    consultationForm.addEventListener("submit", async function(event){
+
+        event.preventDefault();
+
+        const submitButton = consultationForm.querySelector("button[type='submit']");
+
+        const formData = new FormData(consultationForm);
+
+        const name = (formData.get("name") || "").trim();
+        const email = (formData.get("email") || "").trim();
+        const phone = (formData.get("phone") || "").trim();
+        const service = (formData.get("service") || "").trim();
+        const message = (formData.get("message") || "").trim();
+
+        if(!name){
+            showFormStatus(getFormMessage(currentLanguage, "nameRequired"), "error");
+            return;
+        }
+
+        if(!phone){
+            showFormStatus(getFormMessage(currentLanguage, "phoneRequired"), "error");
+            return;
+        }
+
+        if(!service){
+            showFormStatus(getFormMessage(currentLanguage, "serviceRequired"), "error");
+            return;
+        }
+
+        clearFormStatus();
+
+        if(submitButton){
+            submitButton.disabled = true;
+            submitButton.textContent = getFormMessage(currentLanguage, "sending");
+        }
+
+        try{
+
+            const response = await fetch(API_URL, {
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify({
+                    name,
+                    email,
+                    phone,
+                    service,
+                    message,
+                    language:currentLanguage
+                })
+            });
+
+            const result = await response.json().catch(() => ({}));
+
+            if(!response.ok || !result.success){
+                throw new Error(
+                    result.message ||
+                    getFormMessage(currentLanguage, "error")
+                );
+            }
+
+            showFormStatus(
+                result.message ||
+                getFormMessage(currentLanguage, "success"),
+                "success"
+            );
+
+            consultationForm.reset();
+
+            const languageInput = document.getElementById("selectedLanguage");
+
+            if(languageInput){
+                languageInput.value = currentLanguage;
+            }
+
+        }catch(error){
+
+            console.error("Novera consultation error:", error);
+
+            showFormStatus(
+                error.message ||
+                getFormMessage(currentLanguage, "connection"),
+                "error"
+            );
+
+        }finally{
+
+            if(submitButton){
+
+                submitButton.disabled = false;
+
+                submitButton.textContent =
+                    submitButton.getAttribute(`data-${currentLanguage}`) ||
+                    "Request Consultation";
+            }
+        }
+    });
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+document.addEventListener("DOMContentLoaded", function(){
+
+    setLanguage(currentLanguage);
+    initializeNavigation();
+    initializeHeroSlideshow();
+
+});
+
+</script>
+
+
+</body>
+
+</html>

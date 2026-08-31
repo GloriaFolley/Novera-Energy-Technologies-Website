@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Admin Login | {{ company_name }}</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('assets', filename='css/style.css') }}">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #063b73 0%, #0b5ca8 45%, #f5f9ff 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Large background logo */
+        body::before {
+            content: "";
+            position: fixed;
+            width: 650px;
+            height: 650px;
+
+            background-image: url("{{ url_for('assets', filename='logo.png') }}");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
+
+            opacity: 0.06;
+            right: -180px;
+            bottom: -170px;
+
+            pointer-events: none;
+        }
+
+        /* Decorative white circle */
+        body::after {
+            content: "";
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            top: -220px;
+            left: -180px;
+            pointer-events: none;
+        }
+
+        .form-page {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 25px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .form-card {
+            width: 100%;
+            max-width: 440px;
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 20px;
+            padding: 40px 38px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.22);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+        }
+
+        /* Logo section */
+        .brand {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px !important;
+        }
+
+        .brand img {
+            width: 95px;
+            height: 95px;
+            object-fit: contain;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .brand span {
+            font-size: 28px;
+            font-weight: 800;
+            color: #063b73;
+            letter-spacing: 1px;
+        }
+
+        .brand::after {
+            content: "Light · Motion · Intelligence";
+            display: block;
+            margin-top: 5px;
+            font-size: 11px;
+            letter-spacing: 1.5px;
+            color: #6b7280;
+        }
+
+        h1 {
+            text-align: center;
+            color: #12385c;
+            font-size: 25px;
+            margin-bottom: 8px;
+        }
+
+        h1::after {
+            content: "";
+            display: block;
+            width: 45px;
+            height: 3px;
+            background: #0b5ca8;
+            margin: 12px auto 25px;
+            border-radius: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #29445f;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #d3dce8;
+            border-radius: 9px;
+            font-size: 15px;
+            color: #1f2937;
+            background: #f9fbfe;
+            outline: none;
+            transition: 0.2s ease;
+        }
+
+        .form-group input:focus {
+            border-color: #0b5ca8;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(11, 92, 168, 0.10);
+        }
+
+        .btn {
+            width: 100%;
+            border: none;
+            border-radius: 9px;
+            padding: 14px;
+            background: linear-gradient(135deg, #063b73, #0b69bd);
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.25s ease;
+            box-shadow: 0 8px 18px rgba(6, 59, 115, 0.22);
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 12px 24px rgba(6, 59, 115, 0.28);
+        }
+
+        .flash {
+            padding: 11px 13px;
+            border-radius: 8px;
+            margin-bottom: 18px;
+            font-size: 14px;
+        }
+
+        .flash.error {
+            background: #fff0f0;
+            color: #a12626;
+            border: 1px solid #ffd0d0;
+        }
+
+        .flash.success {
+            background: #effaf3;
+            color: #21733b;
+            border: 1px solid #ccebd5;
+        }
+
+        .login-links {
+            text-align: center;
+            margin-top: 22px;
+            font-size: 13px;
+            color: #7a8795;
+        }
+
+        .login-links a {
+            color: #0b5ca8;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-links a:hover {
+            text-decoration: underline;
+        }
+
+        .separator {
+            margin: 0 7px;
+            color: #b4bec9;
+        }
+
+        .portal-footer {
+            text-align: center;
+            margin-top: 25px;
+            color: #8995a3;
+            font-size: 11px;
+        }
+
+        @media (max-width: 500px) {
+            .form-page {
+                padding: 15px;
+            }
+
+            .form-card {
+                padding: 32px 24px;
+                border-radius: 16px;
+            }
+
+            .brand img {
+                width: 80px;
+                height: 80px;
+            }
+
+            .brand span {
+                font-size: 25px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            body::before {
+                width: 450px;
+                height: 450px;
+                right: -220px;
+                bottom: -130px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="form-page">
+
+    <div class="form-card">
+
+        <!-- Novera Logo -->
+        <div class="brand">
+            <img
+                src="{{ url_for('assets', filename='logo.jpg') }}"
+                alt="Novera Energy & Technologies Logo"
+                onerror="this.style.display='none';"
+            >
+
+            <span>Novera</span>
+        </div>
+
+        <h1>Administrator Login</h1>
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="flash {{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endwith %}
+
+        <!-- Login Form -->
+        <form method="post">
+
+            <div class="form-group">
+                <label for="email">Admin Email</label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Enter administrator email"
+                    autocomplete="email"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter password"
+                    autocomplete="current-password"
+                    required
+                >
+            </div>
+
+            <button class="btn" type="submit">
+                Sign In
+            </button>
+
+        </form>
+
+        <!-- Other Portal Logins -->
+        <div class="login-links">
+
+            <a href="{{ url_for('staff_login') }}">
+                Staff Login
+            </a>
+
+            <span class="separator">·</span>
+
+            <a href="{{ url_for('md_login') }}">
+                MD Login
+            </a>
+
+        </div>
+
+        <div class="portal-footer">
+            Novera Energy & Technologies<br>
+            Secure Staff Portal
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
+

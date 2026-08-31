@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Staff Login | {{ company_name }}</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('assets', filename='css/style.css') }}">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            background:
+                linear-gradient(135deg, #ffffff 0%, #eef6ff 50%, #dcecff 100%);
+            color: #172033;
+        }
+
+        .login-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Decorative blue background */
+        .login-page::before {
+            content: "";
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: rgba(25, 91, 160, 0.08);
+            border-radius: 50%;
+            top: -220px;
+            left: -180px;
+        }
+
+        .login-page::after {
+            content: "";
+            position: absolute;
+            width: 420px;
+            height: 420px;
+            background: rgba(25, 91, 160, 0.07);
+            border-radius: 50%;
+            bottom: -200px;
+            right: -150px;
+        }
+
+        .form-card {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 460px;
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 55px rgba(15, 50, 90, 0.16);
+            border: 1px solid rgba(25, 91, 160, 0.12);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            margin-bottom: 25px;
+        }
+
+        .brand img {
+            width: 78px;
+            height: 78px;
+            object-fit: contain;
+            display: block;
+            border-radius: 10px;
+        }
+
+        .brand span {
+            font-size: 28px;
+            font-weight: 800;
+            color: #155a96;
+            letter-spacing: 0.5px;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 0 0 10px;
+            color: #123b63;
+            font-size: 30px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #667085;
+            margin-bottom: 28px;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: #26384d;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 15px;
+            border: 1px solid #ccd7e3;
+            border-radius: 10px;
+            font-size: 15px;
+            outline: none;
+            background: #ffffff;
+            transition: 0.2s;
+        }
+
+        .form-group input:focus {
+            border-color: #1976b9;
+            box-shadow: 0 0 0 3px rgba(25, 118, 185, 0.12);
+        }
+
+        .btn {
+            width: 100%;
+            border: none;
+            border-radius: 10px;
+            padding: 14px;
+            background: linear-gradient(135deg, #155a96, #1976b9);
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(21, 90, 150, 0.25);
+        }
+
+        .links {
+            margin-top: 25px;
+            text-align: center;
+            line-height: 1.8;
+            font-size: 14px;
+        }
+
+        .links a {
+            color: #155a96;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
+
+        .flash {
+            padding: 12px 14px;
+            border-radius: 9px;
+            margin-bottom: 18px;
+            font-size: 14px;
+        }
+
+        .flash.danger {
+            background: #fff0f0;
+            color: #a32020;
+            border: 1px solid #f0bcbc;
+        }
+
+        .flash.warning {
+            background: #fff8e6;
+            color: #805b00;
+            border: 1px solid #f1d58a;
+        }
+
+        .flash.success {
+            background: #edf9f1;
+            color: #216e39;
+            border: 1px solid #b9dfc4;
+        }
+
+        .footer-note {
+            text-align: center;
+            margin-top: 25px;
+            color: #8995a3;
+            font-size: 12px;
+        }
+
+        @media (max-width: 500px) {
+            .form-card {
+                padding: 30px 22px;
+            }
+
+            .brand img {
+                width: 65px;
+                height: 65px;
+            }
+
+            .brand span {
+                font-size: 24px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="login-page">
+
+    <div class="form-card">
+
+        <!-- NOVERA LOGO -->
+        <div class="brand">
+
+            <!--
+                IMPORTANT:
+                Replace "YOUR-LOGO.jpg" below with the EXACT
+                filename of your JPG inside the assets folder.
+            -->
+            <img
+                src="{{ url_for('assets', filename='YOUR-LOGO.jpg') }}"
+                alt="Novera Energy & Technologies Logo"
+                onerror="this.style.display='none';"
+            >
+
+            <span>Novera</span>
+        </div>
+
+        <h1>Staff Portal</h1>
+
+        <p class="subtitle">
+            Secure staff access to {{ company_name }}
+        </p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="flash {{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endwith %}
+
+        <form method="post">
+
+            <div class="form-group">
+                <label for="login">
+                    Staff ID / Work Email
+                </label>
+
+                <input
+                    type="text"
+                    id="login"
+                    name="login"
+                    placeholder="e.g. NVR-2026-0001"
+                    autocomplete="username"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="password">
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    autocomplete="current-password"
+                    required
+                >
+            </div>
+
+            <button class="btn" type="submit">
+                Sign In
+            </button>
+
+        </form>
+
+        <div class="links">
+
+            <div>
+                New staff member?
+                <a href="{{ url_for('staff_register') }}">
+                    Register
+                </a>
+            </div>
+
+            <br>
+
+            <a href="{{ url_for('md_login') }}">
+                MD Login
+            </a>
+
+            &nbsp; · &nbsp;
+
+            <a href="{{ url_for('admin_login') }}">
+                Admin Login
+            </a>
+
+            <br><br>
+
+            <a href="{{ url_for('index') }}">
+                ← Back to Website
+            </a>
+
+        </div>
+
+        <div class="footer-note">
+            {{ company_name }} · {{ company_tagline }}
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
