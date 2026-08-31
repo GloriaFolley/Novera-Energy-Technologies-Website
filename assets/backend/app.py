@@ -4590,7 +4590,7 @@ if __name__ == "__main__":
         debug=(
             os.getenv(
                 "FLASK_DEBUG",
-                "True"
+                "False"
             ).lower() == "true"
         )
     )
