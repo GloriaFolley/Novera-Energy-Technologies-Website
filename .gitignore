@@ -1,0 +1,7 @@
+.ipynb_checkpoints/
+instance/
+*.db
+assets/
+.env
+__pycache__/
+*.pyc
