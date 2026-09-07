@@ -252,70 +252,54 @@ nav a.active {
    HERO
 ========================================================= */
 
-.hero {
-    min-height: 78vh;
+.hero{
+    min-height:88vh;
 
-    display: flex;
+    display:flex;
+    justify-content:center;
+    align-items:center;
 
-    justify-content: center;
-    align-items: center;
+    text-align:center;
 
-    text-align: center;
+    color:white;
 
-    color: white;
+    position:relative;
 
-    position: relative;
+    overflow:hidden;
 
-    overflow: hidden;
-
-    background: #003b82;
+    background:#000;
 }
 
-.hero-slides {
-    position: absolute;
-    inset: 0;
-
-    z-index: 0;
+.hero-slides{
+    position:absolute;
+    inset:0;
+    z-index:0;
 }
 
-.hero-slide {
-    position: absolute;
-    inset: 0;
+.hero-slide{
+    position:absolute;
+    inset:0;
 
-    opacity: 0;
+    opacity:0;
 
-    transition:
-        opacity 1s ease;
+    transition:opacity 1s ease;
 }
 
-.hero-slide.active {
-    opacity: 1;
+.hero-slide.active{
+    opacity:1;
 }
 
-.hero-slide img {
-    width: 100%;
-    height: 100%;
-
-    object-fit: contain;
-    
+.hero-slide img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
     object-position:center;
-
-    filter: brightness(.68);
+    filter:brightness(.78);
 }
 
 .hero-overlay{
-    position:absolute;
-    inset:0;
-    background:
-        linear-gradient(
-            135deg,
-            rgba(0,45,100,.48),
-            rgba(0,114,255,.28)
-        );
-    z-index:1;
+    display:none;
 }
-
-
 .hero::before,
 .hero::after {
     content: "";
@@ -329,29 +313,6 @@ nav a.active {
     pointer-events: none;
 }
 
-.hero::before {
-    width: 500px;
-    height: 500px;
-
-    background:
-        rgba(0, 234, 255, .12);
-
-    filter: blur(5px);
-
-    top: -180px;
-    right: -120px;
-}
-
-.hero::after {
-    width: 400px;
-    height: 400px;
-
-    background:
-        rgba(255, 255, 255, .06);
-
-    bottom: -180px;
-    left: -100px;
-}
 
 .hero-content {
     position: relative;

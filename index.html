@@ -240,7 +240,7 @@ nav a.active{
 ========================================================= */
 
 .hero{
-    min-height:78vh;
+    min-height:88vh;
 
     display:flex;
     justify-content:center;
@@ -254,7 +254,7 @@ nav a.active{
 
     overflow:hidden;
 
-    background:#003b82;
+    background:#000;
 }
 
 .hero-slides{
@@ -281,58 +281,26 @@ nav a.active{
     height:100%;
     object-fit:contain;
     object-position:center;
-    filter:brightness(.68);
-}
-
-.hero::before{
-    content:"";
-
-    position:absolute;
-
-    width:500px;
-    height:500px;
-
-    background:rgba(0,234,255,.12);
-
-    border-radius:50%;
-
-    filter:blur(5px);
-
-    top:-180px;
-    right:-120px;
-
-    z-index:1;
-}
-
-.hero::after{
-    content:"";
-
-    position:absolute;
-
-    width:400px;
-    height:400px;
-
-    background:rgba(255,255,255,.06);
-
-    border-radius:50%;
-
-    bottom:-180px;
-    left:-100px;
-
-    z-index:1;
+    filter:brightness(.78);
 }
 
 .hero-overlay{
-    position:absolute;
-    inset:0;
-    background:
-        linear-gradient(
-            135deg,
-            rgba(0,45,100,.48),
-            rgba(0,114,255,.28)
-        );
-    z-index:1;
+    display:none;
 }
+.hero::before,
+.hero::after {
+    content: "";
+
+    position: absolute;
+
+    border-radius: 50%;
+
+    z-index: 2;
+
+    pointer-events: none;
+}
+
+
 
 .hero-content{
     position:relative;
@@ -1979,7 +1947,7 @@ footer{
         </div>
 
         <div class="hero-slide">
-            <img src="assets/gallery/B174F68B-F98C-4EAF-B392-683B315C4D68.PNG"
+            <img src="assets/gallery/IMG_0255.WEBP"
                  alt="Fire Alarm System">
         </div>
 
