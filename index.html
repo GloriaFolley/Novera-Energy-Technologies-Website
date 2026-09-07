@@ -240,7 +240,7 @@ nav a.active{
 ========================================================= */
 
 .hero{
-    min-height:88vh;
+    min-height:78vh;
 
     display:flex;
     justify-content:center;
@@ -279,8 +279,9 @@ nav a.active{
 .hero-slide img{
     width:100%;
     height:100%;
-    object-fit:cover;
-    filter:brightness(.42);
+    object-fit:contain;
+    object-position:center;
+    filter:brightness(.68);
 }
 
 .hero::before{
@@ -324,14 +325,12 @@ nav a.active{
 .hero-overlay{
     position:absolute;
     inset:0;
-
     background:
         linear-gradient(
             135deg,
-            rgba(0,45,100,.82),
-            rgba(0,114,255,.62)
+            rgba(0,45,100,.48),
+            rgba(0,114,255,.28)
         );
-
     z-index:1;
 }
 
@@ -2347,6 +2346,7 @@ footer{
                     <i class="fa-solid fa-bolt"></i>
                       IEC Standard
                 </span>
+                
 
                 <span class="iec-link novera-standard nec-standard">
                     <i class="fa-solid fa-book"></i>
