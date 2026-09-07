@@ -1908,7 +1908,6 @@ def training_apply():
         url_for("training_apply")
     )
 
-
 # ============================================================
 # PUBLIC CONSULTATION API
 # ============================================================
@@ -1920,80 +1919,56 @@ def training_apply():
 def consultation_api():
 
     data = (
-        request.get_json(
-            silent=True
-        )
+        request.get_json(silent=True)
         or request.form
     )
 
     name = str(
-        data.get(
-            "name",
-            ""
-        )
+        data.get("name", "")
     ).strip()
 
     email = str(
-        data.get(
-            "email",
-            ""
-        )
+        data.get("email", "")
     ).strip()
 
     phone = str(
-        data.get(
-            "phone",
-            ""
-        )
+        data.get("phone", "")
     ).strip()
 
     company = str(
-        data.get(
-            "company",
-            ""
-        )
+        data.get("company", "")
     ).strip()
 
     service = str(
-        data.get(
-            "service",
-            ""
-        )
+        data.get("service", "")
     ).strip()
 
     message = str(
-        data.get(
-            "message",
-            ""
-        )
+        data.get("message", "")
     ).strip()
 
     language = str(
-        data.get(
-            "language",
-            "en"
-        )
+        data.get("language", "en")
     ).strip() or "en"
 
 
-    if not name:
+    # ========================================================
+    # VALIDATION
+    # ========================================================
 
+    if not name:
         return jsonify(
             success=False,
             message="Name is required."
         ), 400
 
-
     if not phone:
-
         return jsonify(
             success=False,
             message="Phone is required."
         ), 400
 
-
     if not service:
-
         return jsonify(
             success=False,
             message="Service is required."
@@ -2005,6 +1980,10 @@ def consultation_api():
     db = get_db()
 
     try:
+
+        # ====================================================
+        # 1. SAVE CONSULTATION
+        # ====================================================
 
         cursor = db.execute(
             """
@@ -2043,17 +2022,26 @@ def consultation_api():
 
         consultation_id = cursor.lastrowid
 
+
+        # ====================================================
+        # GET SAVED CONSULTATION
+        # ====================================================
+
         consultation = db.execute(
             """
             SELECT *
             FROM consultations
             WHERE id = ?
+            LIMIT 1
             """,
             (consultation_id,)
         ).fetchone()
 
 
-        # Notify active staff.
+        # ====================================================
+        # 2. NOTIFY ACTIVE STAFF
+        # ====================================================
+
         staff_members = db.execute(
             """
             SELECT id
@@ -2061,6 +2049,7 @@ def consultation_api():
             WHERE status = 'Active'
             """
         ).fetchall()
+
 
         for staff_member in staff_members:
 
@@ -2087,19 +2076,60 @@ def consultation_api():
             )
 
 
+        # ====================================================
+        # 3. ACTIVITY LOG
+        # ====================================================
+
+        db.execute(
+            """
+            INSERT INTO activity_logs (
+                actor_type,
+                actor_id,
+                action,
+                description,
+                created_at
+            )
+            VALUES (?, ?, ?, ?, ?)
+            """,
+            (
+                "customer",
+                None,
+                "consultation_submitted",
+                (
+                    f"Consultation #{consultation_id} "
+                    f"submitted by {name}."
+                ),
+                created_at
+            )
+        )
+
+
         db.commit()
 
-    except Exception:
+
+    except Exception as error:
 
         db.rollback()
-        raise
+
+        print(
+            "[CONSULTATION DATABASE ERROR]",
+            error
+        )
+
+        return jsonify(
+            success=False,
+            message="Could not save consultation request."
+        ), 500
 
     finally:
 
         close_db(db)
 
 
-    # Email company separately.
+    # ========================================================
+    # 4. SEND EMAIL TO COMPANY
+    # ========================================================
+
     email_sent = False
 
     if (
@@ -2108,34 +2138,63 @@ def consultation_api():
         and os.getenv("MAIL_PASSWORD")
     ):
 
-        email_sent, _ = send_consultation_email(
-            consultation
-        )
-
-        db = get_db()
-
         try:
 
-            db.execute(
-                """
-                UPDATE consultations
-                SET email_sent = ?,
-                    updated_at = ?
-                WHERE id = ?
-                """,
-                (
-                    1 if email_sent else 0,
-                    utc_now(),
-                    consultation_id
-                )
+            email_sent, _ = send_consultation_email(
+                consultation
             )
 
-            db.commit()
+        except Exception as error:
 
-        finally:
+            print(
+                "[CONSULTATION EMAIL ERROR]",
+                error
+            )
 
-            close_db(db)
+            email_sent = False
 
+
+    # ========================================================
+    # 5. RECORD EMAIL STATUS
+    # ========================================================
+
+    db = get_db()
+
+    try:
+
+        db.execute(
+            """
+            UPDATE consultations
+            SET email_sent = ?,
+                updated_at = ?
+            WHERE id = ?
+            """,
+            (
+                1 if email_sent else 0,
+                utc_now(),
+                consultation_id
+            )
+        )
+
+        db.commit()
+
+    except Exception as error:
+
+        db.rollback()
+
+        print(
+            "[CONSULTATION EMAIL STATUS ERROR]",
+            error
+        )
+
+    finally:
+
+        close_db(db)
+
+
+    # ========================================================
+    # SUCCESS
+    # ========================================================
 
     return jsonify(
         success=True,
