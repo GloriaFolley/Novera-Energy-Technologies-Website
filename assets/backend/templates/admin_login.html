@@ -19,22 +19,28 @@
         body {
             font-family: Arial, Helvetica, sans-serif;
             min-height: 100vh;
-            background: linear-gradient(135deg, #063b73 0%, #0b5ca8 45%, #f5f9ff 100%);
+            background: linear-gradient(
+                135deg,
+                #063b73 0%,
+                #0b5ca8 45%,
+                #f5f9ff 100%
+            );
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
-            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: auto;
         }
 
-        /* Large background logo */
+        /* Large background Novera logo */
         body::before {
             content: "";
             position: fixed;
             width: 650px;
             height: 650px;
 
-            background-image: url("{{ url_for('assets', filename='logo.png') }}");
+            background-image: url("{{ url_for('assets', filename='logo.jpg') }}");
             background-repeat: no-repeat;
             background-position: center;
             background-size: contain;
@@ -44,9 +50,10 @@
             bottom: -170px;
 
             pointer-events: none;
+            z-index: 0;
         }
 
-        /* Decorative white circle */
+        /* Decorative circle */
         body::after {
             content: "";
             position: fixed;
@@ -57,6 +64,7 @@
             top: -220px;
             left: -180px;
             pointer-events: none;
+            z-index: 0;
         }
 
         .form-page {
@@ -80,7 +88,7 @@
             border: 1px solid rgba(255, 255, 255, 0.7);
         }
 
-        /* Logo section */
+        /* Brand */
         .brand {
             display: flex;
             flex-direction: column;
@@ -111,6 +119,7 @@
             font-size: 11px;
             letter-spacing: 1.5px;
             color: #6b7280;
+            text-align: center;
         }
 
         h1 {
@@ -130,6 +139,41 @@
             border-radius: 10px;
         }
 
+        /* Flash messages */
+        .flash {
+            padding: 11px 13px;
+            border-radius: 8px;
+            margin-bottom: 18px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .flash.error,
+        .flash.danger {
+            background: #fff0f0;
+            color: #a12626;
+            border: 1px solid #ffd0d0;
+        }
+
+        .flash.success {
+            background: #effaf3;
+            color: #21733b;
+            border: 1px solid #ccebd5;
+        }
+
+        .flash.warning {
+            background: #fff8e8;
+            color: #8a6500;
+            border: 1px solid #f2dfaa;
+        }
+
+        .flash.info {
+            background: #eef6ff;
+            color: #14558a;
+            border: 1px solid #cfe4f8;
+        }
+
+        /* Form */
         .form-group {
             margin-bottom: 20px;
         }
@@ -154,18 +198,31 @@
             transition: 0.2s ease;
         }
 
+        .form-group input::placeholder {
+            color: #9aa6b2;
+        }
+
+        .form-group input:hover {
+            border-color: #b9c8d8;
+        }
+
         .form-group input:focus {
             border-color: #0b5ca8;
             background: #fff;
             box-shadow: 0 0 0 3px rgba(11, 92, 168, 0.10);
         }
 
+        /* Sign-in button */
         .btn {
             width: 100%;
             border: none;
             border-radius: 9px;
             padding: 14px;
-            background: linear-gradient(135deg, #063b73, #0b69bd);
+            background: linear-gradient(
+                135deg,
+                #063b73,
+                #0b69bd
+            );
             color: white;
             font-size: 15px;
             font-weight: 700;
@@ -179,25 +236,11 @@
             box-shadow: 0 12px 24px rgba(6, 59, 115, 0.28);
         }
 
-        .flash {
-            padding: 11px 13px;
-            border-radius: 8px;
-            margin-bottom: 18px;
-            font-size: 14px;
+        .btn:active {
+            transform: translateY(0);
         }
 
-        .flash.error {
-            background: #fff0f0;
-            color: #a12626;
-            border: 1px solid #ffd0d0;
-        }
-
-        .flash.success {
-            background: #effaf3;
-            color: #21733b;
-            border: 1px solid #ccebd5;
-        }
-
+        /* Other portal logins */
         .login-links {
             text-align: center;
             margin-top: 22px;
@@ -220,13 +263,16 @@
             color: #b4bec9;
         }
 
+        /* Footer */
         .portal-footer {
             text-align: center;
             margin-top: 25px;
             color: #8995a3;
             font-size: 11px;
+            line-height: 1.6;
         }
 
+        /* Mobile */
         @media (max-width: 500px) {
             .form-page {
                 padding: 15px;
@@ -256,6 +302,13 @@
                 right: -220px;
                 bottom: -130px;
             }
+
+            body::after {
+                width: 350px;
+                height: 350px;
+                top: -170px;
+                left: -160px;
+            }
         }
     </style>
 </head>
@@ -266,8 +319,9 @@
 
     <div class="form-card">
 
-        <!-- Novera Logo -->
+        <!-- Novera Branding -->
         <div class="brand">
+
             <img
                 src="{{ url_for('assets', filename='logo.jpg') }}"
                 alt="Novera Energy & Technologies Logo"
@@ -275,21 +329,24 @@
             >
 
             <span>Novera</span>
+
         </div>
 
         <h1>Administrator Login</h1>
 
         <!-- Flash Messages -->
         {% with messages = get_flashed_messages(with_categories=true) %}
-            {% for category, message in messages %}
-                <div class="flash {{ category }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
         {% endwith %}
 
-        <!-- Login Form -->
-        <form method="post">
+        <!-- Admin Login Form -->
+        <form method="POST" autocomplete="on">
 
             <div class="form-group">
                 <label for="email">Admin Email</label>
@@ -299,7 +356,7 @@
                     id="email"
                     name="email"
                     placeholder="Enter administrator email"
-                    autocomplete="email"
+                    autocomplete="username"
                     required
                 >
             </div>
@@ -317,7 +374,10 @@
                 >
             </div>
 
-            <button class="btn" type="submit">
+            <button
+                class="btn"
+                type="submit"
+            >
                 Sign In
             </button>
 
@@ -338,6 +398,7 @@
 
         </div>
 
+        <!-- Portal Footer -->
         <div class="portal-footer">
             Novera Energy & Technologies<br>
             Secure Staff Portal
@@ -349,4 +410,3 @@
 
 </body>
 </html>
-

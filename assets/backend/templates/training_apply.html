@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Training Program Application | {{ company_name|default("Novera Energy & Technologies Ltd") }}
+    </title>
+
+    <meta
+        name="description"
+        content="Apply for the Novera Energy & Technologies training program."
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: "Inter", Arial, sans-serif;
+            background: #f5f7fa;
+            color: #172033;
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        button,
+        input,
+        select,
+        textarea {
+            font: inherit;
+        }
+
+        /* =========================================================
+           HEADER
+        ========================================================= */
+
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.97);
+            border-bottom: 1px solid #e5e7eb;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .header-inner {
+            width: min(1180px, 92%);
+            margin: auto;
+            min-height: 78px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 30px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+        }
+
+        .brand-logo {
+            width: 54px;
+            height: 54px;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-name {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #101828;
+        }
+
+        .brand-tagline {
+            font-size: 0.72rem;
+            color: #667085;
+            letter-spacing: 0.08em;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 11px 18px;
+            border: 1px solid #d0d5dd;
+            border-radius: 8px;
+            color: #344054;
+            font-weight: 600;
+            transition: 0.2s ease;
+        }
+
+        .back-link:hover {
+            background: #f2f4f7;
+            border-color: #98a2b3;
+        }
+
+        /* =========================================================
+           HERO
+        ========================================================= */
+
+        .application-hero {
+            background:
+                linear-gradient(
+                    135deg,
+                    #0b1f3a 0%,
+                    #123e63 55%,
+                    #176b87 100%
+                );
+            color: white;
+            padding: 72px 20px;
+        }
+
+        .hero-inner {
+            width: min(900px, 94%);
+            margin: auto;
+            text-align: center;
+        }
+
+        .hero-label {
+            display: inline-block;
+            padding: 7px 14px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.08);
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+        }
+
+        .hero-inner h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            line-height: 1.15;
+            margin-bottom: 18px;
+            font-weight: 800;
+        }
+
+        .hero-inner p {
+            max-width: 700px;
+            margin: auto;
+            color: rgba(255, 255, 255, 0.88);
+            font-size: 1.05rem;
+        }
+
+        /* =========================================================
+           MAIN
+        ========================================================= */
+
+        .main-content {
+            width: min(1100px, 92%);
+            margin: 50px auto 80px;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 0.8fr 1.4fr;
+            gap: 35px;
+            align-items: start;
+        }
+
+        /* =========================================================
+           INFORMATION CARD
+        ========================================================= */
+
+        .info-card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            border: 1px solid #e4e7ec;
+            box-shadow: 0 8px 30px rgba(16, 24, 40, 0.06);
+        }
+
+        .info-card h2 {
+            font-size: 1.45rem;
+            margin-bottom: 14px;
+            color: #101828;
+        }
+
+        .info-card > p {
+            color: #667085;
+            margin-bottom: 25px;
+        }
+
+        .info-item {
+            display: flex;
+            gap: 14px;
+            margin-bottom: 22px;
+        }
+
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            min-width: 40px;
+            border-radius: 10px;
+            background: #eef6f8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .info-item h3 {
+            font-size: 0.98rem;
+            margin-bottom: 3px;
+            color: #1d2939;
+        }
+
+        .info-item p {
+            color: #667085;
+            font-size: 0.9rem;
+        }
+
+        .notice {
+            margin-top: 28px;
+            padding: 17px;
+            background: #f8fafc;
+            border-left: 4px solid #176b87;
+            border-radius: 8px;
+            color: #475467;
+            font-size: 0.88rem;
+        }
+
+        /* =========================================================
+           FORM CARD
+        ========================================================= */
+
+        .form-card {
+            background: white;
+            border-radius: 16px;
+            padding: 35px;
+            border: 1px solid #e4e7ec;
+            box-shadow: 0 8px 30px rgba(16, 24, 40, 0.06);
+        }
+
+        .form-heading {
+            margin-bottom: 28px;
+        }
+
+        .form-heading h2 {
+            color: #101828;
+            font-size: 1.55rem;
+            margin-bottom: 6px;
+        }
+
+        .form-heading p {
+            color: #667085;
+            font-size: 0.92rem;
+        }
+
+        .form-group {
+            margin-bottom: 21px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            color: #344054;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .required {
+            color: #c0392b;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #d0d5dd;
+            border-radius: 8px;
+            background: white;
+            color: #101828;
+            outline: none;
+            transition: border-color 0.2s ease,
+                        box-shadow 0.2s ease;
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: #98a2b3;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #176b87;
+            box-shadow: 0 0 0 3px rgba(23, 107, 135, 0.12);
+        }
+
+        textarea {
+            min-height: 130px;
+            resize: vertical;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin: 22px 0;
+        }
+
+        .checkbox-group input {
+            width: auto;
+            margin-top: 4px;
+            accent-color: #176b87;
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            font-weight: 400;
+            color: #667085;
+            font-size: 0.86rem;
+        }
+
+        .submit-btn {
+            width: 100%;
+            border: none;
+            border-radius: 9px;
+            padding: 15px 20px;
+            background: #176b87;
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .submit-btn:hover {
+            background: #12576e;
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .form-note {
+            text-align: center;
+            margin-top: 13px;
+            color: #98a2b3;
+            font-size: 0.78rem;
+        }
+
+        /* =========================================================
+           FLASH MESSAGES
+        ========================================================= */
+
+        .flash-container {
+            margin-bottom: 25px;
+        }
+
+        .flash {
+            padding: 14px 17px;
+            border-radius: 9px;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            border: 1px solid transparent;
+        }
+
+        .flash.success {
+            background: #ecfdf3;
+            border-color: #abefc6;
+            color: #067647;
+        }
+
+        .flash.danger {
+            background: #fef3f2;
+            border-color: #fecdca;
+            color: #b42318;
+        }
+
+        .flash.warning {
+            background: #fffaeb;
+            border-color: #fedf89;
+            color: #b54708;
+        }
+
+        .flash.info {
+            background: #eff8ff;
+            border-color: #b2ddff;
+            color: #175cd3;
+        }
+
+        /* =========================================================
+           FOOTER
+        ========================================================= */
+
+        footer {
+            background: #101828;
+            color: white;
+            padding: 30px 20px;
+        }
+
+        .footer-inner {
+            width: min(1100px, 92%);
+            margin: auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .footer-brand {
+            font-weight: 700;
+        }
+
+        .footer-tagline {
+            display: block;
+            margin-top: 4px;
+            color: #98a2b3;
+            font-size: 0.78rem;
+        }
+
+        .footer-copy {
+            color: #98a2b3;
+            font-size: 0.78rem;
+            text-align: right;
+        }
+
+        /* =========================================================
+           RESPONSIVE
+        ========================================================= */
+
+        @media (max-width: 800px) {
+
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .info-card {
+                order: 2;
+            }
+
+            .form-card {
+                order: 1;
+            }
+
+        }
+
+        @media (max-width: 600px) {
+
+            .header-inner {
+                min-height: 68px;
+            }
+
+            .brand-text {
+                display: none;
+            }
+
+            .brand-logo {
+                width: 48px;
+                height: 48px;
+            }
+
+            .back-link {
+                padding: 9px 13px;
+                font-size: 0.85rem;
+            }
+
+            .application-hero {
+                padding: 55px 18px;
+            }
+
+            .main-content {
+                margin-top: 30px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .form-card,
+            .info-card {
+                padding: 24px 20px;
+            }
+
+            .footer-inner {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .footer-copy {
+                text-align: center;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- =========================================================
+         HEADER
+    ========================================================== -->
+
+    <header class="site-header">
+
+        <div class="header-inner">
+
+            <a
+                href="{{ url_for('home') }}"
+                class="brand"
+                aria-label="Return to Novera homepage"
+            >
+
+                <img
+                    src="{{ logo_url }}"
+                    alt="{{ company_name|default('Novera') }} logo"
+                    class="brand-logo"
+                >
+
+                <div class="brand-text">
+
+                    <span class="brand-name">
+                        {{ company_name|default("Novera Energy & Technologies Ltd") }}
+                    </span>
+
+                    <span class="brand-tagline">
+                        {{ company_tagline|default("Light · Motion · Intelligence") }}
+                    </span>
+
+                </div>
+
+            </a>
+
+            <a
+                href="{{ url_for('home') }}"
+                class="back-link"
+            >
+                ← Back to Website
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================================================
+         HERO
+    ========================================================== -->
+
+    <section class="application-hero">
+
+        <div class="hero-inner">
+
+            <span class="hero-label">
+                Novera Academy
+            </span>
+
+            <h1>
+                Training Program Application
+            </h1>
+
+            <p>
+                Take the next step in developing practical skills
+                through our professional training programs.
+                Complete the application form below and our team
+                will review your application.
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================================
+         MAIN CONTENT
+    ========================================================== -->
+
+    <main class="main-content">
+
+        <!-- Flash Messages -->
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+
+            {% if messages %}
+
+                <div class="flash-container">
+
+                    {% for category, message in messages %}
+
+                        <div class="flash {{ category }}">
+                            {{ message }}
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+        {% endwith %}
+
+
+        <div class="layout">
+
+
+            <!-- =================================================
+                 INFORMATION
+            ================================================== -->
+
+            <aside class="info-card">
+
+                <h2>
+                    About the Program
+                </h2>
+
+                <p>
+                    Our training programs are designed to provide
+                    practical knowledge and hands-on experience
+                    in relevant technical and professional areas.
+                </p>
+
+
+                <div class="info-item">
+
+                    <div class="info-icon">
+                        🎓
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Practical Training
+                        </h3>
+
+                        <p>
+                            Learn through practical and
+                            skills-focused training.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="info-item">
+
+                    <div class="info-icon">
+                        🛠
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Technical Skills
+                        </h3>
+
+                        <p>
+                            Develop useful technical and
+                            industry-relevant skills.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="info-item">
+
+                    <div class="info-icon">
+                        👥
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Professional Development
+                        </h3>
+
+                        <p>
+                            Build confidence and prepare for
+                            real-world opportunities.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="info-item">
+
+                    <div class="info-icon">
+                        📋
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Application Review
+                        </h3>
+
+                        <p>
+                            Applications are reviewed by our
+                            team before enrollment.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="notice">
+
+                    <strong>
+                        Important:
+                    </strong>
+
+                    Submitting this form does not automatically
+                    guarantee admission into a training program.
+                    Applicants will be contacted after their
+                    application has been reviewed.
+
+                </div>
+
+            </aside>
+
+
+            <!-- =================================================
+                 APPLICATION FORM
+            ================================================== -->
+
+            <section class="form-card">
+
+                <div class="form-heading">
+
+                    <h2>
+                        Apply for Training
+                    </h2>
+
+                    <p>
+                        Please provide accurate information in
+                        the fields below.
+                    </p>
+
+                </div>
+
+
+                <form
+                    id="trainingApplicationForm"
+                    method="POST"
+                    action="{{ url_for('training_apply') }}"
+                >
+
+
+                    <!-- Full Name -->
+
+                    <div class="form-group">
+
+                        <label for="full_name">
+                            Full Name
+                            <span class="required">*</span>
+                        </label>
+
+                        <input
+                            type="text"
+                            id="full_name"
+                            name="full_name"
+                            placeholder="Enter your full name"
+                            autocomplete="name"
+                            maxlength="120"
+                            required
+                        >
+
+                    </div>
+
+
+                    <!-- Email + Phone -->
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+
+                            <label for="email">
+                                Email Address
+                                <span class="required">*</span>
+                            </label>
+
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                placeholder="you@example.com"
+                                autocomplete="email"
+                                maxlength="150"
+                                required
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label for="phone">
+                                Phone Number
+                                <span class="required">*</span>
+                            </label>
+
+                            <input
+                                type="tel"
+                                id="phone"
+                                name="phone"
+                                placeholder="e.g. 024 000 0000"
+                                autocomplete="tel"
+                                maxlength="30"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- Program -->
+
+                    <div class="form-group">
+
+                        <label for="program">
+                            Training Program
+                            <span class="required">*</span>
+                        </label>
+
+                        <select
+                            id="program"
+                            name="program"
+                            required
+                        >
+
+                            <option value="">
+                                Select a training program
+                            </option>
+
+                            <option value="Electrical Installation">
+                                Electrical Installation
+                            </option>
+
+                            <option value="CCTV & Surveillance">
+                                CCTV & Surveillance
+                            </option>
+
+                            <option value="Access Control Systems">
+                                Access Control Systems
+                            </option>
+
+                            <option value="Electric Fencing">
+                                Electric Fencing
+                            </option>
+
+                            <option value="Fire Alarm Systems">
+                                Fire Alarm Systems
+                            </option>
+
+                            <option value="Automation & Smart Systems">
+                                Automation & Smart Systems
+                            </option>
+
+                            <option value="Security Systems">
+                                Security Systems
+                            </option>
+
+                            <option value="Other">
+                                Other
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- Education -->
+
+                    <div class="form-group">
+
+                        <label for="education">
+                            Educational / Professional Background
+                        </label>
+
+                        <input
+                            type="text"
+                            id="education"
+                            name="education"
+                            placeholder="e.g. SHS, Diploma, Degree, Technician"
+                            maxlength="150"
+                        >
+
+                    </div>
+
+
+                    <!-- Company -->
+
+                    <div class="form-group">
+
+                        <label for="company">
+                            Company / Organization
+                        </label>
+
+                        <input
+                            type="text"
+                            id="company"
+                            name="company"
+                            placeholder="Enter company or organization, if applicable"
+                            maxlength="150"
+                        >
+
+                    </div>
+
+
+                    <!-- Experience -->
+
+                    <div class="form-group">
+
+                        <label for="experience">
+                            Previous Experience
+                        </label>
+
+                        <textarea
+                            id="experience"
+                            name="experience"
+                            placeholder="Briefly describe any relevant experience you have."
+                            maxlength="1000"
+                        ></textarea>
+
+                    </div>
+
+
+                    <!-- Motivation -->
+
+                    <div class="form-group">
+
+                        <label for="motivation">
+                            Why do you want to join this training program?
+                            <span class="required">*</span>
+                        </label>
+
+                        <textarea
+                            id="motivation"
+                            name="motivation"
+                            placeholder="Tell us briefly why you are interested in this training."
+                            maxlength="1500"
+                            required
+                        ></textarea>
+
+                    </div>
+
+
+                    <!-- Additional Information -->
+
+                    <div class="form-group">
+
+                        <label for="message">
+                            Additional Information
+                        </label>
+
+                        <textarea
+                            id="message"
+                            name="message"
+                            placeholder="Anything else you would like us to know?"
+                            maxlength="1000"
+                        ></textarea>
+
+                    </div>
+
+
+                    <!-- Agreement -->
+
+                    <div class="checkbox-group">
+
+                        <input
+                            type="checkbox"
+                            id="agreement"
+                            name="agreement"
+                            value="1"
+                            required
+                        >
+
+                        <label for="agreement">
+
+                            I confirm that the information provided
+                            in this application is accurate and may
+                            be used by {{ company_name|default("Novera Energy & Technologies Ltd") }}
+                            for the purpose of reviewing my training
+                            application.
+
+                        </label>
+
+                    </div>
+
+
+                    <!-- Submit -->
+
+                    <button
+                        type="submit"
+                        class="submit-btn"
+                        id="submitButton"
+                    >
+                        Submit Training Application
+                    </button>
+
+                    <p class="form-note">
+                        Fields marked with * are required.
+                    </p>
+
+                </form>
+
+            </section>
+
+        </div>
+
+    </main>
+
+
+    <!-- =========================================================
+         FOOTER
+    ========================================================== -->
+
+    <footer>
+
+        <div class="footer-inner">
+
+            <div>
+
+                <div class="footer-brand">
+                    {{ company_name|default("Novera Energy & Technologies Ltd") }}
+                </div>
+
+                <span class="footer-tagline">
+                    {{ company_tagline|default("Light · Motion · Intelligence") }}
+                </span>
+
+            </div>
+
+            <div class="footer-copy">
+
+                © <span id="currentYear"></span>
+                {{ company_name|default("Novera Energy & Technologies Ltd") }}.
+                All rights reserved.
+
+            </div>
+
+        </div>
+
+    </footer>
+
+
+    <!-- =========================================================
+         JAVASCRIPT
+    ========================================================== -->
+
+    <script>
+
+        document.getElementById("currentYear").textContent =
+            new Date().getFullYear();
+
+
+        const form =
+            document.getElementById(
+                "trainingApplicationForm"
+            );
+
+        const submitButton =
+            document.getElementById(
+                "submitButton"
+            );
+
+
+        form.addEventListener(
+            "submit",
+            function () {
+
+                submitButton.disabled = true;
+
+                submitButton.textContent =
+                    "Submitting Application...";
+
+            }
+        );
+
+    </script>
+
+</body>
+</html>

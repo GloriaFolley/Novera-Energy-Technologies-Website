@@ -22,7 +22,6 @@
 
         body {
             margin: 0;
-
             min-height: 100vh;
 
             font-family:
@@ -58,7 +57,6 @@
                 0 4px 20px rgba(0, 0, 0, 0.08);
 
             position: relative;
-
             z-index: 10;
         }
 
@@ -146,6 +144,11 @@
         }
 
 
+        .back-btn:hover {
+            background: #dceaff;
+        }
+
+
         .logout-btn {
             padding: 10px 17px;
 
@@ -214,6 +217,8 @@
                 rgba(255,255,255,0.82);
 
             font-size: 15px;
+
+            line-height: 1.6;
         }
 
 
@@ -259,6 +264,14 @@
 
             border-left:
                 4px solid #ef4444;
+        }
+
+
+        .flash.info {
+            color: #1d4ed8;
+
+            border-left:
+                4px solid #3b82f6;
         }
 
 
@@ -325,13 +338,15 @@
             width: 100%;
 
             overflow-x: auto;
+
+            border-radius: 12px;
         }
 
 
         table {
             width: 100%;
 
-            min-width: 950px;
+            min-width: 1050px;
 
             border-collapse: collapse;
         }
@@ -354,6 +369,8 @@
             text-transform: uppercase;
 
             letter-spacing: 0.7px;
+
+            white-space: nowrap;
         }
 
 
@@ -372,7 +389,8 @@
 
 
         tbody tr {
-            transition: background 0.2s ease;
+            transition:
+                background 0.2s ease;
         }
 
 
@@ -382,9 +400,13 @@
 
 
         .staff-name {
+            display: block;
+
             font-weight: 800;
 
             color: #123568;
+
+            margin-bottom: 3px;
         }
 
 
@@ -395,6 +417,18 @@
             color: #667085;
 
             font-size: 13px;
+
+            white-space: nowrap;
+        }
+
+
+        .email {
+            word-break: break-word;
+        }
+
+
+        .muted {
+            color: #98a2b3;
         }
 
 
@@ -407,6 +441,8 @@
 
             align-items: center;
 
+            justify-content: center;
+
             padding: 6px 11px;
 
             border-radius: 999px;
@@ -414,6 +450,8 @@
             font-size: 12px;
 
             font-weight: 800;
+
+            white-space: nowrap;
         }
 
 
@@ -455,10 +493,18 @@
             flex-wrap: wrap;
 
             gap: 7px;
+
+            min-width: 180px;
         }
 
 
         .action-btn {
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
             border: none;
 
             border-radius: 7px;
@@ -470,6 +516,28 @@
             font-weight: 800;
 
             cursor: pointer;
+
+            text-decoration: none;
+
+            white-space: nowrap;
+
+            transition:
+                opacity 0.2s ease,
+                transform 0.2s ease;
+        }
+
+
+        .action-btn:hover {
+            opacity: 0.82;
+
+            transform:
+                translateY(-1px);
+        }
+
+
+        .action-btn:active {
+            transform:
+                translateY(0);
         }
 
 
@@ -508,8 +576,12 @@
         }
 
 
-        .action-btn:hover {
-            opacity: 0.8;
+        /* =====================================================
+           FORM
+           ===================================================== */
+
+        .inline-form {
+            margin: 0;
         }
 
 
@@ -526,10 +598,65 @@
         }
 
 
+        .empty-icon {
+            width: 64px;
+
+            height: 64px;
+
+            margin:
+                0 auto 18px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background: #eef5ff;
+
+            color: #0b3d91;
+
+            font-size: 26px;
+
+            font-weight: 800;
+        }
+
+
         .empty h3 {
-            margin: 0 0 8px;
+            margin:
+                0 0 8px;
 
             color: #143565;
+
+            font-size: 20px;
+        }
+
+
+        .empty p {
+            margin: 0;
+
+            font-size: 14px;
+
+            line-height: 1.6;
+        }
+
+
+        /* =====================================================
+           FOOTER
+           ===================================================== */
+
+        .footer {
+            padding:
+                25px 0 35px;
+
+            text-align: center;
+
+            color:
+                rgba(255,255,255,0.72);
+
+            font-size: 12px;
         }
 
 
@@ -557,12 +684,30 @@
 
 
             main {
-                padding: 35px 0 55px;
+                padding:
+                    35px 0 45px;
+            }
+
+
+            .page-header {
+                margin-bottom: 22px;
+            }
+
+
+            .page-header h1 {
+                font-size: 30px;
+            }
+
+
+            .page-header p {
+                font-size: 14px;
             }
 
 
             .staff-panel {
                 padding: 18px;
+
+                border-radius: 16px;
             }
 
 
@@ -570,6 +715,54 @@
                 align-items: flex-start;
 
                 flex-direction: column;
+
+                gap: 12px;
+            }
+
+
+            .panel-header h2 {
+                font-size: 20px;
+            }
+
+
+            .staff-count {
+                align-self: flex-start;
+            }
+
+
+            table {
+                min-width: 950px;
+            }
+
+        }
+
+
+        /* =====================================================
+           SMALL MOBILE
+           ===================================================== */
+
+        @media (max-width: 430px) {
+
+            .container {
+                width: 94%;
+            }
+
+
+            .nav-links {
+                gap: 5px;
+            }
+
+
+            .logout-btn {
+                padding:
+                    9px 12px;
+
+                font-size: 12px;
+            }
+
+
+            .staff-panel {
+                padding: 14px;
             }
 
         }
@@ -590,9 +783,11 @@
 
     <div class="container nav-inner">
 
+
         <a
             class="brand"
             href="{{ url_for('md_dashboard') }}"
+            aria-label="MD Dashboard"
         >
 
             <img
@@ -637,25 +832,32 @@
     <div class="container">
 
 
+        <!-- PAGE HEADER -->
+
         <div class="page-header">
 
             <span class="eyebrow">
                 Novera Management Portal
             </span>
 
+
             <h1>
                 Manage All Staff
             </h1>
 
+
             <p>
-                View and manage registered Novera staff accounts.
+                View, review and manage registered
+                {{ company_name }} staff accounts.
             </p>
 
         </div>
 
 
 
-        <!-- FLASH MESSAGES -->
+        <!-- =================================================
+             FLASH MESSAGES
+             ================================================= -->
 
         {% with messages = get_flashed_messages(
             with_categories=true
@@ -677,7 +879,9 @@
 
 
 
-        <!-- STAFF PANEL -->
+        <!-- =================================================
+             STAFF PANEL
+             ================================================= -->
 
         <section class="staff-panel">
 
@@ -688,13 +892,28 @@
                     Staff Accounts
                 </h2>
 
+
                 <span class="staff-count">
-                    {{ staff|length }} Staff
+
+                    {% if staff %}
+
+                        {{ staff|length }} Staff
+
+                    {% else %}
+
+                        0 Staff
+
+                    {% endif %}
+
                 </span>
 
             </div>
 
 
+
+            <!-- =================================================
+                 STAFF EXISTS
+                 ================================================= -->
 
             {% if staff %}
 
@@ -710,25 +929,31 @@
                                     Staff ID
                                 </th>
 
+
                                 <th>
                                     Name
                                 </th>
+
 
                                 <th>
                                     Email
                                 </th>
 
+
                                 <th>
                                     Department
                                 </th>
+
 
                                 <th>
                                     Position
                                 </th>
 
+
                                 <th>
                                     Status
                                 </th>
+
 
                                 <th>
                                     Actions
@@ -739,45 +964,99 @@
                         </thead>
 
 
+
                         <tbody>
 
                             {% for member in staff %}
 
                                 <tr>
 
+
+                                    <!-- STAFF ID -->
+
                                     <td>
 
                                         <span class="staff-id">
-                                            {{ member["staff_id"] }}
+
+                                            {{ member["staff_id"] or "N/A" }}
+
                                         </span>
 
                                     </td>
 
+
+
+                                    <!-- NAME -->
 
                                     <td>
 
                                         <span class="staff-name">
-                                            {{ member["first_name"] }}
-                                            {{ member["last_name"] }}
+
+                                            {{ member["first_name"] or "" }}
+
+                                            {{ member["last_name"] or "" }}
+
                                         </span>
 
                                     </td>
 
 
+
+                                    <!-- EMAIL -->
+
                                     <td>
-                                        {{ member["email"] }}
+
+                                        <span class="email">
+
+                                            {{ member["email"] or "N/A" }}
+
+                                        </span>
+
                                     </td>
 
 
+
+                                    <!-- DEPARTMENT -->
+
                                     <td>
-                                        {{ member["department"] }}
+
+                                        {% if member["department"] %}
+
+                                            {{ member["department"] }}
+
+                                        {% else %}
+
+                                            <span class="muted">
+                                                Not specified
+                                            </span>
+
+                                        {% endif %}
+
                                     </td>
 
 
+
+                                    <!-- POSITION -->
+
                                     <td>
-                                        {{ member["position"] }}
+
+                                        {% if member["position"] %}
+
+                                            {{ member["position"] }}
+
+                                        {% else %}
+
+                                            <span class="muted">
+                                                Not specified
+                                            </span>
+
+                                        {% endif %}
+
                                     </td>
 
+
+
+                                    <!-- STATUS -->
 
                                     <td>
 
@@ -787,25 +1066,32 @@
                                                 {{ member['status']|lower }}
                                             "
                                         >
+
                                             {{ member["status"] }}
+
                                         </span>
 
                                     </td>
 
+
+
+                                    <!-- ACTIONS -->
 
                                     <td>
 
                                         <div class="actions">
 
 
-                                            <!-- VIEW -->
+                                            <!-- =================================
+                                                 VIEW STAFF
+                                                 ================================= -->
 
                                             <a
                                                 class="action-btn view"
                                                 href="{{
                                                     url_for(
-                                                        'md_view_staff',
-                                                        staff_db_id=member['id']
+                                                        'md_staff_view',
+                                                        staff_id=member['id']
                                                     )
                                                 }}"
                                             >
@@ -814,16 +1100,19 @@
 
 
 
-                                            <!-- APPROVE -->
+                                            <!-- =================================
+                                                 APPROVE
+                                                 ================================= -->
 
                                             {% if member["status"] == "Pending" %}
 
                                                 <form
+                                                    class="inline-form"
                                                     method="POST"
                                                     action="{{
                                                         url_for(
                                                             'md_staff_action',
-                                                            staff_db_id=member['id'],
+                                                            staff_id=member['id'],
                                                             action='approve'
                                                         )
                                                     }}"
@@ -832,6 +1121,7 @@
                                                     <button
                                                         type="submit"
                                                         class="action-btn approve"
+                                                        onclick="return confirm('Approve this staff account?');"
                                                     >
                                                         Approve
                                                     </button>
@@ -842,16 +1132,19 @@
 
 
 
-                                            <!-- REJECT -->
+                                            <!-- =================================
+                                                 REJECT
+                                                 ================================= -->
 
                                             {% if member["status"] == "Pending" %}
 
                                                 <form
+                                                    class="inline-form"
                                                     method="POST"
                                                     action="{{
                                                         url_for(
                                                             'md_staff_action',
-                                                            staff_db_id=member['id'],
+                                                            staff_id=member['id'],
                                                             action='reject'
                                                         )
                                                     }}"
@@ -860,6 +1153,7 @@
                                                     <button
                                                         type="submit"
                                                         class="action-btn reject"
+                                                        onclick="return confirm('Reject this staff account?');"
                                                     >
                                                         Reject
                                                     </button>
@@ -870,16 +1164,19 @@
 
 
 
-                                            <!-- DISABLE -->
+                                            <!-- =================================
+                                                 DISABLE
+                                                 ================================= -->
 
                                             {% if member["status"] == "Active" %}
 
                                                 <form
+                                                    class="inline-form"
                                                     method="POST"
                                                     action="{{
                                                         url_for(
                                                             'md_staff_action',
-                                                            staff_db_id=member['id'],
+                                                            staff_id=member['id'],
                                                             action='disable'
                                                         )
                                                     }}"
@@ -888,6 +1185,7 @@
                                                     <button
                                                         type="submit"
                                                         class="action-btn disable"
+                                                        onclick="return confirm('Disable this staff account?');"
                                                     >
                                                         Disable
                                                     </button>
@@ -898,7 +1196,9 @@
 
 
 
-                                            <!-- ACTIVATE -->
+                                            <!-- =================================
+                                                 ACTIVATE
+                                                 ================================= -->
 
                                             {% if member["status"] in [
                                                 "Disabled",
@@ -906,11 +1206,12 @@
                                             ] %}
 
                                                 <form
+                                                    class="inline-form"
                                                     method="POST"
                                                     action="{{
                                                         url_for(
                                                             'md_staff_action',
-                                                            staff_db_id=member['id'],
+                                                            staff_id=member['id'],
                                                             action='activate'
                                                         )
                                                     }}"
@@ -919,6 +1220,7 @@
                                                     <button
                                                         type="submit"
                                                         class="action-btn activate"
+                                                        onclick="return confirm('Activate this staff account?');"
                                                     >
                                                         Activate
                                                     </button>
@@ -931,6 +1233,7 @@
                                         </div>
 
                                     </td>
+
 
                                 </tr>
 
@@ -945,11 +1248,22 @@
 
             {% else %}
 
+
+                <!-- =================================================
+                     EMPTY STATE
+                     ================================================= -->
+
                 <div class="empty">
+
+                    <div class="empty-icon">
+                        N
+                    </div>
+
 
                     <h3>
                         No Staff Accounts
                     </h3>
+
 
                     <p>
                         No staff members have registered yet.
@@ -957,14 +1271,33 @@
 
                 </div>
 
+
             {% endif %}
 
 
         </section>
 
+
     </div>
 
 </main>
+
+
+
+<!-- =========================================================
+     FOOTER
+     ========================================================= -->
+
+<footer class="footer">
+
+    <div class="container">
+
+        © {{ company_name }}.
+        Management Portal.
+
+    </div>
+
+</footer>
 
 
 </body>

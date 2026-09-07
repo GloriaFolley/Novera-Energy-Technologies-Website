@@ -1,0 +1,2050 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Consultation #{{ consultation["id"] }}
+        | {{ company_name }} MD Portal
+    </title>
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+    <style>
+
+        :root {
+            --blue: #0756a8;
+            --blue-dark: #043b76;
+            --blue-light: #eaf4ff;
+
+            --white: #ffffff;
+
+            --text: #122033;
+            --muted: #718096;
+
+            --border: #e5edf6;
+
+            --green: #159957;
+            --green-light: #e9f8f0;
+
+            --orange: #d97706;
+            --orange-light: #fff5df;
+
+            --red: #dc3545;
+            --red-light: #fff0f1;
+
+            --gray-light: #f5f8fc;
+        }
+
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+
+        body {
+            font-family:
+                "Inter",
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background:
+                var(--gray-light);
+
+            color:
+                var(--text);
+
+            min-height:
+                100vh;
+        }
+
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+
+        /* =====================================================
+           LAYOUT
+           ===================================================== */
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+
+        /* =====================================================
+           SIDEBAR
+           ===================================================== */
+
+        .sidebar {
+            width: 250px;
+
+            position: fixed;
+
+            inset: 0 auto 0 0;
+
+            background:
+                linear-gradient(
+                    180deg,
+                    #0756a8,
+                    #043b76
+                );
+
+            color:
+                #ffffff;
+
+            padding:
+                25px 16px;
+
+            z-index:
+                20;
+        }
+
+
+        .brand {
+            display: flex;
+
+            align-items: center;
+
+            gap: 11px;
+
+            padding:
+                8px 10px 30px;
+        }
+
+
+        .brand img {
+            width: 48px;
+
+            height: 48px;
+
+            object-fit: contain;
+
+            background:
+                #ffffff;
+
+            padding: 4px;
+
+            border-radius:
+                11px;
+        }
+
+
+        .brand strong {
+            display: block;
+
+            font-size: 15px;
+
+            font-weight: 800;
+        }
+
+
+        .brand span {
+            display: block;
+
+            font-size: 9px;
+
+            opacity: .75;
+
+            margin-top: 3px;
+        }
+
+
+        .nav-link {
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            padding: 12px;
+
+            border-radius: 9px;
+
+            margin-bottom: 5px;
+
+            font-size: 12px;
+
+            font-weight: 600;
+
+            color:
+                rgba(255,255,255,.82);
+
+            transition:
+                background .2s ease,
+                transform .2s ease;
+        }
+
+
+        .nav-link:hover {
+            background:
+                rgba(255,255,255,.13);
+
+            transform:
+                translateX(2px);
+        }
+
+
+        .nav-link.active {
+            background:
+                rgba(255,255,255,.16);
+
+            color:
+                #ffffff;
+        }
+
+
+        .nav-link i {
+            width: 18px;
+
+            text-align: center;
+
+            font-size: 13px;
+        }
+
+
+        /* =====================================================
+           MAIN
+           ===================================================== */
+
+        .main {
+            margin-left:
+                250px;
+
+            width:
+                calc(100% - 250px);
+
+            min-height:
+                100vh;
+        }
+
+
+        .topbar {
+            height:
+                75px;
+
+            background:
+                #ffffff;
+
+            border-bottom:
+                1px solid var(--border);
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            padding:
+                0 32px;
+
+            position:
+                sticky;
+
+            top:
+                0;
+
+            z-index:
+                10;
+        }
+
+
+        .topbar strong {
+            font-size:
+                14px;
+
+            color:
+                #183b70;
+        }
+
+
+        .content {
+            padding:
+                32px;
+
+            max-width:
+                1250px;
+        }
+
+
+        /* =====================================================
+           BACK
+           ===================================================== */
+
+        .back {
+            display:
+                inline-flex;
+
+            align-items:
+                center;
+
+            gap:
+                7px;
+
+            color:
+                var(--blue);
+
+            font-size:
+                12px;
+
+            font-weight:
+                700;
+
+            margin-bottom:
+                20px;
+        }
+
+
+        .back:hover {
+            opacity:
+                .72;
+        }
+
+
+        /* =====================================================
+           PAGE HEADER
+           ===================================================== */
+
+        .page-header {
+            display:
+                flex;
+
+            justify-content:
+                space-between;
+
+            align-items:
+                flex-start;
+
+            gap:
+                20px;
+
+            margin-bottom:
+                25px;
+        }
+
+
+        .page-title h1 {
+            font-size:
+                25px;
+
+            font-weight:
+                800;
+
+            color:
+                #122033;
+        }
+
+
+        .page-title p {
+            color:
+                var(--muted);
+
+            font-size:
+                12px;
+
+            margin-top:
+                6px;
+
+            line-height:
+                1.6;
+        }
+
+
+        .readonly-badge {
+            display:
+                inline-flex;
+
+            align-items:
+                center;
+
+            gap:
+                7px;
+
+            padding:
+                9px 13px;
+
+            background:
+                var(--blue-light);
+
+            color:
+                var(--blue);
+
+            border-radius:
+                20px;
+
+            font-size:
+                10px;
+
+            font-weight:
+                800;
+
+            white-space:
+                nowrap;
+        }
+
+
+        /* =====================================================
+           GRID
+           ===================================================== */
+
+        .grid {
+            display:
+                grid;
+
+            grid-template-columns:
+                minmax(0, 1.5fr)
+                minmax(300px, .8fr);
+
+            gap:
+                22px;
+
+            align-items:
+                start;
+        }
+
+
+        /* =====================================================
+           CARD
+           ===================================================== */
+
+        .card {
+            background:
+                #ffffff;
+
+            border:
+                1px solid var(--border);
+
+            border-radius:
+                15px;
+
+            overflow:
+                hidden;
+
+            box-shadow:
+                0 12px 35px
+                rgba(5,54,105,.07);
+        }
+
+
+        .card-head {
+            padding:
+                19px 21px;
+
+            border-bottom:
+                1px solid var(--border);
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                space-between;
+        }
+
+
+        .card-head h2 {
+            font-size:
+                15px;
+
+            font-weight:
+                800;
+        }
+
+
+        .card-body {
+            padding:
+                22px;
+        }
+
+
+        /* =====================================================
+           DETAILS
+           ===================================================== */
+
+        .detail {
+            display:
+                grid;
+
+            grid-template-columns:
+                150px minmax(0, 1fr);
+
+            gap:
+                15px;
+
+            padding:
+                13px 0;
+
+            border-bottom:
+                1px solid #edf2f7;
+        }
+
+
+        .detail:last-child {
+            border-bottom:
+                0;
+        }
+
+
+        .label {
+            color:
+                var(--muted);
+
+            font-size:
+                11px;
+
+            font-weight:
+                600;
+        }
+
+
+        .value {
+            font-size:
+                13px;
+
+            font-weight:
+                600;
+
+            line-height:
+                1.5;
+
+            overflow-wrap:
+                anywhere;
+        }
+
+
+        .message {
+            white-space:
+                pre-wrap;
+
+            font-weight:
+                400;
+
+            line-height:
+                1.7;
+        }
+
+
+        /* =====================================================
+           STATUS
+           ===================================================== */
+
+        .status {
+            display:
+                inline-flex;
+
+            align-items:
+                center;
+
+            gap:
+                6px;
+
+            padding:
+                6px 10px;
+
+            border-radius:
+                20px;
+
+            font-size:
+                10px;
+
+            font-weight:
+                800;
+        }
+
+
+        .status.new {
+            background:
+                var(--blue-light);
+
+            color:
+                var(--blue);
+        }
+
+
+        .status.progress {
+            background:
+                var(--orange-light);
+
+            color:
+                #a36000;
+        }
+
+
+        .status.closed {
+            background:
+                var(--green-light);
+
+            color:
+                #11713f;
+        }
+
+
+        /* =====================================================
+           ASSIGNMENT CARD
+           ===================================================== */
+
+        .assignment-card {
+            background:
+                #ffffff;
+
+            border:
+                1px solid var(--border);
+
+            border-radius:
+                15px;
+
+            overflow:
+                hidden;
+
+            box-shadow:
+                0 12px 35px
+                rgba(5,54,105,.07);
+        }
+
+
+        .assignment-head {
+            padding:
+                19px 21px;
+
+            border-bottom:
+                1px solid var(--border);
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                10px;
+        }
+
+
+        .assignment-head-icon {
+            width:
+                34px;
+
+            height:
+                34px;
+
+            border-radius:
+                9px;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            background:
+                var(--blue-light);
+
+            color:
+                var(--blue);
+
+            font-size:
+                14px;
+        }
+
+
+        .assignment-head h2 {
+            font-size:
+                15px;
+
+            font-weight:
+                800;
+        }
+
+
+        .assignment-body {
+            padding:
+                22px;
+        }
+
+
+        /* =====================================================
+           ASSIGNED BOX
+           ===================================================== */
+
+        .assigned-box {
+            background:
+                var(--green-light);
+
+            border:
+                1px solid #ccebdc;
+
+            color:
+                #11713f;
+
+            padding:
+                15px;
+
+            border-radius:
+                11px;
+
+            margin-bottom:
+                18px;
+        }
+
+
+        .assigned-title {
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                8px;
+
+            font-size:
+                11px;
+
+            font-weight:
+                800;
+
+            margin-bottom:
+                7px;
+        }
+
+
+        .assigned-name {
+            font-size:
+                15px;
+
+            font-weight:
+                800;
+
+            line-height:
+                1.4;
+
+            margin-bottom:
+                5px;
+        }
+
+
+        .assigned-id {
+            font-size:
+                10px;
+
+            opacity:
+                .85;
+
+            line-height:
+                1.5;
+        }
+
+
+        /* =====================================================
+           UNASSIGNED BOX
+           ===================================================== */
+
+        .unassigned-box {
+            background:
+                var(--red-light);
+
+            border:
+                1px solid #f3c9ce;
+
+            color:
+                #a91f2e;
+
+            padding:
+                15px;
+
+            border-radius:
+                11px;
+
+            margin-bottom:
+                18px;
+
+            font-size:
+                11px;
+
+            font-weight:
+                700;
+
+            line-height:
+                1.5;
+        }
+
+
+        .unassigned-box i {
+            margin-right:
+                6px;
+        }
+
+
+        /* =====================================================
+           INFORMATION BOX
+           ===================================================== */
+
+        .assignment-info {
+            border:
+                1px solid #e1eaf3;
+
+            border-radius:
+                11px;
+
+            overflow:
+                hidden;
+
+            background:
+                #fbfdff;
+        }
+
+
+        .assignment-info-title {
+            padding:
+                13px 15px;
+
+            background:
+                #f3f8fd;
+
+            border-bottom:
+                1px solid #e1eaf3;
+
+            font-size:
+                11px;
+
+            font-weight:
+                800;
+
+            color:
+                #183b70;
+
+            text-transform:
+                uppercase;
+
+            letter-spacing:
+                .3px;
+        }
+
+
+        .info-row {
+            display:
+                grid;
+
+            grid-template-columns:
+                105px minmax(0, 1fr);
+
+            gap:
+                12px;
+
+            padding:
+                12px 15px;
+
+            border-bottom:
+                1px solid #edf2f7;
+        }
+
+
+        .info-row:last-child {
+            border-bottom:
+                0;
+        }
+
+
+        .info-label {
+            color:
+                var(--muted);
+
+            font-size:
+                10px;
+
+            font-weight:
+                600;
+        }
+
+
+        .info-value {
+            color:
+                var(--text);
+
+            font-size:
+                11px;
+
+            font-weight:
+                700;
+
+            line-height:
+                1.5;
+
+            overflow-wrap:
+                anywhere;
+        }
+
+
+        /* =====================================================
+           READ ONLY NOTICE
+           ===================================================== */
+
+        .readonly-notice {
+            margin-top:
+                18px;
+
+            padding:
+                14px;
+
+            background:
+                var(--blue-light);
+
+            border:
+                1px solid #d4e7fa;
+
+            border-radius:
+                10px;
+
+            color:
+                var(--blue);
+
+            font-size:
+                10px;
+
+            line-height:
+                1.7;
+
+            font-weight:
+                600;
+        }
+
+
+        .readonly-notice i {
+            margin-right:
+                6px;
+        }
+
+
+        /* =====================================================
+           FLASH MESSAGES
+           ===================================================== */
+
+        .flash {
+            padding:
+                13px 15px;
+
+            border-radius:
+                9px;
+
+            margin-bottom:
+                18px;
+
+            font-size:
+                12px;
+
+            font-weight:
+                600;
+        }
+
+
+        .flash.success {
+            background:
+                var(--green-light);
+
+            color:
+                #11713f;
+        }
+
+
+        .flash.warning {
+            background:
+                var(--orange-light);
+
+            color:
+                #8a5a00;
+        }
+
+
+        .flash.danger {
+            background:
+                var(--red-light);
+
+            color:
+                #a91f2e;
+        }
+
+
+        .flash.info {
+            background:
+                var(--blue-light);
+
+            color:
+                var(--blue);
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+           ===================================================== */
+
+        @media (max-width: 1000px) {
+
+            .grid {
+                grid-template-columns:
+                    1fr;
+            }
+
+        }
+
+
+        @media (max-width: 850px) {
+
+            .sidebar {
+                width:
+                    70px;
+
+                padding:
+                    18px 8px;
+            }
+
+
+            .brand {
+                justify-content:
+                    center;
+
+                padding:
+                    8px 4px 30px;
+            }
+
+
+            .brand div,
+            .nav-link span {
+                display:
+                    none;
+            }
+
+
+            .nav-link {
+                justify-content:
+                    center;
+            }
+
+
+            .nav-link i {
+                width:
+                    auto;
+
+                font-size:
+                    15px;
+            }
+
+
+            .main {
+                margin-left:
+                    70px;
+
+                width:
+                    calc(100% - 70px);
+            }
+
+
+            .topbar {
+                padding:
+                    0 20px;
+            }
+
+
+            .content {
+                padding:
+                    20px;
+            }
+
+
+            .page-header {
+                flex-direction:
+                    column;
+            }
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            .topbar {
+                height:
+                    65px;
+            }
+
+
+            .topbar strong {
+                font-size:
+                    12px;
+            }
+
+
+            .content {
+                padding:
+                    16px;
+            }
+
+
+            .page-title h1 {
+                font-size:
+                    21px;
+            }
+
+
+            .card-body,
+            .assignment-body {
+                padding:
+                    17px;
+            }
+
+
+            .detail {
+                grid-template-columns:
+                    1fr;
+
+                gap:
+                    5px;
+
+                padding:
+                    12px 0;
+            }
+
+
+            .label {
+                font-size:
+                    10px;
+
+                text-transform:
+                    uppercase;
+
+                letter-spacing:
+                    .3px;
+            }
+
+
+            .value {
+                font-size:
+                    13px;
+            }
+
+
+            .info-row {
+                grid-template-columns:
+                    1fr;
+
+                gap:
+                    4px;
+            }
+
+        }
+
+
+        @media (max-width: 430px) {
+
+            .sidebar {
+                width:
+                    58px;
+
+                padding:
+                    15px 6px;
+            }
+
+
+            .main {
+                margin-left:
+                    58px;
+
+                width:
+                    calc(100% - 58px);
+            }
+
+
+            .content {
+                padding:
+                    13px;
+            }
+
+
+            .topbar {
+                padding:
+                    0 14px;
+            }
+
+
+            .brand img {
+                width:
+                    40px;
+
+                height:
+                    40px;
+            }
+
+
+            .card-head,
+            .assignment-head {
+                padding:
+                    16px;
+            }
+
+
+            .card-body,
+            .assignment-body {
+                padding:
+                    15px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="layout">
+
+
+    <!-- =====================================================
+         SIDEBAR
+         ===================================================== -->
+
+    <aside class="sidebar">
+
+
+        <div class="brand">
+
+            <img
+                src="{{ url_for('logo') }}"
+                alt="{{ company_name }} Logo"
+                onerror="
+                    this.onerror=null;
+                    this.src='/assets/logo.jpg';
+                "
+            >
+
+
+            <div>
+
+                <strong>
+                    NOVERA
+                </strong>
+
+                <span>
+                    Light · Motion · Intelligence
+                </span>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- DASHBOARD -->
+
+        <a
+            class="nav-link"
+            href="{{ url_for('md_dashboard') }}"
+        >
+
+            <i class="fa-solid fa-chart-pie"></i>
+
+            <span>
+                Dashboard
+            </span>
+
+        </a>
+
+
+
+        <!-- STAFF -->
+
+        <a
+            class="nav-link"
+            href="{{ url_for('md_staff') }}"
+        >
+
+            <i class="fa-solid fa-users"></i>
+
+            <span>
+                Staff
+            </span>
+
+        </a>
+
+
+
+        <!-- CONSULTATIONS -->
+
+        <a
+            class="nav-link active"
+            href="{{ url_for('md_consultations') }}"
+        >
+
+            <i class="fa-solid fa-clipboard-list"></i>
+
+            <span>
+                Consultations
+            </span>
+
+        </a>
+
+
+
+        <!-- LOGOUT -->
+
+        <a
+            class="nav-link"
+            href="{{ url_for('md_logout') }}"
+            style="
+                position:absolute;
+                bottom:25px;
+                left:16px;
+                right:16px;
+            "
+        >
+
+            <i class="fa-solid fa-right-from-bracket"></i>
+
+            <span>
+                Logout
+            </span>
+
+        </a>
+
+
+    </aside>
+
+
+
+    <!-- =====================================================
+         MAIN
+         ===================================================== -->
+
+    <main class="main">
+
+
+        <header class="topbar">
+
+            <strong>
+                Executive Consultation Oversight
+            </strong>
+
+        </header>
+
+
+
+        <div class="content">
+
+
+            <!-- =================================================
+                 FLASH MESSAGES
+                 ================================================= -->
+
+            {% with messages = get_flashed_messages(
+                with_categories=true
+            ) %}
+
+                {% for category, message in messages %}
+
+                    <div class="flash {{ category }}">
+
+                        {{ message }}
+
+                    </div>
+
+                {% endfor %}
+
+            {% endwith %}
+
+
+
+            <!-- =================================================
+                 BACK
+                 ================================================= -->
+
+            <a
+                href="{{ url_for('md_consultations') }}"
+                class="back"
+            >
+
+                <i class="fa-solid fa-arrow-left"></i>
+
+                Back to Consultations
+
+            </a>
+
+
+
+            <!-- =================================================
+                 PAGE HEADER
+                 ================================================= -->
+
+            <div class="page-header">
+
+
+                <div class="page-title">
+
+                    <h1>
+
+                        Consultation #{{ consultation["id"] }}
+
+                    </h1>
+
+
+                    <p>
+
+                        View client details, consultation status,
+                        assigned staff, and assignment information.
+
+                    </p>
+
+                </div>
+
+
+
+                <div class="readonly-badge">
+
+                    <i class="fa-solid fa-eye"></i>
+
+                    Read-Only
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =================================================
+                 GRID
+                 ================================================= -->
+
+            <div class="grid">
+
+
+
+                <!-- =================================================
+                     CONSULTATION DETAILS
+                     ================================================= -->
+
+                <section class="card">
+
+
+                    <div class="card-head">
+
+                        <h2>
+                            Consultation Details
+                        </h2>
+
+                    </div>
+
+
+
+                    <div class="card-body">
+
+
+                        <!-- CLIENT -->
+
+                        <div class="detail">
+
+                            <div class="label">
+                                Client
+                            </div>
+
+                            <div class="value">
+
+                                {{ consultation["name"] or "Not provided" }}
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- COMPANY -->
+
+                        <div class="detail">
+
+                            <div class="label">
+                                Company
+                            </div>
+
+                            <div class="value">
+
+                                {{ consultation["company"] or "Not provided" }}
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- EMAIL -->
+
+                        <div class="detail">
+
+                            <div class="label">
+                                Email
+                            </div>
+
+                            <div class="value">
+
+                                {{ consultation["email"] or "Not provided" }}
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- PHONE -->
+
+                        <div class="detail">
+
+                            <div class="label">
+                                Phone
+                            </div>
+
+                            <div class="value">
+
+                                {{ consultation["phone"] or "Not provided" }}
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- SERVICE -->
+
+                        <div class="detail">
+
+                            <div class="label">
+                                Service
+                            </div>
+
+                            <div class="value">
+
+                                {{ consultation["service"] or "Not specified" }}
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- LANGUAGE -->
+
+                        {% if consultation["language"] %}
+
+                            <div class="detail">
+
+                                <div class="label">
+                                    Language
+                                </div>
+
+                                <div class="value">
+
+                                    {{ consultation["language"] }}
+
+                                </div>
+
+                            </div>
+
+                        {% endif %}
+
+
+
+                        <!-- STATUS -->
+
+                        <div class="detail">
+
+                            <div class="label">
+                                Status
+                            </div>
+
+                            <div class="value">
+
+
+                                {% if consultation["status"] == "New" %}
+
+                                    <span class="status new">
+
+                                        <i
+                                            class="fa-solid fa-circle"
+                                        ></i>
+
+                                        New
+
+                                    </span>
+
+
+                                {% elif consultation["status"] == "In Progress" %}
+
+                                    <span class="status progress">
+
+                                        <i
+                                            class="fa-solid fa-clock"
+                                        ></i>
+
+                                        In Progress
+
+                                    </span>
+
+
+                                {% elif consultation["status"] == "Closed" %}
+
+                                    <span class="status closed">
+
+                                        <i
+                                            class="fa-solid fa-circle-check"
+                                        ></i>
+
+                                        Closed
+
+                                    </span>
+
+
+                                {% else %}
+
+                                    <span class="status new">
+
+                                        <i
+                                            class="fa-solid fa-circle"
+                                        ></i>
+
+                                        {{ consultation["status"] or "Unknown" }}
+
+                                    </span>
+
+                                {% endif %}
+
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- SUBMITTED -->
+
+                        <div class="detail">
+
+                            <div class="label">
+                                Submitted
+                            </div>
+
+                            <div class="value">
+
+                                {{ consultation["created_at"] or "Not available" }}
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- UPDATED -->
+
+                        {% if consultation["updated_at"] %}
+
+                            <div class="detail">
+
+                                <div class="label">
+                                    Last Updated
+                                </div>
+
+                                <div class="value">
+
+                                    {{ consultation["updated_at"] }}
+
+                                </div>
+
+                            </div>
+
+                        {% endif %}
+
+
+
+                        <!-- MESSAGE -->
+
+                        <div class="detail">
+
+                            <div class="label">
+                                Message
+                            </div>
+
+                            <div class="value message">
+
+                                {{ consultation["message"] or "No message provided." }}
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </section>
+
+
+
+                <!-- =================================================
+                     ASSIGNMENT INFORMATION
+                     ================================================= -->
+
+                <aside>
+
+                    <section class="assignment-card">
+
+
+                        <div class="assignment-head">
+
+                            <div class="assignment-head-icon">
+
+                                <i
+                                    class="fa-solid fa-user-check"
+                                ></i>
+
+                            </div>
+
+
+                            <h2>
+                                Assignment Information
+                            </h2>
+
+                        </div>
+
+
+
+                        <div class="assignment-body">
+
+
+
+                            <!-- =================================================
+                                 CURRENT ASSIGNMENT
+                                 ================================================= -->
+
+                            {% if consultation["assigned_staff_id"] %}
+
+
+                                <div class="assigned-box">
+
+
+                                    <div class="assigned-title">
+
+                                        <i
+                                            class="fa-solid fa-circle-check"
+                                        ></i>
+
+                                        Currently Assigned
+
+                                    </div>
+
+
+                                    <div class="assigned-name">
+
+                                        {{ consultation["assigned_first_name"] or "" }}
+
+                                        {{ consultation["assigned_last_name"] or "" }}
+
+                                    </div>
+
+
+                                    <div class="assigned-id">
+
+                                        <i
+                                            class="fa-solid fa-id-badge"
+                                        ></i>
+
+                                        {{ consultation["assigned_staff_code"] or "Staff ID unavailable" }}
+
+                                    </div>
+
+
+                                </div>
+
+
+
+                                <!-- =================================================
+                                     STAFF INFORMATION
+                                     ================================================= -->
+
+                                <div class="assignment-info">
+
+
+                                    <div class="assignment-info-title">
+
+                                        Assigned Staff
+
+                                    </div>
+
+
+
+                                    <div class="info-row">
+
+                                        <div class="info-label">
+                                            Name
+                                        </div>
+
+                                        <div class="info-value">
+
+                                            {{ consultation["assigned_first_name"] or "" }}
+
+                                            {{ consultation["assigned_last_name"] or "" }}
+
+                                        </div>
+
+                                    </div>
+
+
+
+                                    <div class="info-row">
+
+                                        <div class="info-label">
+                                            Staff ID
+                                        </div>
+
+                                        <div class="info-value">
+
+                                            {{ consultation["assigned_staff_code"] or "Not available" }}
+
+                                        </div>
+
+                                    </div>
+
+
+
+                                    <div class="info-row">
+
+                                        <div class="info-label">
+                                            Department
+                                        </div>
+
+                                        <div class="info-value">
+
+                                            {{ consultation["assigned_department"] or "Not specified" }}
+
+                                        </div>
+
+                                    </div>
+
+
+
+                                    <div class="info-row">
+
+                                        <div class="info-label">
+                                            Position
+                                        </div>
+
+                                        <div class="info-value">
+
+                                            {{ consultation["assigned_position"] or "Not specified" }}
+
+                                        </div>
+
+                                    </div>
+
+
+
+                                    <div class="info-row">
+
+                                        <div class="info-label">
+                                            Email
+                                        </div>
+
+                                        <div class="info-value">
+
+                                            {{ consultation["assigned_staff_email"] or "Not available" }}
+
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+
+
+
+                                <!-- =================================================
+                                     ASSIGNMENT AUDIT
+                                     ================================================= -->
+
+                                <div
+                                    class="assignment-info"
+                                    style="margin-top:15px;"
+                                >
+
+
+                                    <div class="assignment-info-title">
+
+                                        Assignment Audit
+
+                                    </div>
+
+
+
+                                    <div class="info-row">
+
+                                        <div class="info-label">
+                                            Assigned By
+                                        </div>
+
+                                        <div class="info-value">
+
+                                            {% if consultation["assigned_by_first_name"] %}
+
+                                                {{ consultation["assigned_by_first_name"] }}
+
+                                                {{ consultation["assigned_by_last_name"] or "" }}
+
+                                            {% else %}
+
+                                                Not available
+
+                                            {% endif %}
+
+                                        </div>
+
+                                    </div>
+
+
+
+                                    <div class="info-row">
+
+                                        <div class="info-label">
+                                            Email
+                                        </div>
+
+                                        <div class="info-value">
+
+                                            {{ consultation["assigned_by_email"] or "Not available" }}
+
+                                        </div>
+
+                                    </div>
+
+
+
+                                    <div class="info-row">
+
+                                        <div class="info-label">
+                                            Assigned On
+                                        </div>
+
+                                        <div class="info-value">
+
+                                            {{ consultation["assigned_at"] or "Not available" }}
+
+                                        </div>
+
+                                    </div>
+
+
+                                </div>
+
+
+
+                            {% else %}
+
+
+                                <!-- =================================================
+                                     UNASSIGNED
+                                     ================================================= -->
+
+                                <div class="unassigned-box">
+
+                                    <i
+                                        class="fa-solid fa-circle-exclamation"
+                                    ></i>
+
+                                    This consultation is currently
+                                    unassigned.
+
+                                </div>
+
+
+                            {% endif %}
+
+
+
+                            <!-- =================================================
+                                 READ ONLY NOTICE
+                                 ================================================= -->
+
+                            <div class="readonly-notice">
+
+                                <i
+                                    class="fa-solid fa-eye"
+                                ></i>
+
+                                <strong>MD Read-Only Access:</strong>
+
+                                You can review the consultation,
+                                its current status, the staff member
+                                assigned to it, who assigned it, and
+                                when it was assigned.
+
+                                <br><br>
+
+                                MD cannot assign, reassign, unassign,
+                                change the consultation status, or
+                                delete consultations.
+
+                            </div>
+
+
+                        </div>
+
+                    </section>
+
+                </aside>
+
+
+            </div>
+
+
+        </div>
+
+
+    </main>
+
+
+</div>
+
+
+</body>
+
+</html>

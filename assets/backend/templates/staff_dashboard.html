@@ -11,7 +11,7 @@
     >
 
     <title>
-        Novera Staff Dashboard
+        Staff Dashboard | {{ company_name }}
     </title>
 
     <link
@@ -21,6 +21,10 @@
 
     <style>
 
+        /* =====================================================
+           NOVERA STAFF DASHBOARD
+           ===================================================== */
+
         * {
             margin: 0;
             padding: 0;
@@ -28,7 +32,10 @@
         }
 
         :root {
+
             --navy: #071a33;
+            --navy-light: #0b315f;
+
             --blue: #0b5ed7;
             --blue-dark: #084298;
             --blue-light: #eaf3ff;
@@ -38,6 +45,7 @@
 
             --text: #172033;
             --muted: #6b7280;
+            --muted-dark: #4b5563;
 
             --border: #e4e9f2;
 
@@ -49,6 +57,9 @@
 
             --danger: #dc3545;
             --danger-bg: #fff0f1;
+
+            --closed: #59616e;
+            --closed-bg: #eef1f4;
 
             --shadow:
                 0 8px 25px rgba(7, 26, 51, 0.07);
@@ -74,26 +85,22 @@
 
 
         a {
-
-            text-decoration:
-                none;
-
-            color:
-                inherit;
+            color: inherit;
+            text-decoration: none;
         }
 
 
         /* =====================================================
            TOPBAR
-        ===================================================== */
+           ===================================================== */
 
         .topbar {
 
-            height:
+            min-height:
                 76px;
 
             background:
-                var(--white);
+                rgba(255, 255, 255, 0.98);
 
             border-bottom:
                 1px solid var(--border);
@@ -131,6 +138,9 @@
 
             gap:
                 13px;
+
+            min-width:
+                0;
         }
 
 
@@ -147,6 +157,9 @@
 
             display:
                 block;
+
+            flex-shrink:
+                0;
         }
 
 
@@ -198,7 +211,7 @@
                 center;
 
             gap:
-                12px;
+                10px;
         }
 
 
@@ -240,12 +253,16 @@
         }
 
 
+        .profile-btn,
         .logout-btn {
 
             display:
                 inline-flex;
 
             align-items:
+                center;
+
+            justify-content:
                 center;
 
             gap:
@@ -260,11 +277,11 @@
             border-radius:
                 8px;
 
-            color:
-                #4b5563;
-
             background:
                 white;
+
+            color:
+                var(--muted-dark);
 
             font-size:
                 13px;
@@ -273,7 +290,20 @@
                 600;
 
             transition:
-                .2s ease;
+                0.2s ease;
+        }
+
+
+        .profile-btn:hover {
+
+            color:
+                var(--blue);
+
+            border-color:
+                #b8d1f5;
+
+            background:
+                var(--blue-light);
         }
 
 
@@ -292,7 +322,7 @@
 
         /* =====================================================
            PAGE
-        ===================================================== */
+           ===================================================== */
 
         .page {
 
@@ -312,7 +342,7 @@
 
         /* =====================================================
            PAGE HEADER
-        ===================================================== */
+           ===================================================== */
 
         .page-header {
 
@@ -356,6 +386,9 @@
 
             font-size:
                 14px;
+
+            line-height:
+                1.5;
         }
 
 
@@ -387,12 +420,15 @@
 
             font-weight:
                 700;
+
+            white-space:
+                nowrap;
         }
 
 
         /* =====================================================
            FLASH MESSAGES
-        ===================================================== */
+           ===================================================== */
 
         .flash {
 
@@ -452,11 +488,30 @@
         }
 
 
+        .flash.info {
+
+            background:
+                var(--blue-light);
+
+            color:
+                var(--blue-dark);
+
+            border-color:
+                #cfe0f8;
+        }
+
+
         /* =====================================================
            PROFILE BANNER
-        ===================================================== */
+           ===================================================== */
 
         .profile-banner {
+
+            position:
+                relative;
+
+            overflow:
+                hidden;
 
             background:
                 linear-gradient(
@@ -484,6 +539,9 @@
             justify-content:
                 space-between;
 
+            gap:
+                20px;
+
             margin-bottom:
                 25px;
 
@@ -492,7 +550,44 @@
         }
 
 
+        .profile-banner::after {
+
+            content:
+                "";
+
+            position:
+                absolute;
+
+            width:
+                240px;
+
+            height:
+                240px;
+
+            right:
+                -100px;
+
+            top:
+                -110px;
+
+            border-radius:
+                50%;
+
+            background:
+                rgba(255, 255, 255, 0.06);
+
+            pointer-events:
+                none;
+        }
+
+
         .profile-left {
+
+            position:
+                relative;
+
+            z-index:
+                2;
 
             display:
                 flex;
@@ -502,6 +597,9 @@
 
             gap:
                 18px;
+
+            min-width:
+                0;
         }
 
 
@@ -513,11 +611,14 @@
             height:
                 62px;
 
+            flex-shrink:
+                0;
+
             border-radius:
                 14px;
 
             background:
-                rgba(255,255,255,.15);
+                rgba(255, 255, 255, 0.15);
 
             display:
                 flex;
@@ -532,7 +633,14 @@
                 25px;
 
             border:
-                1px solid rgba(255,255,255,.2);
+                1px solid rgba(255, 255, 255, 0.2);
+        }
+
+
+        .profile-info {
+
+            min-width:
+                0;
         }
 
 
@@ -543,6 +651,9 @@
 
             margin-bottom:
                 5px;
+
+            word-break:
+                break-word;
         }
 
 
@@ -552,14 +663,26 @@
                 13px;
 
             opacity:
-                .82;
+                0.82;
+
+            line-height:
+                1.5;
         }
 
 
         .profile-id {
 
+            position:
+                relative;
+
+            z-index:
+                2;
+
             text-align:
                 right;
+
+            flex-shrink:
+                0;
         }
 
 
@@ -578,7 +701,7 @@
                 1px;
 
             opacity:
-                .7;
+                0.7;
 
             margin-bottom:
                 5px;
@@ -589,12 +712,15 @@
 
             font-size:
                 16px;
+
+            letter-spacing:
+                0.3px;
         }
 
 
         /* =====================================================
            STAFF INFORMATION
-        ===================================================== */
+           ===================================================== */
 
         .info-grid {
 
@@ -627,7 +753,7 @@
                 20px;
 
             box-shadow:
-                0 4px 15px rgba(7,26,51,.035);
+                0 4px 15px rgba(7, 26, 51, 0.035);
         }
 
 
@@ -674,7 +800,7 @@
                 uppercase;
 
             letter-spacing:
-                .5px;
+                0.5px;
 
             margin-bottom:
                 7px;
@@ -699,7 +825,7 @@
 
         /* =====================================================
            STATISTICS
-        ===================================================== */
+           ===================================================== */
 
         .stats-grid {
 
@@ -713,7 +839,7 @@
                 18px;
 
             margin-bottom:
-                30px;
+                32px;
         }
 
 
@@ -741,7 +867,20 @@
                 16px;
 
             box-shadow:
-                0 4px 15px rgba(7,26,51,.035);
+                0 4px 15px rgba(7, 26, 51, 0.035);
+
+            transition:
+                0.2s ease;
+        }
+
+
+        .stat-card:hover {
+
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                var(--shadow);
         }
 
 
@@ -807,7 +946,7 @@
 
         /* =====================================================
            PORTAL
-        ===================================================== */
+           ===================================================== */
 
         .section-heading {
 
@@ -879,7 +1018,7 @@
                 16px;
 
             transition:
-                .2s ease;
+                0.2s ease;
         }
 
 
@@ -958,7 +1097,7 @@
 
         /* =====================================================
            REQUEST PANEL
-        ===================================================== */
+           ===================================================== */
 
         .requests-panel {
 
@@ -978,7 +1117,7 @@
                 25px;
 
             box-shadow:
-                0 4px 15px rgba(7,26,51,.035);
+                0 4px 15px rgba(7, 26, 51, 0.035);
         }
 
 
@@ -998,6 +1137,9 @@
 
             justify-content:
                 space-between;
+
+            gap:
+                15px;
         }
 
 
@@ -1077,7 +1219,7 @@
 
         /* =====================================================
            REQUEST CARD
-        ===================================================== */
+           ===================================================== */
 
         .request-card {
 
@@ -1097,12 +1239,11 @@
                 #fff;
 
             transition:
-                .2s ease;
+                0.2s ease;
         }
 
 
         .request-card:last-child {
-
             margin-bottom:
                 0;
         }
@@ -1114,7 +1255,7 @@
                 #c8d9f2;
 
             box-shadow:
-                0 5px 16px rgba(7,26,51,.045);
+                0 5px 16px rgba(7, 26, 51, 0.045);
         }
 
 
@@ -1150,6 +1291,9 @@
 
             margin-bottom:
                 5px;
+
+            word-break:
+                break-word;
         }
 
 
@@ -1164,8 +1308,8 @@
 
 
         /* =====================================================
-           BADGES
-        ===================================================== */
+           REQUEST STATUS
+           ===================================================== */
 
         .badge {
 
@@ -1215,33 +1359,13 @@
         }
 
 
-        .badge-completed {
-
-            color:
-                var(--success);
-
-            background:
-                var(--success-bg);
-        }
-
-
         .badge-closed {
 
             color:
-                #59616e;
+                var(--closed);
 
             background:
-                #eef1f4;
-        }
-
-
-        .badge-cancelled {
-
-            color:
-                var(--danger);
-
-            background:
-                var(--danger-bg);
+                var(--closed-bg);
         }
 
 
@@ -1256,8 +1380,8 @@
 
 
         /* =====================================================
-           DETAILS
-        ===================================================== */
+           REQUEST DETAILS
+           ===================================================== */
 
         .request-details {
 
@@ -1293,7 +1417,7 @@
                 uppercase;
 
             letter-spacing:
-                .5px;
+                0.5px;
 
             margin-bottom:
                 5px;
@@ -1311,19 +1435,25 @@
             font-size:
                 13px;
 
+            line-height:
+                1.5;
+
             word-break:
                 break-word;
         }
 
 
         /* =====================================================
-           ACTIONS
-        ===================================================== */
+           REQUEST ACTIONS
+           ===================================================== */
 
         .request-actions {
 
             display:
                 flex;
+
+            flex-wrap:
+                wrap;
 
             gap:
                 9px;
@@ -1353,14 +1483,20 @@
             border-radius:
                 8px;
 
+            border:
+                none;
+
             font-size:
                 12px;
 
             font-weight:
                 700;
 
+            cursor:
+                pointer;
+
             transition:
-                .2s ease;
+                0.2s ease;
         }
 
 
@@ -1399,8 +1535,8 @@
 
 
         /* =====================================================
-           EMPTY
-        ===================================================== */
+           EMPTY STATE
+           ===================================================== */
 
         .empty-state {
 
@@ -1480,7 +1616,7 @@
 
         /* =====================================================
            RESPONSIBILITY
-        ===================================================== */
+           ===================================================== */
 
         .responsibility {
 
@@ -1549,7 +1685,7 @@
 
         /* =====================================================
            FOOTER
-        ===================================================== */
+           ===================================================== */
 
         footer {
 
@@ -1569,7 +1705,7 @@
 
         /* =====================================================
            RESPONSIVE
-        ===================================================== */
+           ===================================================== */
 
         @media (max-width: 1100px) {
 
@@ -1578,6 +1714,7 @@
                 grid-template-columns:
                     repeat(2, 1fr);
             }
+
 
             .request-details {
 
@@ -1595,11 +1732,13 @@
                     0 18px;
             }
 
+
             .page {
 
                 width:
                     92%;
             }
+
 
             .profile-banner {
 
@@ -1608,16 +1747,15 @@
 
                 align-items:
                     flex-start;
-
-                gap:
-                    20px;
             }
+
 
             .profile-id {
 
                 text-align:
                     left;
             }
+
 
             .stats-grid,
             .portal-grid {
@@ -1632,9 +1770,10 @@
 
             .topbar {
 
-                height:
+                min-height:
                     68px;
             }
+
 
             .brand-logo {
 
@@ -1645,11 +1784,13 @@
                     42px;
             }
 
+
             .brand-name {
 
                 font-size:
                     18px;
             }
+
 
             .brand-tagline {
 
@@ -1657,17 +1798,54 @@
                     7px;
             }
 
+
             .staff-status {
 
                 display:
                     none;
             }
 
+
+            .profile-btn {
+
+                padding:
+                    8px 10px;
+
+                font-size:
+                    12px;
+            }
+
+
+            .profile-btn span {
+
+                display:
+                    none;
+            }
+
+
+            .logout-btn {
+
+                padding:
+                    8px 10px;
+
+                font-size:
+                    12px;
+            }
+
+
+            .logout-btn span {
+
+                display:
+                    none;
+            }
+
+
             .page {
 
-                padding-top:
-                    22px;
+                padding:
+                    22px 0 45px;
             }
+
 
             .page-header {
 
@@ -1678,11 +1856,13 @@
                     12px;
             }
 
+
             .page-header h1 {
 
                 font-size:
                     24px;
             }
+
 
             .info-grid,
             .stats-grid,
@@ -1693,11 +1873,13 @@
                     1fr;
             }
 
+
             .request-top {
 
                 flex-direction:
                     column;
             }
+
 
             .request-actions {
 
@@ -1705,10 +1887,35 @@
                     column;
             }
 
-            .btn {
+
+            .request-actions .btn {
 
                 width:
                     100%;
+            }
+
+
+            .profile-banner {
+
+                padding:
+                    22px 20px;
+            }
+
+
+            .profile-left {
+
+                gap:
+                    13px;
+            }
+
+
+            .profile-avatar {
+
+                width:
+                    54px;
+
+                height:
+                    54px;
             }
         }
 
@@ -1734,8 +1941,9 @@
 
         <img
             src="{{ url_for('logo') }}"
-            alt="Novera Energy & Technologies"
+            alt="{{ company_name }} Logo"
             class="brand-logo"
+            onerror="this.style.display='none';"
         >
 
 
@@ -1756,6 +1964,7 @@
 
     <div class="top-actions">
 
+
         <span class="staff-status">
 
             <i class="fa-solid fa-circle status-dot"></i>
@@ -1766,13 +1975,29 @@
 
 
         <a
+            href="{{ url_for('staff_profile') }}"
+            class="profile-btn"
+        >
+
+            <i class="fa-solid fa-user"></i>
+
+            <span>
+                My Profile
+            </span>
+
+        </a>
+
+
+        <a
             href="{{ url_for('staff_logout') }}"
             class="logout-btn"
         >
 
             <i class="fa-solid fa-right-from-bracket"></i>
 
-            Sign out
+            <span>
+                Sign out
+            </span>
 
         </a>
 
@@ -1790,7 +2015,7 @@
 
 
     <!-- =====================================================
-         HEADER
+         PAGE HEADER
     ====================================================== -->
 
     <section class="page-header">
@@ -1800,15 +2025,15 @@
             <h1>
 
                 Welcome,
-                {{ staff.name if staff else session.get('staff_name', 'Staff') }}
+                {{ staff["first_name"] if staff else session.get("staff_name", "Staff") }}
 
             </h1>
 
 
             <p>
 
-                Manage consultation and service requests assigned
-                to your staff account.
+                Manage consultation and service requests
+                assigned to your staff account.
 
             </p>
 
@@ -1852,7 +2077,7 @@
 
 
     <!-- =====================================================
-         PROFILE
+         PROFILE BANNER
     ====================================================== -->
 
     <section class="profile-banner">
@@ -1872,24 +2097,27 @@
 
                 <h2>
 
-                    {{ staff.name
-                       if staff
-                       else session.get('staff_name', 'Staff') }}
+                    {{ staff["first_name"] if staff else session.get("staff_name", "Staff") }}
+
+                    {% if staff and staff["last_name"] %}
+                        {{ staff["last_name"] }}
+                    {% endif %}
 
                 </h2>
 
 
                 <p>
 
-                    {{ staff.position
-                       if staff and staff.position
-                       else 'Staff' }}
+                    {% if staff and staff["position"] %}
+                        {{ staff["position"] }}
+                    {% else %}
+                        Staff Member
+                    {% endif %}
 
-                    ·
 
-                    {{ staff.department
-                       if staff and staff.department
-                       else 'Operations' }}
+                    {% if staff and staff["department"] %}
+                        · {{ staff["department"] }}
+                    {% endif %}
 
                 </p>
 
@@ -1907,9 +2135,7 @@
 
             <strong>
 
-                {{ staff.staff_id
-                   if staff
-                   else session.get('staff_id', 'N/A') }}
+                {{ staff["staff_id"] if staff else session.get("staff_id", "N/A") }}
 
             </strong>
 
@@ -1929,6 +2155,8 @@
     >
 
 
+        <!-- STAFF ID -->
+
         <div class="info-card">
 
             <div class="info-icon">
@@ -1937,21 +2165,23 @@
 
             </div>
 
+
             <h4>
                 Staff ID
             </h4>
 
+
             <p>
 
-                {{ staff.staff_id
-                   if staff
-                   else session.get('staff_id', 'N/A') }}
+                {{ staff["staff_id"] if staff else session.get("staff_id", "N/A") }}
 
             </p>
 
         </div>
 
 
+
+        <!-- EMAIL -->
 
         <div class="info-card">
 
@@ -1961,21 +2191,23 @@
 
             </div>
 
+
             <h4>
                 Work Email
             </h4>
 
+
             <p>
 
-                {{ staff.email
-                   if staff
-                   else session.get('staff_email', 'N/A') }}
+                {{ staff["email"] if staff else session.get("staff_email", "N/A") }}
 
             </p>
 
         </div>
 
 
+
+        <!-- DEPARTMENT -->
 
         <div class="info-card">
 
@@ -1985,21 +2217,27 @@
 
             </div>
 
+
             <h4>
                 Department
             </h4>
 
+
             <p>
 
-                {{ staff.department
-                   if staff and staff.department
-                   else 'Operations' }}
+                {% if staff and staff["department"] %}
+                    {{ staff["department"] }}
+                {% else %}
+                    Not assigned
+                {% endif %}
 
             </p>
 
         </div>
 
 
+
+        <!-- POSITION -->
 
         <div class="info-card">
 
@@ -2009,15 +2247,19 @@
 
             </div>
 
+
             <h4>
                 Position
             </h4>
 
+
             <p>
 
-                {{ staff.position
-                   if staff and staff.position
-                   else 'Staff' }}
+                {% if staff and staff["position"] %}
+                    {{ staff["position"] }}
+                {% else %}
+                    Staff Member
+                {% endif %}
 
             </p>
 
@@ -2035,6 +2277,8 @@
     <section class="stats-grid">
 
 
+        <!-- ASSIGNED -->
+
         <div class="stat-card">
 
             <div class="stat-icon">
@@ -2048,7 +2292,7 @@
 
                 <div class="stat-number">
 
-                    {{ assigned_count|default(assigned_requests|length) }}
+                    {{ assigned_count|default(0) }}
 
                 </div>
 
@@ -2064,6 +2308,8 @@
         </div>
 
 
+
+        <!-- IN PROGRESS -->
 
         <div class="stat-card">
 
@@ -2095,6 +2341,8 @@
 
 
 
+        <!-- CLOSED -->
+
         <div class="stat-card">
 
             <div class="stat-icon">
@@ -2108,14 +2356,14 @@
 
                 <div class="stat-number">
 
-                    {{ completed_count|default(0) }}
+                    {{ closed_count|default(completed_count|default(0)) }}
 
                 </div>
 
 
                 <div class="stat-label">
 
-                    Completed Requests
+                    Closed Requests
 
                 </div>
 
@@ -2138,6 +2386,7 @@
             Staff Portal
         </h2>
 
+
         <p>
             Access your assigned work and staff information.
         </p>
@@ -2147,6 +2396,8 @@
 
     <section class="portal-grid">
 
+
+        <!-- ASSIGNED REQUESTS -->
 
         <a
             href="#assigned-requests"
@@ -2166,10 +2417,11 @@
                     Assigned Requests
                 </h3>
 
+
                 <p>
 
                     View consultation and service requests
-                    assigned to you.
+                    assigned to your staff account.
 
                 </p>
 
@@ -2179,8 +2431,10 @@
 
 
 
+        <!-- PROFILE -->
+
         <a
-            href="#staff-information"
+            href="{{ url_for('staff_profile') }}"
             class="portal-card"
         >
 
@@ -2197,10 +2451,11 @@
                     My Profile
                 </h3>
 
+
                 <p>
 
-                    View your staff ID, email, department
-                    and position.
+                    View your staff ID, work email,
+                    department, position and account information.
 
                 </p>
 
@@ -2240,7 +2495,7 @@
 
             <span class="request-count">
 
-                {{ assigned_count|default(assigned_requests|length) }}
+                {{ assigned_count|default(0) }}
 
             </span>
 
@@ -2270,45 +2525,41 @@
 
                             <div class="request-service">
 
-                                {{ request.service
-                                   or 'Service Request' }}
+                                {{ request["service"] or "Service Request" }}
 
                             </div>
 
 
                             <div class="request-number">
 
-                                Request #{{ request.id }}
+                                Request #{{ request["id"] }}
 
                             </div>
 
                         </div>
 
 
-
                         {% set request_status =
-                            (request.status or 'New')
+                            (request["status"] or "New")
                             |lower
-                            |replace('_', ' ')
+                            |replace("_", " ")
+                            |trim
                         %}
 
 
-
-                        {% if request_status == 'new'
-                              or request_status == 'pending' %}
+                        {% if request_status == "new" %}
 
 
                             <span class="badge badge-new">
 
                                 <i class="fa-solid fa-bell"></i>
 
-                                {{ request.status or 'New' }}
+                                New
 
                             </span>
 
 
-                        {% elif request_status in
-                              ['in progress', 'processing', 'ongoing'] %}
+                        {% elif request_status == "in progress" %}
 
 
                             <span class="badge badge-progress">
@@ -2320,19 +2571,7 @@
                             </span>
 
 
-                        {% elif request_status == 'completed' %}
-
-
-                            <span class="badge badge-completed">
-
-                                <i class="fa-solid fa-check"></i>
-
-                                Completed
-
-                            </span>
-
-
-                        {% elif request_status == 'closed' %}
+                        {% elif request_status == "closed" %}
 
 
                             <span class="badge badge-closed">
@@ -2344,24 +2583,12 @@
                             </span>
 
 
-                        {% elif request_status == 'cancelled' %}
-
-
-                            <span class="badge badge-cancelled">
-
-                                <i class="fa-solid fa-xmark"></i>
-
-                                Cancelled
-
-                            </span>
-
-
                         {% else %}
 
 
                             <span class="badge badge-default">
 
-                                {{ request.status or 'New' }}
+                                {{ request["status"] or "New" }}
 
                             </span>
 
@@ -2378,21 +2605,26 @@
                     <div class="request-details">
 
 
+                        <!-- CLIENT -->
+
                         <div class="detail">
 
                             <label>
                                 Client
                             </label>
 
+
                             <span>
 
-                                {{ request.name or 'N/A' }}
+                                {{ request["name"] or "N/A" }}
 
                             </span>
 
                         </div>
 
 
+
+                        <!-- EMAIL -->
 
                         <div class="detail">
 
@@ -2400,15 +2632,18 @@
                                 Email
                             </label>
 
+
                             <span>
 
-                                {{ request.email or 'N/A' }}
+                                {{ request["email"] or "N/A" }}
 
                             </span>
 
                         </div>
 
 
+
+                        <!-- COMPANY -->
 
                         <div class="detail">
 
@@ -2416,9 +2651,10 @@
                                 Company
                             </label>
 
+
                             <span>
 
-                                {{ request.company or '—' }}
+                                {{ request["company"] or "—" }}
 
                             </span>
 
@@ -2426,15 +2662,18 @@
 
 
 
+                        <!-- CREATED -->
+
                         <div class="detail">
 
                             <label>
                                 Created
                             </label>
 
+
                             <span>
 
-                                {{ request.created_at or 'N/A' }}
+                                {{ request["created_at"] or "N/A" }}
 
                             </span>
 
@@ -2445,15 +2684,15 @@
 
 
 
-                    <!-- ACTIONS -->
+                    <!-- REQUEST ACTIONS -->
 
                     <div class="request-actions">
 
 
                         <a
                             href="{{ url_for(
-                                'staff_request_detail',
-                                request_id=request.id
+                                'staff_consultation_view',
+                                consultation_id=request['id']
                             ) }}"
                             class="btn btn-primary"
                         >
@@ -2465,14 +2704,13 @@
                         </a>
 
 
-                        {% if request_status not in
-                              ['completed', 'closed', 'cancelled'] %}
+                        {% if request_status != "closed" %}
 
 
                             <a
                                 href="{{ url_for(
-                                    'staff_request_detail',
-                                    request_id=request.id
+                                    'staff_consultation_view',
+                                    consultation_id=request['id']
                                 ) }}"
                                 class="btn btn-secondary"
                             >
@@ -2498,6 +2736,8 @@
 
             {% else %}
 
+
+                <!-- EMPTY STATE -->
 
                 <div class="empty-state">
 
@@ -2547,6 +2787,7 @@
 
             <i class="fa-solid fa-shield-halved"></i>
 
+
             <h3>
                 Staff Responsibility
             </h3>
@@ -2558,11 +2799,10 @@
 
             You can view and work on consultation requests
             assigned to your staff account and update their
-            progress. Management-level actions remain with
-            authorized administrators.
+            progress. Management-level actions remain available
+            only to authorized administrators.
 
         </p>
-
 
     </section>
 
@@ -2577,7 +2817,7 @@
 
 <footer>
 
-    © 2026 Novera Energy & Technologies.
+    © 2026 {{ company_name }}.
     All rights reserved.
 
 </footer>
@@ -2586,5 +2826,3 @@
 </body>
 
 </html>
-```
-

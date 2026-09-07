@@ -1,23 +1,69 @@
-```html
 <!doctype html>
 <html lang="en">
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
 
-    <title>Staff Management | {{ company_name }}</title>
+    <title>Staff Management | {{ company_name or "Novera Energy & Technologies" }}</title>
 
-    <link rel="stylesheet"
-          href="{{ url_for('assets', filename='css/style.css') }}">
+    <link
+        rel="stylesheet"
+        href="{{ url_for('assets', filename='css/style.css') }}"
+    >
 
     <style>
+
+        /* =========================================================
+           RESET
+        ========================================================= */
+
         * {
             box-sizing: border-box;
         }
 
+
+        /* =========================================================
+           VARIABLES
+        ========================================================= */
+
+        :root {
+            --blue: #0757b5;
+            --dark-blue: #063b73;
+            --light-blue: #eaf4ff;
+            --pale-blue: #f5f9ff;
+
+            --white: #ffffff;
+
+            --text: #243447;
+            --muted: #738091;
+
+            --border: #e5edf5;
+
+            --green: #16834a;
+            --green-light: #e9f8ef;
+
+            --red: #c93636;
+            --red-light: #ffeded;
+
+            --orange: #9a6b00;
+            --orange-light: #fff6dd;
+
+            --gray: #5c6875;
+            --gray-light: #edf0f3;
+        }
+
+
+        /* =========================================================
+           BODY
+        ========================================================= */
+
         body {
             margin: 0;
+
             min-height: 100vh;
 
             font-family:
@@ -25,7 +71,7 @@
                 Helvetica,
                 sans-serif;
 
-            color: #243447;
+            color: var(--text);
 
             background:
                 linear-gradient(
@@ -37,13 +83,14 @@
                 );
 
             position: relative;
+
             overflow-x: hidden;
         }
 
 
-        /* =========================================
-           NOVERA LOGO BACKGROUND WATERMARK
-        ========================================= */
+        /* =========================================================
+           BACKGROUND BRANDING
+        ========================================================= */
 
         body::before {
             content: "";
@@ -60,7 +107,9 @@
                 url("{{ url_for('assets', filename='logo.jpg') }}");
 
             background-repeat: no-repeat;
+
             background-position: center;
+
             background-size: contain;
 
             opacity: 0.06;
@@ -70,10 +119,6 @@
             z-index: 0;
         }
 
-
-        /* =========================================
-           SOFT WHITE DECORATIVE CIRCLE
-        ========================================= */
 
         body::after {
             content: "";
@@ -88,7 +133,8 @@
 
             border-radius: 50%;
 
-            background: rgba(255, 255, 255, 0.10);
+            background:
+                rgba(255, 255, 255, 0.10);
 
             pointer-events: none;
 
@@ -96,18 +142,20 @@
         }
 
 
-        /* =========================================
+        /* =========================================================
            NAVIGATION
-        ========================================= */
+        ========================================================= */
 
         .nav {
             position: relative;
+
             z-index: 10;
 
-            background: rgba(255, 255, 255, 0.98);
+            background:
+                rgba(255, 255, 255, 0.98);
 
             border-bottom:
-                1px solid #e5edf5;
+                1px solid var(--border);
 
             box-shadow:
                 0 4px 18px rgba(0, 0, 0, 0.10);
@@ -115,22 +163,31 @@
 
 
         .nav-inner {
+            width: 92%;
+
+            max-width: 1250px;
+
             min-height: 78px;
 
+            margin: 0 auto;
+
             display: flex;
+
             align-items: center;
+
             justify-content: space-between;
 
             gap: 20px;
         }
 
 
-        /* =========================================
-           NOVERA BRAND
-        ========================================= */
+        /* =========================================================
+           BRAND
+        ========================================================= */
 
         .brand {
             display: flex;
+
             align-items: center;
 
             gap: 12px;
@@ -152,7 +209,9 @@
 
 
         .brand span {
-            color: #063b73;
+            display: block;
+
+            color: var(--dark-blue);
 
             font-size: 24px;
 
@@ -162,31 +221,46 @@
         }
 
 
-        /* =========================================
-           DASHBOARD BUTTON
-        ========================================= */
+        .brand-tagline {
+            display: block;
 
-        .nav .btn {
+            margin-top: 2px;
+
+            color: #7b8794;
+
+            font-size: 8px;
+
+            letter-spacing: 1.2px;
+        }
+
+
+        /* =========================================================
+           DASHBOARD BUTTON
+        ========================================================= */
+
+        .dashboard-btn {
             display: inline-flex;
 
             align-items: center;
+
             justify-content: center;
+
+            gap: 7px;
 
             min-height: 40px;
 
-            padding:
-                9px 18px;
+            padding: 9px 18px;
 
             border-radius: 8px;
 
             background:
                 linear-gradient(
                     135deg,
-                    #063b73,
+                    var(--dark-blue),
                     #0b69bd
                 );
 
-            color: #ffffff;
+            color: white;
 
             text-decoration: none;
 
@@ -203,7 +277,7 @@
         }
 
 
-        .nav .btn:hover {
+        .dashboard-btn:hover {
             transform: translateY(-1px);
 
             box-shadow:
@@ -211,12 +285,13 @@
         }
 
 
-        /* =========================================
-           MAIN AREA
-        ========================================= */
+        /* =========================================================
+           MAIN
+        ========================================================= */
 
         .dashboard {
             position: relative;
+
             z-index: 2;
 
             padding:
@@ -224,17 +299,18 @@
         }
 
 
-        .dashboard .container {
+        .container {
             width: 92%;
+
             max-width: 1250px;
 
             margin: 0 auto;
         }
 
 
-        /* =========================================
-           HEADER CARD
-        ========================================= */
+        /* =========================================================
+           PAGE HEADER
+        ========================================================= */
 
         .page-header {
             background:
@@ -258,7 +334,7 @@
         h1 {
             margin: 0;
 
-            color: #063b73;
+            color: var(--dark-blue);
 
             font-size: 30px;
 
@@ -266,17 +342,9 @@
         }
 
 
-        .page-description {
-            margin-top: 8px;
-
-            color: #738091;
-
-            font-size: 13px;
-        }
-
-
         .title-line {
             width: 55px;
+
             height: 4px;
 
             margin-top: 14px;
@@ -286,48 +354,98 @@
             background:
                 linear-gradient(
                     90deg,
-                    #063b73,
+                    var(--dark-blue),
                     #0b69bd
                 );
         }
 
 
-        /* =========================================
+        .page-description {
+            margin-top: 10px;
+
+            color: var(--muted);
+
+            font-size: 13px;
+
+            line-height: 1.6;
+        }
+
+
+        /* =========================================================
            FLASH MESSAGES
-        ========================================= */
+        ========================================================= */
+
+        .flash-container {
+            margin-bottom: 18px;
+        }
+
 
         .flash {
             padding:
                 13px 15px;
 
-            margin-bottom: 18px;
+            margin-bottom: 9px;
 
             border-radius: 9px;
 
             font-size: 13px;
+
+            font-weight: 600;
         }
 
 
         .flash.success {
-            background: #edf9f1;
-            color: #176b3a;
+            background:
+                #edf9f1;
 
-            border: 1px solid #c8ead4;
+            color:
+                #176b3a;
+
+            border:
+                1px solid #c8ead4;
         }
 
 
         .flash.error,
         .flash.danger {
-            background: #fff0f0;
-            color: #a32222;
+            background:
+                #fff0f0;
 
-            border: 1px solid #f0c7c7;
+            color:
+                #a32222;
+
+            border:
+                1px solid #f0c7c7;
         }
 
 
-        /* =========================================
-           TABLE
-        ========================================= */
+        .flash.warning {
+            background:
+                #fff8e8;
+
+            color:
+                #8a6200;
+
+            border:
+                1px solid #f2d58a;
+        }
+
+
+        .flash.info {
+            background:
+                #edf6ff;
+
+            color:
+                #0757b5;
+
+            border:
+                1px solid #c8e1fb;
+        }
+
+
+        /* =========================================================
+           TABLE CARD
+        ========================================================= */
 
         .table-wrap {
             background:
@@ -350,13 +468,15 @@
         table {
             width: 100%;
 
-            min-width: 900px;
+            min-width: 950px;
 
             border-collapse: collapse;
         }
 
 
-        /* TABLE HEADER */
+        /* =========================================================
+           TABLE HEADER
+        ========================================================= */
 
         table th {
             padding:
@@ -364,33 +484,44 @@
 
             text-align: left;
 
-            background: #063b73;
+            background:
+                var(--dark-blue);
 
-            color: #ffffff;
+            color:
+                #ffffff;
 
-            font-size: 12px;
+            font-size:
+                12px;
 
-            font-weight: 700;
+            font-weight:
+                700;
 
-            text-transform: uppercase;
+            text-transform:
+                uppercase;
 
-            letter-spacing: 0.4px;
+            letter-spacing:
+                0.4px;
 
-            white-space: nowrap;
+            white-space:
+                nowrap;
         }
 
 
         table th:first-child {
-            border-radius: 10px 0 0 10px;
+            border-radius:
+                10px 0 0 10px;
         }
 
 
         table th:last-child {
-            border-radius: 0 10px 10px 0;
+            border-radius:
+                0 10px 10px 0;
         }
 
 
-        /* TABLE BODY */
+        /* =========================================================
+           TABLE CELLS
+        ========================================================= */
 
         table td {
             padding:
@@ -399,189 +530,378 @@
             border-bottom:
                 1px solid #e9eef4;
 
-            color: #405166;
+            color:
+                #405166;
 
-            font-size: 13px;
+            font-size:
+                13px;
 
-            vertical-align: middle;
+            vertical-align:
+                middle;
         }
 
 
-        table tr {
-            transition: background 0.2s ease;
+        table tbody tr {
+            transition:
+                background 0.2s ease;
         }
 
 
-        table tr:hover td {
-            background: #f5f9fd;
+        table tbody tr:hover td {
+            background:
+                #f5f9fd;
         }
 
 
-        table tr:last-child td {
-            border-bottom: none;
+        table tbody tr:last-child td {
+            border-bottom:
+                none;
         }
 
 
-        /* =========================================
+        /* =========================================================
+           STAFF INFORMATION
+        ========================================================= */
+
+        .staff-name {
+            color:
+                #243447;
+
+            font-weight:
+                700;
+
+            line-height:
+                1.4;
+        }
+
+
+        .staff-email {
+            color:
+                #526579;
+
+            word-break:
+                break-word;
+        }
+
+
+        .staff-id {
+            color:
+                var(--dark-blue);
+
+            font-weight:
+                700;
+
+            white-space:
+                nowrap;
+        }
+
+
+        .muted {
+            color:
+                #8a96a3;
+        }
+
+
+        /* =========================================================
            STATUS BADGES
-        ========================================= */
+        ========================================================= */
 
         .badge {
-            display: inline-flex;
+            display:
+                inline-flex;
 
-            align-items: center;
-            justify-content: center;
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            gap:
+                5px;
 
             padding:
                 6px 11px;
 
-            border-radius: 20px;
+            border-radius:
+                20px;
 
-            font-size: 11px;
+            font-size:
+                11px;
 
-            font-weight: 700;
+            font-weight:
+                700;
 
-            white-space: nowrap;
+            white-space:
+                nowrap;
         }
 
 
-        .badge.Pending {
-            background: #fff6dd;
-            color: #9a6b00;
+        .badge.pending {
+            background:
+                var(--orange-light);
+
+            color:
+                var(--orange);
         }
 
 
-        .badge.Active {
-            background: #e9f8ef;
-            color: #17733b;
+        .badge.active {
+            background:
+                var(--green-light);
+
+            color:
+                var(--green);
         }
 
 
-        .badge.Disabled {
-            background: #edf0f3;
-            color: #5c6875;
+        .badge.disabled {
+            background:
+                var(--gray-light);
+
+            color:
+                var(--gray);
         }
 
 
-        .badge.Rejected {
-            background: #ffeded;
-            color: #a32323;
+        .badge.rejected {
+            background:
+                var(--red-light);
+
+            color:
+                #a32323;
         }
 
 
-        /* =========================================
-           ACTION BUTTONS
-        ========================================= */
+        .badge.unknown {
+            background:
+                #eef2f7;
+
+            color:
+                #64748b;
+        }
+
+
+        /* =========================================================
+           ACTIONS
+        ========================================================= */
 
         .actions {
-            display: flex;
+            display:
+                flex;
 
-            align-items: center;
+            align-items:
+                center;
 
-            gap: 7px;
+            gap:
+                7px;
 
-            flex-wrap: wrap;
+            flex-wrap:
+                wrap;
         }
 
 
         .actions form {
-            margin: 0;
+            margin:
+                0;
         }
 
 
-        .actions .btn {
-            border: none;
+        .action-btn {
+            display:
+                inline-flex;
 
-            border-radius: 7px;
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            gap:
+                5px;
+
+            border:
+                none;
+
+            border-radius:
+                7px;
 
             padding:
                 8px 11px;
 
-            font-size: 11px;
+            font-size:
+                11px;
 
-            font-weight: 700;
+            font-weight:
+                700;
 
-            cursor: pointer;
+            cursor:
+                pointer;
 
-            transition: 0.2s ease;
+            transition:
+                0.2s ease;
+
+            text-decoration:
+                none;
         }
 
 
-        .actions .btn:hover {
-            transform: translateY(-1px);
+        .action-btn:hover {
+            transform:
+                translateY(-1px);
 
-            opacity: 0.9;
+            opacity:
+                0.92;
         }
 
 
-        .btn.success {
-            background: #16834a;
+        .action-btn:focus-visible {
+            outline:
+                3px solid rgba(7, 87, 181, 0.22);
 
-            color: #ffffff;
+            outline-offset:
+                2px;
         }
 
 
-        .btn.danger {
-            background: #c93636;
+        .action-btn.approve,
+        .action-btn.activate {
+            background:
+                #16834a;
 
-            color: #ffffff;
+            color:
+                white;
         }
 
 
-        /* =========================================
+        .action-btn.reject,
+        .action-btn.disable {
+            background:
+                #c93636;
+
+            color:
+                white;
+        }
+
+
+        .action-btn.view {
+            background:
+                #eaf4ff;
+
+            color:
+                #0757b5;
+        }
+
+
+        /* =========================================================
            EMPTY STATE
-        ========================================= */
+        ========================================================= */
 
         .empty-state {
-            text-align: center;
+            text-align:
+                center;
 
-            padding: 50px 20px;
+            padding:
+                60px 20px;
 
-            color: #7d8997;
+            color:
+                #7d8997;
+        }
+
+
+        .empty-state i {
+            display:
+                block;
+
+            font-size:
+                32px;
+
+            margin-bottom:
+                12px;
+
+            color:
+                #b5c0cc;
         }
 
 
         .empty-state strong {
-            display: block;
+            display:
+                block;
 
-            margin-bottom: 7px;
+            margin-bottom:
+                7px;
 
-            color: #405166;
+            color:
+                #405166;
 
-            font-size: 16px;
+            font-size:
+                16px;
         }
 
 
-        /* =========================================
+        /* =========================================================
+           FOOTER
+        ========================================================= */
+
+        .footer {
+            text-align:
+                center;
+
+            margin-top:
+                24px;
+
+            color:
+                rgba(255, 255, 255, 0.82);
+
+            font-size:
+                11px;
+
+            line-height:
+                1.6;
+        }
+
+
+        /* =========================================================
            MOBILE
-        ========================================= */
+        ========================================================= */
 
         @media (max-width: 700px) {
 
             .nav-inner {
-                width: 92%;
-                margin: 0 auto;
+                width:
+                    94%;
             }
 
 
             .brand img {
-                width: 44px;
-                height: 44px;
+                width:
+                    44px;
+
+                height:
+                    44px;
             }
 
 
             .brand span {
-                font-size: 21px;
+                font-size:
+                    21px;
+            }
+
+
+            .brand-tagline {
+                display:
+                    none;
             }
 
 
             .dashboard {
-                padding-top: 25px;
+                padding-top:
+                    25px;
             }
 
 
-            .dashboard .container {
-                width: 94%;
+            .container {
+                width:
+                    94%;
             }
 
 
@@ -592,7 +912,32 @@
 
 
             h1 {
-                font-size: 25px;
+                font-size:
+                    25px;
+            }
+
+
+            .page-description {
+                font-size:
+                    12px;
+            }
+
+
+            .dashboard-btn {
+                padding:
+                    8px 11px;
+
+                font-size:
+                    11px;
+            }
+
+
+            .table-wrap {
+                border-radius:
+                    14px;
+
+                padding:
+                    6px;
             }
         }
 
@@ -600,20 +945,38 @@
         @media (max-width: 450px) {
 
             .nav-inner {
-                min-height: 68px;
+                min-height:
+                    68px;
             }
 
 
             .brand span {
-                font-size: 19px;
+                font-size:
+                    19px;
             }
 
 
-            .nav .btn {
-                padding:
-                    8px 11px;
+            .dashboard-btn span {
+                display:
+                    none;
+            }
 
-                font-size: 11px;
+
+            .dashboard-btn {
+                width:
+                    38px;
+
+                height:
+                    38px;
+
+                padding:
+                    0;
+            }
+
+
+            .page-header {
+                border-radius:
+                    14px;
             }
         }
 
@@ -623,55 +986,104 @@
 
 <body>
 
-    <!-- =========================================
+
+    <!-- =========================================================
          NAVIGATION
-    ========================================== -->
+    ========================================================== -->
 
     <nav class="nav">
 
-        <div class="container nav-inner">
+        <div class="nav-inner">
+
+
+            <!-- BRAND -->
 
             <a
                 class="brand"
-                href="{{ url_for('index') }}"
+                href="{{ url_for('home') }}"
+                aria-label="Novera Main Portal"
             >
-
-                <!-- NOVERA JPG LOGO -->
 
                 <img
                     src="{{ url_for('assets', filename='logo.jpg') }}"
                     alt="Novera Energy & Technologies Logo"
+                    onerror="this.style.display='none';"
                 >
 
-                <span>Novera</span>
+                <div>
+
+                    <span>Novera</span>
+
+                    <small class="brand-tagline">
+                        Light · Motion · Intelligence
+                    </small>
+
+                </div>
 
             </a>
 
 
-            <a
-                class="btn small"
-                href="{{ url_for('md_dashboard' if is_md else 'admin_dashboard') }}"
-            >
-                Dashboard
-            </a>
+            <!-- DASHBOARD -->
+
+            {% if is_md %}
+
+                <a
+                    class="dashboard-btn"
+                    href="{{ url_for('md_dashboard') }}"
+                    aria-label="Management Dashboard"
+                >
+
+                    <i
+                        class="fa-solid fa-chart-pie"
+                        aria-hidden="true"
+                    ></i>
+
+                    <span>
+                        Dashboard
+                    </span>
+
+                </a>
+
+            {% else %}
+
+                <a
+                    class="dashboard-btn"
+                    href="{{ url_for('admin_dashboard') }}"
+                    aria-label="Admin Dashboard"
+                >
+
+                    <i
+                        class="fa-solid fa-chart-pie"
+                        aria-hidden="true"
+                    ></i>
+
+                    <span>
+                        Dashboard
+                    </span>
+
+                </a>
+
+            {% endif %}
 
         </div>
 
     </nav>
 
 
-    <!-- =========================================
-         STAFF MANAGEMENT
-    ========================================== -->
+    <!-- =========================================================
+         MAIN
+    ========================================================== -->
 
-    <div class="dashboard">
+    <main class="dashboard">
 
         <div class="container">
 
 
-            <!-- PAGE TITLE -->
+            <!-- =================================================
+                 PAGE HEADER
+            ================================================== -->
 
-            <div class="page-header">
+            <section class="page-header">
 
                 <h1>
                     Staff Management
@@ -680,33 +1092,54 @@
                 <div class="title-line"></div>
 
                 <div class="page-description">
-                    Manage staff registrations, approvals,
-                    and account access.
+
+                    Review staff registrations, approve new
+                    accounts, manage account access and
+                    monitor staff status.
+
                 </div>
 
-            </div>
+            </section>
 
 
-            <!-- FLASH MESSAGES -->
+            <!-- =================================================
+                 FLASH MESSAGES
+            ================================================== -->
 
             {% with messages =
                 get_flashed_messages(with_categories=true)
             %}
 
-                {% for category, message in messages %}
+                {% if messages %}
 
-                    <div class="flash {{ category }}">
-                        {{ message }}
+                    <div
+                        class="flash-container"
+                        aria-live="polite"
+                    >
+
+                        {% for category, message in messages %}
+
+                            <div class="flash {{ category }}">
+                                {{ message }}
+                            </div>
+
+                        {% endfor %}
+
                     </div>
 
-                {% endfor %}
+                {% endif %}
 
             {% endwith %}
 
 
-            <!-- STAFF TABLE -->
+            <!-- =================================================
+                 STAFF TABLE
+            ================================================== -->
 
-            <div class="table-wrap">
+            <section
+                class="table-wrap"
+                aria-label="Staff management table"
+            >
 
                 <table>
 
@@ -714,17 +1147,33 @@
 
                         <tr>
 
-                            <th>Staff ID</th>
+                            <th>
+                                Staff ID
+                            </th>
 
-                            <th>Name</th>
+                            <th>
+                                Name
+                            </th>
 
-                            <th>Work Email</th>
+                            <th>
+                                Work Email
+                            </th>
 
-                            <th>Department</th>
+                            <th>
+                                Position
+                            </th>
 
-                            <th>Status</th>
+                            <th>
+                                Department
+                            </th>
 
-                            <th>Actions</th>
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Actions
+                            </th>
 
                         </tr>
 
@@ -733,171 +1182,473 @@
 
                     <tbody>
 
+
                     {% for person in staff %}
+
+
+                        {% set status =
+                            person["status"] or "Unknown"
+                        %}
+
+
+                        {% set normalized_status =
+                            status|string|lower|trim
+                        %}
+
+
+                        {% if normalized_status == "active" %}
+
+                            {% set status_class = "active" %}
+
+                        {% elif normalized_status == "pending" %}
+
+                            {% set status_class = "pending" %}
+
+                        {% elif normalized_status == "disabled" %}
+
+                            {% set status_class = "disabled" %}
+
+                        {% elif normalized_status == "rejected" %}
+
+                            {% set status_class = "rejected" %}
+
+                        {% else %}
+
+                            {% set status_class = "unknown" %}
+
+                        {% endif %}
+
 
                         <tr>
 
-                            <td>
-                                <strong>
-                                    {{ person["staff_id"] }}
-                                </strong>
-                            </td>
 
-
-                            <td>
-                                {{ person["first_name"] }}
-                                {{ person["last_name"] }}
-                            </td>
-
-
-                            <td>
-                                {{ person["email"] }}
-                            </td>
-
-
-                            <td>
-                                {{ person["department"] }}
-                            </td>
-
+                            <!-- STAFF ID -->
 
                             <td>
 
-                                <span
-                                    class="badge {{ person['status'] }}"
-                                >
-                                    {{ person["status"] }}
+                                <span class="staff-id">
+
+                                    {{ person["staff_id"] or "—" }}
+
                                 </span>
 
                             </td>
 
 
+                            <!-- NAME -->
+
                             <td>
 
-                                <div class="actions">
+                                <div class="staff-name">
 
-                                    {% if is_md %}
+                                    {{ person["first_name"] or "" }}
 
-                                        {% set action_base =
-                                            '/md/staff/' ~ person["id"]
-                                        %}
-
-                                    {% else %}
-
-                                        {% set action_base =
-                                            '/admin/staff/' ~ person["id"]
-                                        %}
-
-                                    {% endif %}
-
-
-                                    {% if person["status"] == "Pending" %}
-
-                                        <form
-                                            method="post"
-                                            action="{{ action_base }}/approve"
-                                        >
-
-                                            <button
-                                                class="btn small success"
-                                                type="submit"
-                                            >
-                                                Approve
-                                            </button>
-
-                                        </form>
-
-
-                                        <form
-                                            method="post"
-                                            action="{{ action_base }}/reject"
-                                        >
-
-                                            <button
-                                                class="btn small danger"
-                                                type="submit"
-                                            >
-                                                Reject
-                                            </button>
-
-                                        </form>
-
-
-                                    {% elif person["status"] == "Active" %}
-
-                                        <form
-                                            method="post"
-                                            action="{{ action_base }}/disable"
-                                        >
-
-                                            <button
-                                                class="btn small danger"
-                                                type="submit"
-                                            >
-                                                Disable
-                                            </button>
-
-                                        </form>
-
-
-                                    {% elif person["status"] in
-                                        ["Disabled", "Rejected"] %}
-
-                                        <form
-                                            method="post"
-                                            action="{{ action_base }}/activate"
-                                        >
-
-                                            <button
-                                                class="btn small success"
-                                                type="submit"
-                                            >
-                                                Activate
-                                            </button>
-
-                                        </form>
-
-                                    {% endif %}
+                                    {{ person["last_name"] or "" }}
 
                                 </div>
 
                             </td>
+
+
+                            <!-- EMAIL -->
+
+                            <td>
+
+                                <div class="staff-email">
+
+                                    {{ person["email"] or "—" }}
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- POSITION -->
+
+                            <td>
+
+                                {% if person["position"] %}
+
+                                    {{ person["position"] }}
+
+                                {% else %}
+
+                                    <span class="muted">
+                                        —
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- DEPARTMENT -->
+
+                            <td>
+
+                                {% if person["department"] %}
+
+                                    {{ person["department"] }}
+
+                                {% else %}
+
+                                    <span class="muted">
+                                        —
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- STATUS -->
+
+                            <td>
+
+                                <span
+                                    class="badge {{ status_class }}"
+                                >
+
+                                    {% if normalized_status == "active" %}
+
+                                        <i
+                                            class="fa-solid fa-circle-check"
+                                            aria-hidden="true"
+                                        ></i>
+
+                                    {% elif normalized_status == "pending" %}
+
+                                        <i
+                                            class="fa-solid fa-clock"
+                                            aria-hidden="true"
+                                        ></i>
+
+                                    {% elif normalized_status == "disabled" %}
+
+                                        <i
+                                            class="fa-solid fa-ban"
+                                            aria-hidden="true"
+                                        ></i>
+
+                                    {% elif normalized_status == "rejected" %}
+
+                                        <i
+                                            class="fa-solid fa-circle-xmark"
+                                            aria-hidden="true"
+                                        ></i>
+
+                                    {% else %}
+
+                                        <i
+                                            class="fa-solid fa-circle-question"
+                                            aria-hidden="true"
+                                        ></i>
+
+                                    {% endif %}
+
+                                    {{ status }}
+
+                                </span>
+
+                            </td>
+
+
+                            <!-- ACTIONS -->
+
+                            <td>
+
+                                <div class="actions">
+
+
+                                    <!-- =================================
+                                         DETERMINE ROUTES
+                                    ================================== -->
+
+                                    {% if is_md %}
+
+
+                                        {% set action_url =
+                                            url_for(
+                                                'md_staff_action',
+                                                staff_id=person["id"]
+                                            )
+                                        %}
+
+
+                                        {% set view_url =
+                                            url_for(
+                                                'md_staff_view',
+                                                staff_id=person["id"]
+                                            )
+                                        %}
+
+
+                                    {% else %}
+
+
+                                        {% set action_url =
+                                            url_for(
+                                                'admin_staff_action',
+                                                staff_id=person["id"]
+                                            )
+                                        %}
+
+
+                                        {% set view_url =
+                                            url_for(
+                                                'admin_staff_view',
+                                                staff_id=person["id"]
+                                            )
+                                        %}
+
+
+                                    {% endif %}
+
+
+                                    <!-- =================================
+                                         VIEW
+                                    ================================== -->
+
+                                    <a
+                                        href="{{ view_url }}"
+                                        class="action-btn view"
+                                        title="View staff details"
+                                    >
+
+                                        <i
+                                            class="fa-solid fa-eye"
+                                            aria-hidden="true"
+                                        ></i>
+
+                                        View
+
+                                    </a>
+
+
+                                    <!-- =================================
+                                         PENDING ACTIONS
+                                    ================================== -->
+
+                                    {% if normalized_status == "pending" %}
+
+
+                                        <!-- APPROVE -->
+
+                                        <form
+                                            method="post"
+                                            action="{{ action_url }}"
+                                            onsubmit="return confirm('Approve this staff account?');"
+                                        >
+
+                                            <input
+                                                type="hidden"
+                                                name="action"
+                                                value="approve"
+                                            >
+
+
+                                            <button
+                                                type="submit"
+                                                class="action-btn approve"
+                                                title="Approve staff account"
+                                            >
+
+                                                <i
+                                                    class="fa-solid fa-check"
+                                                    aria-hidden="true"
+                                                ></i>
+
+                                                Approve
+
+                                            </button>
+
+                                        </form>
+
+
+                                        <!-- REJECT -->
+
+                                        <form
+                                            method="post"
+                                            action="{{ action_url }}"
+                                            onsubmit="return confirm('Reject this staff registration?');"
+                                        >
+
+                                            <input
+                                                type="hidden"
+                                                name="action"
+                                                value="reject"
+                                            >
+
+
+                                            <button
+                                                type="submit"
+                                                class="action-btn reject"
+                                                title="Reject staff registration"
+                                            >
+
+                                                <i
+                                                    class="fa-solid fa-xmark"
+                                                    aria-hidden="true"
+                                                ></i>
+
+                                                Reject
+
+                                            </button>
+
+                                        </form>
+
+
+                                    <!-- =================================
+                                         ACTIVE ACTION
+                                    ================================== -->
+
+                                    {% elif normalized_status == "active" %}
+
+
+                                        <form
+                                            method="post"
+                                            action="{{ action_url }}"
+                                            onsubmit="return confirm('Disable this staff account?');"
+                                        >
+
+                                            <input
+                                                type="hidden"
+                                                name="action"
+                                                value="disable"
+                                            >
+
+
+                                            <button
+                                                type="submit"
+                                                class="action-btn disable"
+                                                title="Disable staff account"
+                                            >
+
+                                                <i
+                                                    class="fa-solid fa-ban"
+                                                    aria-hidden="true"
+                                                ></i>
+
+                                                Disable
+
+                                            </button>
+
+                                        </form>
+
+
+                                    <!-- =================================
+                                         DISABLED / REJECTED
+                                    ================================== -->
+
+                                    {% elif
+                                        normalized_status == "disabled"
+                                        or
+                                        normalized_status == "rejected"
+                                    %}
+
+
+                                        <form
+                                            method="post"
+                                            action="{{ action_url }}"
+                                            onsubmit="return confirm('Activate this staff account?');"
+                                        >
+
+                                            <input
+                                                type="hidden"
+                                                name="action"
+                                                value="activate"
+                                            >
+
+
+                                            <button
+                                                type="submit"
+                                                class="action-btn activate"
+                                                title="Activate staff account"
+                                            >
+
+                                                <i
+                                                    class="fa-solid fa-check"
+                                                    aria-hidden="true"
+                                                ></i>
+
+                                                Activate
+
+                                            </button>
+
+                                        </form>
+
+
+                                    {% endif %}
+
+
+                                </div>
+
+                            </td>
+
 
                         </tr>
 
 
                     {% else %}
 
+
+                        <!-- =================================================
+                             EMPTY STATE
+                        ================================================== -->
+
                         <tr>
 
                             <td
-                                colspan="6"
+                                colspan="7"
                                 class="empty-state"
                             >
+
+                                <i
+                                    class="fa-solid fa-users-slash"
+                                    aria-hidden="true"
+                                ></i>
+
 
                                 <strong>
                                     No staff registrations yet.
                                 </strong>
 
-                                Staff registrations will appear here.
+
+                                Staff registrations will appear
+                                here when employees create accounts.
 
                             </td>
 
                         </tr>
 
+
                     {% endfor %}
+
 
                     </tbody>
 
                 </table>
 
-            </div>
+            </section>
+
+
+            <!-- =================================================
+                 FOOTER
+            ================================================== -->
+
+            <footer class="footer">
+
+                © 2026 Novera Energy & Technologies.
+                All rights reserved.
+
+            </footer>
+
 
         </div>
 
-    </div>
+    </main>
+
 
 </body>
 
 </html>
-```
-

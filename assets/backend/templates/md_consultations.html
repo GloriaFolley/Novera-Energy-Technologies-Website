@@ -11,8 +11,7 @@
     >
 
     <title>
-        Consultation #{{ consultation.id }}
-        | Novera MD Portal
+        Consultations | {{ company_name }} MD Portal
     </title>
 
     <link
@@ -22,7 +21,7 @@
 
     <link
         rel="preconnect"
-        href="https://fonts.gstatic.com"
+        href="https://fonts.googleapis.com"
         crossorigin
     >
 
@@ -42,14 +41,26 @@
             --blue: #0756a8;
             --blue-dark: #043b76;
             --blue-light: #eaf4ff;
-            --white: #fff;
+
+            --white: #ffffff;
+
             --text: #122033;
             --muted: #718096;
+
             --border: #e5edf6;
+
             --green: #159957;
+            --green-light: #e9f8f0;
+
             --orange: #d97706;
+            --orange-light: #fff5df;
+
             --red: #dc3545;
+            --red-light: #fff0f1;
+
+            --gray-light: #f5f8fc;
         }
+
 
         * {
             box-sizing: border-box;
@@ -57,380 +68,1256 @@
             padding: 0;
         }
 
+
         body {
-            font-family: "Inter", sans-serif;
-            background: #f5f8fc;
-            color: var(--text);
+            font-family:
+                "Inter",
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background:
+                var(--gray-light);
+
+            color:
+                var(--text);
+
+            min-height:
+                100vh;
         }
+
 
         a {
             text-decoration: none;
             color: inherit;
         }
 
+
+        /* =====================================================
+           LAYOUT
+           ===================================================== */
+
         .layout {
             display: flex;
             min-height: 100vh;
         }
 
+
+        /* =====================================================
+           SIDEBAR
+           ===================================================== */
+
         .sidebar {
             width: 250px;
+
             position: fixed;
+
             inset: 0 auto 0 0;
+
             background:
                 linear-gradient(
                     180deg,
                     #0756a8,
                     #043b76
                 );
-            color: white;
-            padding: 25px 16px;
+
+            color:
+                #ffffff;
+
+            padding:
+                25px 16px;
+
+            z-index:
+                20;
         }
+
 
         .brand {
             display: flex;
+
             align-items: center;
+
             gap: 11px;
-            padding: 8px 10px 30px;
+
+            padding:
+                8px 10px 30px;
         }
+
 
         .brand img {
             width: 48px;
+
             height: 48px;
+
             object-fit: contain;
-            background: white;
+
+            background:
+                #ffffff;
+
             padding: 4px;
-            border-radius: 11px;
+
+            border-radius:
+                11px;
         }
+
 
         .brand strong {
             display: block;
+
             font-size: 15px;
+
+            font-weight: 800;
         }
+
 
         .brand span {
             display: block;
+
             font-size: 9px;
+
             opacity: .75;
+
             margin-top: 3px;
         }
 
+
         .nav-link {
             display: flex;
+
             align-items: center;
+
             gap: 12px;
+
             padding: 12px;
+
             border-radius: 9px;
+
             margin-bottom: 5px;
+
             font-size: 12px;
+
             font-weight: 600;
-            color: rgba(255,255,255,.82);
+
+            color:
+                rgba(255,255,255,.82);
+
+            transition:
+                background .2s ease,
+                transform .2s ease;
         }
+
 
         .nav-link:hover {
-            background: rgba(255,255,255,.13);
+            background:
+                rgba(255,255,255,.13);
+
+            transform:
+                translateX(2px);
         }
+
+
+        .nav-link.active {
+            background:
+                rgba(255,255,255,.16);
+
+            color:
+                #ffffff;
+        }
+
+
+        .nav-link i {
+            width: 18px;
+
+            text-align: center;
+
+            font-size: 13px;
+        }
+
+
+        /* =====================================================
+           MAIN
+           ===================================================== */
 
         .main {
-            margin-left: 250px;
-            width: calc(100% - 250px);
+            margin-left:
+                250px;
+
+            width:
+                calc(100% - 250px);
+
+            min-height:
+                100vh;
         }
+
 
         .topbar {
-            height: 75px;
-            background: white;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            padding: 0 32px;
+            height:
+                75px;
+
+            background:
+                #ffffff;
+
+            border-bottom:
+                1px solid var(--border);
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            padding:
+                0 32px;
+
+            position:
+                sticky;
+
+            top:
+                0;
+
+            z-index:
+                10;
         }
+
+
+        .topbar strong {
+            font-size:
+                14px;
+
+            color:
+                #183b70;
+        }
+
 
         .content {
-            padding: 32px;
-            max-width: 1200px;
+            padding:
+                32px;
+
+            max-width:
+                1500px;
         }
 
-        .back {
-            color: var(--blue);
-            font-size: 12px;
-            font-weight: 700;
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-            margin-bottom: 20px;
+
+        /* =====================================================
+           PAGE HEADER
+           ===================================================== */
+
+        .page-header {
+            display:
+                flex;
+
+            align-items:
+                flex-start;
+
+            justify-content:
+                space-between;
+
+            gap:
+                20px;
+
+            margin-bottom:
+                25px;
         }
 
-        .page-title {
-            margin-bottom: 25px;
-        }
 
         .page-title h1 {
-            font-size: 25px;
-            font-weight: 800;
+            font-size:
+                25px;
+
+            font-weight:
+                800;
+
+            color:
+                #122033;
         }
+
 
         .page-title p {
-            color: var(--muted);
-            font-size: 12px;
-            margin-top: 6px;
+            color:
+                var(--muted);
+
+            font-size:
+                12px;
+
+            margin-top:
+                6px;
+
+            line-height:
+                1.6;
         }
 
-        .grid {
-            display: grid;
-            grid-template-columns:
-                minmax(0, 1.5fr)
-                minmax(300px, .8fr);
-            gap: 22px;
+
+        .oversight-badge {
+            display:
+                inline-flex;
+
+            align-items:
+                center;
+
+            gap:
+                7px;
+
+            padding:
+                9px 13px;
+
+            border-radius:
+                20px;
+
+            background:
+                var(--blue-light);
+
+            color:
+                var(--blue);
+
+            font-size:
+                10px;
+
+            font-weight:
+                700;
+
+            white-space:
+                nowrap;
         }
 
-        .card {
-            background: white;
-            border: 1px solid var(--border);
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow:
-                0 12px 35px rgba(5,54,105,.07);
-        }
 
-        .card-head {
-            padding: 19px 21px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .card-head h2 {
-            font-size: 15px;
-            font-weight: 800;
-        }
-
-        .card-body {
-            padding: 22px;
-        }
-
-        .detail {
-            display: grid;
-            grid-template-columns: 150px 1fr;
-            gap: 15px;
-            padding: 13px 0;
-            border-bottom: 1px solid #edf2f7;
-        }
-
-        .detail:last-child {
-            border-bottom: 0;
-        }
-
-        .label {
-            color: var(--muted);
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        .value {
-            font-size: 13px;
-            font-weight: 600;
-            line-height: 1.5;
-        }
-
-        .message {
-            white-space: pre-wrap;
-            font-weight: 400;
-            line-height: 1.7;
-        }
-
-        .status {
-            display: inline-flex;
-            padding: 6px 10px;
-            border-radius: 20px;
-            font-size: 10px;
-            font-weight: 700;
-        }
-
-        .new {
-            background: var(--blue-light);
-            color: var(--blue);
-        }
-
-        .progress {
-            background: #fff5df;
-            color: #a36000;
-        }
-
-        .closed {
-            background: #e9f8f0;
-            color: #11713f;
-        }
-
-        .assignment {
-            background: #f8fbff;
-            border: 1px solid #dceaf8;
-            border-radius: 12px;
-            padding: 17px;
-        }
-
-        .assignment h3 {
-            font-size: 13px;
-            margin-bottom: 5px;
-        }
-
-        .assignment p {
-            color: var(--muted);
-            font-size: 10px;
-            margin-bottom: 15px;
-        }
-
-        select {
-            width: 100%;
-            padding: 11px 12px;
-            border: 1px solid #d5e2ef;
-            border-radius: 9px;
-            background: white;
-            font-family: inherit;
-            font-size: 12px;
-            margin-bottom: 10px;
-        }
-
-        button {
-            width: 100%;
-            border: 0;
-            background: var(--blue);
-            color: white;
-            padding: 11px;
-            border-radius: 9px;
-            font-family: inherit;
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background: var(--blue-dark);
-        }
-
-        .unassign {
-            background: #fff0f1;
-            color: var(--red);
-            margin-top: 10px;
-        }
-
-        .status-form {
-            margin-top: 18px;
-        }
-
-        .status-form label {
-            display: block;
-            color: var(--muted);
-            font-size: 10px;
-            font-weight: 700;
-            margin-bottom: 7px;
-        }
+        /* =====================================================
+           FLASH MESSAGES
+           ===================================================== */
 
         .flash {
-            padding: 13px 15px;
-            border-radius: 9px;
-            margin-bottom: 18px;
-            font-size: 12px;
-            font-weight: 600;
+            padding:
+                13px 15px;
+
+            border-radius:
+                9px;
+
+            margin-bottom:
+                18px;
+
+            font-size:
+                12px;
+
+            font-weight:
+                600;
         }
+
 
         .flash.success {
-            background: #e9f8f0;
-            color: #11713f;
+            background:
+                var(--green-light);
+
+            color:
+                #11713f;
         }
+
 
         .flash.warning {
-            background: #fff6df;
-            color: #8a5a00;
+            background:
+                var(--orange-light);
+
+            color:
+                #8a5a00;
         }
+
 
         .flash.danger {
-            background: #fff0f1;
-            color: #a91f2e;
+            background:
+                var(--red-light);
+
+            color:
+                #a91f2e;
         }
 
-        @media(max-width: 850px) {
+
+        .flash.info {
+            background:
+                var(--blue-light);
+
+            color:
+                #0756a8;
+        }
+
+
+        /* =====================================================
+           TABLE CARD
+           ===================================================== */
+
+        .table-card {
+            background:
+                #ffffff;
+
+            border:
+                1px solid var(--border);
+
+            border-radius:
+                15px;
+
+            overflow:
+                hidden;
+
+            box-shadow:
+                0 12px 35px
+                rgba(5,54,105,.07);
+        }
+
+
+        .table-header {
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                space-between;
+
+            gap:
+                15px;
+
+            padding:
+                19px 21px;
+
+            border-bottom:
+                1px solid var(--border);
+        }
+
+
+        .table-header h2 {
+            font-size:
+                15px;
+
+            font-weight:
+                800;
+        }
+
+
+        .table-count {
+            color:
+                var(--muted);
+
+            font-size:
+                10px;
+
+            font-weight:
+                600;
+        }
+
+
+        .table-wrapper {
+            width:
+                100%;
+
+            overflow-x:
+                auto;
+        }
+
+
+        table {
+            width:
+                100%;
+
+            border-collapse:
+                collapse;
+
+            min-width:
+                1100px;
+        }
+
+
+        thead {
+            background:
+                #f7faff;
+        }
+
+
+        th {
+            text-align:
+                left;
+
+            padding:
+                13px 15px;
+
+            color:
+                #607086;
+
+            font-size:
+                10px;
+
+            font-weight:
+                800;
+
+            text-transform:
+                uppercase;
+
+            letter-spacing:
+                .35px;
+
+            border-bottom:
+                1px solid var(--border);
+
+            white-space:
+                nowrap;
+        }
+
+
+        td {
+            padding:
+                15px;
+
+            border-bottom:
+                1px solid #edf2f7;
+
+            font-size:
+                11px;
+
+            vertical-align:
+                middle;
+        }
+
+
+        tbody tr:last-child td {
+            border-bottom:
+                0;
+        }
+
+
+        tbody tr:hover {
+            background:
+                #fbfdff;
+        }
+
+
+        /* =====================================================
+           ID
+           ===================================================== */
+
+        .consultation-id {
+            color:
+                var(--blue);
+
+            font-size:
+                11px;
+
+            font-weight:
+                800;
+
+            white-space:
+                nowrap;
+        }
+
+
+        /* =====================================================
+           CLIENT
+           ===================================================== */
+
+        .client-name {
+            color:
+                var(--text);
+
+            font-size:
+                12px;
+
+            font-weight:
+                800;
+
+            margin-bottom:
+                3px;
+        }
+
+
+        .client-contact {
+            color:
+                var(--muted);
+
+            font-size:
+                9px;
+
+            line-height:
+                1.5;
+
+            max-width:
+                180px;
+
+            overflow-wrap:
+                anywhere;
+        }
+
+
+        /* =====================================================
+           SERVICE
+           ===================================================== */
+
+        .service {
+            color:
+                #26384f;
+
+            font-size:
+                11px;
+
+            font-weight:
+                700;
+
+            max-width:
+                190px;
+
+            line-height:
+                1.5;
+        }
+
+
+        /* =====================================================
+           STATUS
+           ===================================================== */
+
+        .status {
+            display:
+                inline-flex;
+
+            align-items:
+                center;
+
+            gap:
+                6px;
+
+            padding:
+                6px 10px;
+
+            border-radius:
+                20px;
+
+            font-size:
+                9px;
+
+            font-weight:
+                800;
+
+            white-space:
+                nowrap;
+        }
+
+
+        .status.new {
+            background:
+                var(--blue-light);
+
+            color:
+                var(--blue);
+        }
+
+
+        .status.progress {
+            background:
+                var(--orange-light);
+
+            color:
+                #a36000;
+        }
+
+
+        .status.closed {
+            background:
+                var(--green-light);
+
+            color:
+                #11713f;
+        }
+
+
+        /* =====================================================
+           ASSIGNED STAFF
+           ===================================================== */
+
+        .assigned-staff {
+            display:
+                flex;
+
+            align-items:
+                flex-start;
+
+            gap:
+                9px;
+        }
+
+
+        .staff-icon {
+            width:
+                30px;
+
+            height:
+                30px;
+
+            flex:
+                0 0 30px;
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            border-radius:
+                8px;
+
+            background:
+                var(--green-light);
+
+            color:
+                var(--green);
+
+            font-size:
+                11px;
+        }
+
+
+        .staff-name {
+            color:
+                var(--text);
+
+            font-size:
+                10px;
+
+            font-weight:
+                800;
+
+            line-height:
+                1.4;
+        }
+
+
+        .staff-id {
+            color:
+                var(--muted);
+
+            font-size:
+                9px;
+
+            margin-top:
+                2px;
+        }
+
+
+        .unassigned {
+            display:
+                inline-flex;
+
+            align-items:
+                center;
+
+            gap:
+                6px;
+
+            padding:
+                6px 9px;
+
+            background:
+                var(--red-light);
+
+            border:
+                1px solid #f3c9ce;
+
+            border-radius:
+                8px;
+
+            color:
+                #a91f2e;
+
+            font-size:
+                9px;
+
+            font-weight:
+                700;
+
+            white-space:
+                nowrap;
+        }
+
+
+        /* =====================================================
+           ASSIGNED BY
+           ===================================================== */
+
+        .assigned-by-name {
+            color:
+                var(--text);
+
+            font-size:
+                10px;
+
+            font-weight:
+                800;
+
+            line-height:
+                1.4;
+        }
+
+
+        .assigned-by-email {
+            color:
+                var(--muted);
+
+            font-size:
+                9px;
+
+            display:
+                block;
+
+            margin-top:
+                2px;
+
+            max-width:
+                170px;
+
+            overflow-wrap:
+                anywhere;
+        }
+
+
+        .not-available {
+            color:
+                var(--muted);
+
+            font-size:
+                10px;
+        }
+
+
+        /* =====================================================
+           ASSIGNED DATE
+           ===================================================== */
+
+        .assigned-date {
+            color:
+                #53657a;
+
+            font-size:
+                9px;
+
+            line-height:
+                1.5;
+
+            white-space:
+                nowrap;
+        }
+
+
+        /* =====================================================
+           VIEW BUTTON
+           ===================================================== */
+
+        .view-button {
+            display:
+                inline-flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            gap:
+                7px;
+
+            padding:
+                8px 12px;
+
+            border-radius:
+                8px;
+
+            background:
+                var(--blue);
+
+            color:
+                #ffffff;
+
+            font-size:
+                10px;
+
+            font-weight:
+                700;
+
+            transition:
+                background .2s ease,
+                transform .2s ease;
+        }
+
+
+        .view-button:hover {
+            background:
+                var(--blue-dark);
+
+            transform:
+                translateY(-1px);
+        }
+
+
+        /* =====================================================
+           EMPTY STATE
+           ===================================================== */
+
+        .empty {
+            text-align:
+                center;
+
+            padding:
+                70px 25px;
+        }
+
+
+        .empty-icon {
+            width:
+                65px;
+
+            height:
+                65px;
+
+            margin:
+                0 auto 16px;
+
+            border-radius:
+                50%;
+
+            background:
+                var(--blue-light);
+
+            color:
+                var(--blue);
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                center;
+
+            font-size:
+                24px;
+        }
+
+
+        .empty h3 {
+            font-size:
+                16px;
+
+            font-weight:
+                800;
+
+            margin-bottom:
+                7px;
+        }
+
+
+        .empty p {
+            color:
+                var(--muted);
+
+            font-size:
+                11px;
+
+            line-height:
+                1.6;
+
+            max-width:
+                450px;
+
+            margin:
+                0 auto;
+        }
+
+
+        /* =====================================================
+           READ ONLY NOTICE
+           ===================================================== */
+
+        .readonly-notice {
+            margin-top:
+                18px;
+
+            padding:
+                13px 14px;
+
+            background:
+                var(--blue-light);
+
+            border:
+                1px solid #d4e7fa;
+
+            border-radius:
+                10px;
+
+            color:
+                #0756a8;
+
+            font-size:
+                10px;
+
+            line-height:
+                1.6;
+
+            font-weight:
+                600;
+        }
+
+
+        .readonly-notice i {
+            margin-right:
+                6px;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+           ===================================================== */
+
+        @media (max-width: 850px) {
 
             .sidebar {
-                width: 70px;
-                padding: 18px 8px;
+                width:
+                    70px;
+
+                padding:
+                    18px 8px;
             }
 
+
             .brand {
-                justify-content: center;
+                justify-content:
+                    center;
+
+                padding:
+                    8px 4px 30px;
             }
+
 
             .brand div,
             .nav-link span {
-                display: none;
+                display:
+                    none;
             }
+
 
             .nav-link {
-                justify-content: center;
+                justify-content:
+                    center;
             }
+
+
+            .nav-link i {
+                width:
+                    auto;
+
+                font-size:
+                    15px;
+            }
+
 
             .main {
-                margin-left: 70px;
-                width: calc(100% - 70px);
+                margin-left:
+                    70px;
+
+                width:
+                    calc(100% - 70px);
             }
+
+
+            .topbar {
+                padding:
+                    0 20px;
+            }
+
 
             .content {
-                padding: 18px;
+                padding:
+                    20px;
             }
 
-            .grid {
-                grid-template-columns: 1fr;
+
+            .page-header {
+                flex-direction:
+                    column;
             }
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            .topbar {
+                height:
+                    65px;
+            }
+
+
+            .topbar strong {
+                font-size:
+                    12px;
+            }
+
+
+            .content {
+                padding:
+                    16px;
+            }
+
+
+            .page-title h1 {
+                font-size:
+                    21px;
+            }
+
+
+            .table-header {
+                padding:
+                    17px;
+            }
+
+        }
+
+
+        @media (max-width: 430px) {
+
+            .sidebar {
+                width:
+                    58px;
+
+                padding:
+                    15px 6px;
+            }
+
+
+            .main {
+                margin-left:
+                    58px;
+
+                width:
+                    calc(100% - 58px);
+            }
+
+
+            .content {
+                padding:
+                    13px;
+            }
+
+
+            .topbar {
+                padding:
+                    0 14px;
+            }
+
+
+            .brand img {
+                width:
+                    40px;
+
+                height:
+                    40px;
+            }
+
         }
 
     </style>
 
 </head>
 
+
 <body>
+
 
 <div class="layout">
 
+
+    <!-- =====================================================
+         SIDEBAR
+         ===================================================== -->
+
     <aside class="sidebar">
+
 
         <div class="brand">
 
             <img
-                src="{{ logo_url }}"
-                alt="Novera Logo"
-                onerror="this.onerror=null; this.src='/assets/logo.jpg';"
+                src="{{ url_for('logo') }}"
+                alt="{{ company_name }} Logo"
+                onerror="
+                    this.onerror=null;
+                    this.src='/assets/logo.jpg';
+                "
             >
 
+
             <div>
-                <strong>NOVERA</strong>
+
+                <strong>
+                    NOVERA
+                </strong>
 
                 <span>
                     Light · Motion · Intelligence
                 </span>
+
             </div>
 
         </div>
+
+
+
+        <!-- DASHBOARD -->
 
         <a
             class="nav-link"
             href="{{ url_for('md_dashboard') }}"
         >
+
             <i class="fa-solid fa-chart-pie"></i>
-            <span>Dashboard</span>
+
+            <span>
+                Dashboard
+            </span>
+
         </a>
+
+
+
+        <!-- STAFF -->
 
         <a
             class="nav-link"
             href="{{ url_for('md_staff') }}"
         >
+
             <i class="fa-solid fa-users"></i>
-            <span>Staff</span>
+
+            <span>
+                Staff
+            </span>
+
         </a>
 
+
+
+        <!-- CONSULTATIONS -->
+
         <a
-            class="nav-link"
+            class="nav-link active"
             href="{{ url_for('md_consultations') }}"
         >
+
             <i class="fa-solid fa-clipboard-list"></i>
-            <span>Consultations</span>
+
+            <span>
+                Consultations
+            </span>
+
         </a>
+
+
+
+        <!-- LOGOUT -->
 
         <a
             class="nav-link"
@@ -442,25 +1329,47 @@
                 right:16px;
             "
         >
+
             <i class="fa-solid fa-right-from-bracket"></i>
-            <span>Logout</span>
+
+            <span>
+                Logout
+            </span>
+
         </a>
+
 
     </aside>
 
 
+
+    <!-- =====================================================
+         MAIN
+         ===================================================== -->
+
     <main class="main">
+
+
+        <!-- TOPBAR -->
 
         <header class="topbar">
 
             <strong>
-                Executive Consultation Management
+                Executive Consultation Oversight
             </strong>
 
         </header>
 
 
+
+        <!-- CONTENT -->
+
         <div class="content">
+
+
+            <!-- =================================================
+                 FLASH MESSAGES
+                 ================================================= -->
 
             {% with messages = get_flashed_messages(
                 with_categories=true
@@ -477,418 +1386,502 @@
             {% endwith %}
 
 
-            <a
-                href="{{ url_for('md_consultations') }}"
-                class="back"
-            >
-                <i class="fa-solid fa-arrow-left"></i>
-                Back to Consultations
-            </a>
+
+            <!-- =================================================
+                 PAGE HEADER
+                 ================================================= -->
+
+            <div class="page-header">
 
 
-            <div class="page-title">
+                <div class="page-title">
 
-                <h1>
-                    Consultation #{{ consultation.id }}
-                </h1>
+                    <h1>
+                        Consultations
+                    </h1>
 
-                <p>
-                    Review, assign and manage this
-                    client consultation.
-                </p>
+                    <p>
+                        Review client consultations and monitor
+                        assignment information.
+                    </p>
+
+                </div>
+
+
+                <div class="oversight-badge">
+
+                    <i class="fa-solid fa-eye"></i>
+
+                    Read-Only Oversight
+
+                </div>
+
 
             </div>
 
 
-            <div class="grid">
 
+            <!-- =================================================
+                 CONSULTATIONS TABLE
+                 ================================================= -->
 
-                <!-- CLIENT -->
+            <section class="table-card">
 
-                <section class="card">
 
-                    <div class="card-head">
+                <div class="table-header">
 
-                        <h2>
-                            Consultation Details
-                        </h2>
+                    <h2>
+                        Client Consultations
+                    </h2>
 
-                    </div>
 
-                    <div class="card-body">
+                    <span class="table-count">
 
-                        <div class="detail">
+                        {{ consultations|length }}
 
-                            <div class="label">
-                                Client
-                            </div>
+                        consultation{% if consultations|length != 1 %}s{% endif %}
 
-                            <div class="value">
-                                {{ consultation.name }}
-                            </div>
+                    </span>
 
-                        </div>
+                </div>
 
 
-                        <div class="detail">
 
-                            <div class="label">
-                                Company
-                            </div>
+                {% if consultations %}
 
-                            <div class="value">
-                                {{ consultation.company or 'Not provided' }}
-                            </div>
 
-                        </div>
+                    <div class="table-wrapper">
 
+                        <table>
 
-                        <div class="detail">
+                            <thead>
 
-                            <div class="label">
-                                Email
-                            </div>
+                                <tr>
 
-                            <div class="value">
-                                {{ consultation.email or 'Not provided' }}
-                            </div>
+                                    <th>
+                                        ID
+                                    </th>
 
-                        </div>
+                                    <th>
+                                        Client
+                                    </th>
 
+                                    <th>
+                                        Service
+                                    </th>
 
-                        <div class="detail">
+                                    <th>
+                                        Status
+                                    </th>
 
-                            <div class="label">
-                                Phone
-                            </div>
+                                    <th>
+                                        Assigned Staff
+                                    </th>
 
-                            <div class="value">
-                                {{ consultation.phone or 'Not provided' }}
-                            </div>
+                                    <th>
+                                        Assigned By
+                                    </th>
 
-                        </div>
+                                    <th>
+                                        Assigned On
+                                    </th>
 
+                                    <th>
+                                        Action
+                                    </th>
 
-                        <div class="detail">
+                                </tr>
 
-                            <div class="label">
-                                Service
-                            </div>
+                            </thead>
 
-                            <div class="value">
-                                {{ consultation.service }}
-                            </div>
 
-                        </div>
 
+                            <tbody>
 
-                        <div class="detail">
 
-                            <div class="label">
-                                Status
-                            </div>
+                                {% for consultation in consultations %}
 
-                            <div class="value">
 
-                                {% if consultation.status == 'New' %}
+                                    <tr>
 
-                                    <span class="status new">
-                                        New
-                                    </span>
 
-                                {% elif consultation.status == 'In Progress' %}
+                                        <!-- =================================================
+                                             ID
+                                             ================================================= -->
 
-                                    <span class="status progress">
-                                        In Progress
-                                    </span>
+                                        <td>
 
-                                {% else %}
+                                            <div class="consultation-id">
 
-                                    <span class="status closed">
-                                        Closed
-                                    </span>
+                                                #{{ consultation["id"] }}
 
-                                {% endif %}
+                                            </div>
 
-                            </div>
+                                        </td>
 
-                        </div>
 
 
-                        <div class="detail">
+                                        <!-- =================================================
+                                             CLIENT
+                                             ================================================= -->
 
-                            <div class="label">
-                                Submitted
-                            </div>
+                                        <td>
 
-                            <div class="value">
-                                {{ consultation.created_at }}
-                            </div>
+                                            <div class="client-name">
 
-                        </div>
+                                                {{ consultation["name"] or "Not provided" }}
 
+                                            </div>
 
-                        <div class="detail">
 
-                            <div class="label">
-                                Message
-                            </div>
+                                            {% if consultation["email"] %}
 
-                            <div class="value message">
-                                {{ consultation.message or 'No message provided.' }}
-                            </div>
+                                                <div class="client-contact">
 
-                        </div>
+                                                    {{ consultation["email"] }}
 
-                    </div>
+                                                </div>
 
-                </section>
+                                            {% elif consultation["phone"] %}
 
+                                                <div class="client-contact">
 
-                <!-- ASSIGNMENT -->
+                                                    {{ consultation["phone"] }}
 
-                <aside>
+                                                </div>
 
-                    <section class="card">
+                                            {% endif %}
 
-                        <div class="card-head">
+                                        </td>
 
-                            <h2>
-                                Staff Assignment
-                            </h2>
 
-                        </div>
 
+                                        <!-- =================================================
+                                             SERVICE
+                                             ================================================= -->
 
-                        <div class="card-body">
+                                        <td>
 
-                            {% if consultation.assigned_staff_id %}
+                                            <div class="service">
 
-                                <div
-                                    style="
-                                        background:#e9f8f0;
-                                        color:#11713f;
-                                        padding:12px;
-                                        border-radius:10px;
-                                        margin-bottom:15px;
-                                        font-size:11px;
-                                        font-weight:600;
-                                    "
-                                >
+                                                {{ consultation["service"] or "Not specified" }}
 
-                                    <i class="fa-solid fa-circle-check"></i>
+                                            </div>
 
-                                    Currently assigned to
+                                        </td>
 
-                                    <strong>
-                                        {{ consultation.assigned_first_name }}
-                                        {{ consultation.assigned_last_name }}
-                                    </strong>
 
-                                    <small
-                                        style="
-                                            display:block;
-                                            margin-top:4px;
-                                        "
-                                    >
-                                        {{ consultation.assigned_staff_code }}
-                                        ·
-                                        {{ consultation.assigned_department }}
-                                    </small>
 
-                                </div>
+                                        <!-- =================================================
+                                             STATUS
+                                             ================================================= -->
 
-                            {% else %}
+                                        <td>
 
-                                <div
-                                    style="
-                                        background:#fff0f1;
-                                        color:#a91f2e;
-                                        padding:12px;
-                                        border-radius:10px;
-                                        margin-bottom:15px;
-                                        font-size:11px;
-                                        font-weight:600;
-                                    "
-                                >
 
-                                    <i class="fa-solid fa-circle-exclamation"></i>
+                                            {% if consultation["status"] == "New" %}
 
-                                    This consultation is unassigned.
 
-                                </div>
+                                                <span class="status new">
 
-                            {% endif %}
+                                                    <i
+                                                        class="fa-solid fa-circle"
+                                                    ></i>
 
+                                                    New
 
-                            <div class="assignment">
+                                                </span>
 
-                                <h3>
-                                    Assign to Staff
-                                </h3>
 
-                                <p>
-                                    Only active staff members are listed.
-                                </p>
+                                            {% elif consultation["status"] == "In Progress" %}
 
 
-                                <form
-                                    method="POST"
-                                    action="{{
-                                        url_for(
-                                            'md_assign_consultation',
-                                            consultation_id=consultation.id
-                                        )
-                                    }}"
-                                >
+                                                <span class="status progress">
 
-                                    <select
-                                        name="staff_id"
-                                        required
-                                    >
+                                                    <i
+                                                        class="fa-solid fa-clock"
+                                                    ></i>
 
-                                        <option value="">
-                                            Select staff member
-                                        </option>
+                                                    In Progress
 
-                                        {% for member in staff %}
+                                                </span>
 
-                                            <option
-                                                value="{{ member.id }}"
-                                                {% if consultation.assigned_staff_id == member.id %}
-                                                    selected
+
+                                            {% else %}
+
+
+                                                <span class="status closed">
+
+                                                    <i
+                                                        class="fa-solid fa-circle-check"
+                                                    ></i>
+
+                                                    Closed
+
+                                                </span>
+
+
+                                            {% endif %}
+
+
+                                        </td>
+
+
+
+                                        <!-- =================================================
+                                             ASSIGNED STAFF
+                                             ================================================= -->
+
+                                        <td>
+
+
+                                            {% if consultation["assigned_staff_id"] %}
+
+
+                                                <div class="assigned-staff">
+
+
+                                                    <div class="staff-icon">
+
+                                                        <i
+                                                            class="fa-solid fa-user-check"
+                                                        ></i>
+
+                                                    </div>
+
+
+                                                    <div>
+
+                                                        <div class="staff-name">
+
+                                                            {{ consultation["assigned_first_name"] or "" }}
+
+                                                            {{ consultation["assigned_last_name"] or "" }}
+
+                                                        </div>
+
+
+                                                        <div class="staff-id">
+
+                                                            {{ consultation["assigned_staff_code"] or "Staff ID unavailable" }}
+
+                                                        </div>
+
+                                                    </div>
+
+
+                                                </div>
+
+
+                                            {% else %}
+
+
+                                                <span class="unassigned">
+
+                                                    <i
+                                                        class="fa-solid fa-circle-exclamation"
+                                                    ></i>
+
+                                                    Unassigned
+
+                                                </span>
+
+
+                                            {% endif %}
+
+
+                                        </td>
+
+
+
+                                        <!-- =================================================
+                                             ASSIGNED BY
+                                             ================================================= -->
+
+                                        <td>
+
+
+                                            {% if consultation["assigned_by_first_name"] %}
+
+
+                                                <div class="assigned-by-name">
+
+                                                    {{ consultation["assigned_by_first_name"] }}
+
+                                                    {{ consultation["assigned_by_last_name"] or "" }}
+
+                                                </div>
+
+
+                                                {% if consultation["assigned_by_email"] %}
+
+                                                    <span class="assigned-by-email">
+
+                                                        {{ consultation["assigned_by_email"] }}
+
+                                                    </span>
+
                                                 {% endif %}
+
+
+                                            {% else %}
+
+
+                                                <span class="not-available">
+
+                                                    —
+
+                                                </span>
+
+
+                                            {% endif %}
+
+
+                                        </td>
+
+
+
+                                        <!-- =================================================
+                                             ASSIGNED ON
+                                             ================================================= -->
+
+                                        <td>
+
+
+                                            {% if consultation["assigned_at"] %}
+
+
+                                                <div class="assigned-date">
+
+                                                    {{ consultation["assigned_at"] }}
+
+                                                </div>
+
+
+                                            {% else %}
+
+
+                                                <span class="not-available">
+
+                                                    —
+
+                                                </span>
+
+
+                                            {% endif %}
+
+
+                                        </td>
+
+
+
+                                        <!-- =================================================
+                                             VIEW
+                                             ================================================= -->
+
+                                        <td>
+
+                                            <a
+                                                class="view-button"
+                                                href="{{ url_for(
+                                                    'md_consultation_view',
+                                                    consultation_id=consultation['id']
+                                                ) }}"
                                             >
-                                                {{ member.first_name }}
-                                                {{ member.last_name }}
-                                                —
-                                                {{ member.department }}
-                                                —
-                                                {{ member.staff_id }}
-                                            </option>
 
-                                        {% endfor %}
+                                                <i
+                                                    class="fa-solid fa-eye"
+                                                ></i>
 
-                                    </select>
+                                                View
 
+                                            </a>
 
-                                    <button type="submit">
-
-                                        <i class="fa-solid fa-user-plus"></i>
-
-                                        Assign Consultation
-
-                                    </button>
-
-                                </form>
+                                        </td>
 
 
-                                {% if consultation.assigned_staff_id %}
-
-                                    <form
-                                        method="POST"
-                                        action="{{
-                                            url_for(
-                                                'admin_consultations'
-                                            )
-                                        }}"
-                                    >
-
-                                        <!--
-                                        MD does not need a separate
-                                        unassign endpoint in this
-                                        template. If you want MD
-                                        unassignment, add an MD
-                                        unassign route.
-                                        -->
-
-                                    </form>
-
-                                {% endif %}
-
-                            </div>
+                                    </tr>
 
 
-                            <!-- STATUS -->
+                                {% endfor %}
 
-                            <form
-                                method="POST"
-                                class="status-form"
-                                action="{{
-                                    url_for(
-                                        'md_update_consultation_status',
-                                        consultation_id=consultation.id
-                                    )
-                                }}"
-                            >
 
-                                <label>
-                                    Consultation Status
-                                </label>
+                            </tbody>
 
-                                <select
-                                    name="status"
-                                    required
-                                >
+                        </table>
 
-                                    <option
-                                        value="New"
-                                        {% if consultation.status == 'New' %}
-                                            selected
-                                        {% endif %}
-                                    >
-                                        New
-                                    </option>
+                    </div>
 
-                                    <option
-                                        value="In Progress"
-                                        {% if consultation.status == 'In Progress' %}
-                                            selected
-                                        {% endif %}
-                                    >
-                                        In Progress
-                                    </option>
 
-                                    <option
-                                        value="Closed"
-                                        {% if consultation.status == 'Closed' %}
-                                            selected
-                                        {% endif %}
-                                    >
-                                        Closed
-                                    </option>
+                {% else %}
 
-                                </select>
 
-                                <button
-                                    type="submit"
-                                    style="
-                                        background:#eef5fc;
-                                        color:#0756a8;
-                                    "
-                                >
+                    <!-- =================================================
+                         EMPTY STATE
+                         ================================================= -->
 
-                                    <i class="fa-solid fa-arrows-rotate"></i>
+                    <div class="empty">
 
-                                    Update Status
 
-                                </button>
+                        <div class="empty-icon">
 
-                            </form>
+                            <i
+                                class="fa-solid fa-clipboard-list"
+                            ></i>
 
                         </div>
 
-                    </section>
 
-                </aside>
+                        <h3>
+                            No consultations yet
+                        </h3>
+
+
+                        <p>
+                            Client consultations submitted through
+                            the company website will appear here.
+                        </p>
+
+
+                    </div>
+
+
+                {% endif %}
+
+
+            </section>
+
+
+
+            <!-- =================================================
+                 READ ONLY NOTICE
+                 ================================================= -->
+
+            <div class="readonly-notice">
+
+                <i
+                    class="fa-solid fa-eye"
+                ></i>
+
+                MD access is read-only for consultations.
+                You can review client information, consultation
+                status, assigned staff, who assigned the consultation,
+                and the assignment date. Assignment, reassignment,
+                unassignment, status changes, and deletion are handled
+                through the appropriate operational portal.
 
             </div>
+
 
         </div>
 
+
     </main>
+
 
 </div>
 
+
 </body>
+
 </html>

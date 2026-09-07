@@ -1,0 +1,992 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <title>
+        Staff Details | {{ company_name|default('Novera Energy & Technologies Ltd') }}
+    </title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #061a3a 0%,
+                    #0b3d91 48%,
+                    #edf4ff 100%
+                );
+
+            color: #172033;
+        }
+
+
+        /* =====================================================
+           NAVIGATION
+        ===================================================== */
+
+        .nav {
+            background: #ffffff;
+
+            box-shadow:
+                0 4px 22px
+                rgba(0, 0, 0, 0.10);
+
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+
+        .container {
+            width: min(920px, 92%);
+            margin: auto;
+        }
+
+
+        .nav-inner {
+            min-height: 82px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 20px;
+        }
+
+
+        .brand {
+            width: 170px;
+            height: 64px;
+
+            display: block;
+
+            flex-shrink: 0;
+        }
+
+
+        .brand img {
+            width: 100%;
+            height: 100%;
+
+            object-fit: contain;
+        }
+
+
+        .back {
+            display: inline-flex;
+
+            align-items: center;
+            justify-content: center;
+
+            gap: 7px;
+
+            padding: 11px 17px;
+
+            border-radius: 10px;
+
+            background: #eef5ff;
+
+            color: #0b3d91;
+
+            text-decoration: none;
+
+            font-weight: 700;
+
+            font-size: 14px;
+
+            border: 1px solid #d8e6fa;
+
+            transition:
+                background .2s ease,
+                color .2s ease,
+                transform .2s ease;
+        }
+
+
+        .back:hover {
+            background: #0b3d91;
+            color: #ffffff;
+
+            transform: translateY(-1px);
+        }
+
+
+        /* =====================================================
+           MAIN
+        ===================================================== */
+
+        main {
+            padding: 55px 0 70px;
+        }
+
+
+        .card {
+            background: #ffffff;
+
+            border-radius: 22px;
+
+            padding: 34px;
+
+            box-shadow:
+                0 22px 55px
+                rgba(0, 20, 60, 0.20);
+
+            border:
+                1px solid rgba(255,255,255,0.6);
+        }
+
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        .profile-header {
+            display: flex;
+
+            align-items: center;
+
+            gap: 20px;
+
+            padding-bottom: 28px;
+
+            margin-bottom: 28px;
+
+            border-bottom:
+                1px solid #e8edf5;
+        }
+
+
+        .avatar {
+            width: 70px;
+            height: 70px;
+
+            flex-shrink: 0;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 18px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0b3d91,
+                    #155dcc
+                );
+
+            color: #ffffff;
+
+            font-size: 25px;
+
+            font-weight: 800;
+
+            box-shadow:
+                0 10px 25px
+                rgba(11, 61, 145, 0.25);
+        }
+
+
+        .profile-heading {
+            min-width: 0;
+        }
+
+
+        .eyebrow {
+            display: block;
+
+            color: #0b3d91;
+
+            font-size: 11px;
+
+            font-weight: 800;
+
+            text-transform: uppercase;
+
+            letter-spacing: 1.5px;
+
+            margin-bottom: 7px;
+        }
+
+
+        h1 {
+            margin: 0;
+
+            color: #092d68;
+
+            font-size: 31px;
+
+            line-height: 1.2;
+
+            word-break: break-word;
+        }
+
+
+        .subtitle {
+            margin-top: 7px;
+
+            color: #667085;
+
+            font-size: 14px;
+        }
+
+
+        /* =====================================================
+           DETAILS
+        ===================================================== */
+
+        .section-title {
+            margin: 0 0 15px;
+
+            color: #143565;
+
+            font-size: 15px;
+
+            font-weight: 800;
+        }
+
+
+        .details {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 15px;
+        }
+
+
+        .detail {
+            padding: 18px;
+
+            min-width: 0;
+
+            border-radius: 13px;
+
+            background: #f7faff;
+
+            border:
+                1px solid #e2eaf6;
+
+            transition:
+                border-color .2s ease,
+                transform .2s ease;
+        }
+
+
+        .detail:hover {
+            border-color: #c8d9f1;
+
+            transform: translateY(-1px);
+        }
+
+
+        .detail span.label {
+            display: block;
+
+            margin-bottom: 7px;
+
+            color: #667085;
+
+            font-size: 10px;
+
+            font-weight: 800;
+
+            text-transform: uppercase;
+
+            letter-spacing: .8px;
+        }
+
+
+        .detail strong {
+            display: block;
+
+            color: #143565;
+
+            font-size: 14px;
+
+            line-height: 1.5;
+
+            word-break: break-word;
+        }
+
+
+        .muted {
+            color: #98a2b3 !important;
+
+            font-weight: 600 !important;
+        }
+
+
+        /* =====================================================
+           STATUS
+        ===================================================== */
+
+        .status {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            padding: 6px 11px;
+
+            border-radius: 999px;
+
+            font-size: 11px;
+
+            font-weight: 800;
+
+            line-height: 1;
+        }
+
+
+        .status::before {
+            content: "";
+
+            width: 7px;
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: currentColor;
+        }
+
+
+        .status-active {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+
+        .status-pending {
+            background: #fff7d6;
+            color: #8a6200;
+        }
+
+
+        .status-disabled {
+            background: #fee2e2;
+            color: #b42318;
+        }
+
+
+        .status-rejected {
+            background: #f3e8ff;
+            color: #7e22ce;
+        }
+
+
+        .status-default {
+            background: #eef2f7;
+            color: #475467;
+        }
+
+
+        /* =====================================================
+           FOOTER ACTION
+        ===================================================== */
+
+        .bottom-actions {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 15px;
+
+            margin-top: 30px;
+
+            padding-top: 25px;
+
+            border-top:
+                1px solid #e8edf5;
+        }
+
+
+        .record-note {
+            color: #667085;
+
+            font-size: 12px;
+
+            line-height: 1.5;
+        }
+
+
+        .return-btn {
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 11px 18px;
+
+            border-radius: 10px;
+
+            background: #0b3d91;
+
+            color: #ffffff;
+
+            text-decoration: none;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            transition:
+                background .2s ease,
+                transform .2s ease;
+        }
+
+
+        .return-btn:hover {
+            background: #092d68;
+
+            transform: translateY(-1px);
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 700px) {
+
+            .nav-inner {
+                min-height: 72px;
+            }
+
+
+            .brand {
+                width: 140px;
+                height: 54px;
+            }
+
+
+            .back {
+                padding: 9px 12px;
+
+                font-size: 12px;
+            }
+
+
+            main {
+                padding: 35px 0 50px;
+            }
+
+
+            .card {
+                padding: 23px;
+
+                border-radius: 18px;
+            }
+
+
+            .profile-header {
+                align-items: flex-start;
+
+                gap: 15px;
+            }
+
+
+            .avatar {
+                width: 58px;
+                height: 58px;
+
+                border-radius: 15px;
+
+                font-size: 21px;
+            }
+
+
+            h1 {
+                font-size: 25px;
+            }
+
+
+            .details {
+                grid-template-columns: 1fr;
+            }
+
+
+            .bottom-actions {
+                flex-direction: column;
+
+                align-items: stretch;
+            }
+
+
+            .return-btn {
+                width: 100%;
+            }
+
+        }
+
+
+        @media (max-width: 430px) {
+
+            .container {
+                width: 94%;
+            }
+
+
+            .brand {
+                width: 120px;
+            }
+
+
+            .back {
+                font-size: 0;
+
+                width: 40px;
+                height: 40px;
+
+                padding: 0;
+            }
+
+
+            .back::before {
+                content: "←";
+
+                font-size: 18px;
+            }
+
+
+            .card {
+                padding: 18px;
+            }
+
+
+            .profile-header {
+                padding-bottom: 22px;
+
+                margin-bottom: 22px;
+            }
+
+
+            h1 {
+                font-size: 22px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     NAVIGATION
+========================================================= -->
+
+<nav class="nav">
+
+    <div class="container nav-inner">
+
+        <a
+            class="brand"
+            href="{{ url_for('md_dashboard') }}"
+            aria-label="MD Dashboard"
+        >
+
+            <img
+                src="{{ url_for('logo') }}"
+                alt="{{ company_name|default('Novera Energy & Technologies Ltd') }} Logo"
+            >
+
+        </a>
+
+
+        <a
+            class="back"
+            href="{{ url_for('md_staff') }}"
+            aria-label="Back to Staff"
+        >
+            ← Back to Staff
+        </a>
+
+    </div>
+
+</nav>
+
+
+<!-- =========================================================
+     MAIN CONTENT
+========================================================= -->
+
+<main>
+
+    <div class="container">
+
+        <div class="card">
+
+
+            <!-- PROFILE HEADER -->
+
+            <div class="profile-header">
+
+                <div class="avatar">
+
+                    {% set first_name = staff["first_name"]|default("", true) %}
+                    {% set last_name = staff["last_name"]|default("", true) %}
+
+                    {{
+                        (
+                            first_name[:1] ~
+                            last_name[:1]
+                        )|upper
+                    }}
+
+                </div>
+
+
+                <div class="profile-heading">
+
+                    <span class="eyebrow">
+                        Staff Record
+                    </span>
+
+                    <h1>
+                        {{ first_name }}
+                        {{ last_name }}
+                    </h1>
+
+                    <div class="subtitle">
+
+                        {{ staff["position"]|default("Staff Member", true) }}
+
+                        {% if staff["department"] %}
+                            · {{ staff["department"] }}
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- STAFF INFORMATION -->
+
+            <h2 class="section-title">
+                Staff Information
+            </h2>
+
+
+            <div class="details">
+
+
+                <!-- STAFF ID -->
+
+                <div class="detail">
+
+                    <span class="label">
+                        Staff ID
+                    </span>
+
+                    <strong>
+                        {{ staff["staff_id"]|default("Not assigned", true) }}
+                    </strong>
+
+                </div>
+
+
+                <!-- STATUS -->
+
+                <div class="detail">
+
+                    <span class="label">
+                        Status
+                    </span>
+
+                    {% set current_status =
+                        staff["status"]|default("Unknown", true)|lower
+                    %}
+
+
+                    <strong>
+
+                        {% if current_status == "active" %}
+
+                            <span class="status status-active">
+                                Active
+                            </span>
+
+                        {% elif current_status == "pending" %}
+
+                            <span class="status status-pending">
+                                Pending
+                            </span>
+
+                        {% elif current_status == "disabled" %}
+
+                            <span class="status status-disabled">
+                                Disabled
+                            </span>
+
+                        {% elif current_status == "rejected" %}
+
+                            <span class="status status-rejected">
+                                Rejected
+                            </span>
+
+                        {% else %}
+
+                            <span class="status status-default">
+                                {{ staff["status"]|default("Unknown", true) }}
+                            </span>
+
+                        {% endif %}
+
+                    </strong>
+
+                </div>
+
+
+                <!-- EMAIL -->
+
+                <div class="detail">
+
+                    <span class="label">
+                        Work Email
+                    </span>
+
+                    {% if staff["email"] %}
+
+                        <strong>
+                            {{ staff["email"] }}
+                        </strong>
+
+                    {% else %}
+
+                        <strong class="muted">
+                            Not provided
+                        </strong>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- PHONE -->
+
+                <div class="detail">
+
+                    <span class="label">
+                        Phone
+                    </span>
+
+                    {% if staff["phone"] %}
+
+                        <strong>
+                            {{ staff["phone"] }}
+                        </strong>
+
+                    {% else %}
+
+                        <strong class="muted">
+                            Not provided
+                        </strong>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- DEPARTMENT -->
+
+                <div class="detail">
+
+                    <span class="label">
+                        Department
+                    </span>
+
+                    {% if staff["department"] %}
+
+                        <strong>
+                            {{ staff["department"] }}
+                        </strong>
+
+                    {% else %}
+
+                        <strong class="muted">
+                            Not assigned
+                        </strong>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- POSITION -->
+
+                <div class="detail">
+
+                    <span class="label">
+                        Position
+                    </span>
+
+                    {% if staff["position"] %}
+
+                        <strong>
+                            {{ staff["position"] }}
+                        </strong>
+
+                    {% else %}
+
+                        <strong class="muted">
+                            Not assigned
+                        </strong>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- REGISTERED -->
+
+                <div class="detail">
+
+                    <span class="label">
+                        Registered
+                    </span>
+
+                    {% if staff["created_at"] %}
+
+                        <strong>
+                            {{ staff["created_at"] }}
+                        </strong>
+
+                    {% else %}
+
+                        <strong class="muted">
+                            Not available
+                        </strong>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- APPROVED -->
+
+                <div class="detail">
+
+                    <span class="label">
+                        Approved
+                    </span>
+
+                    {% if staff["approved_at"] %}
+
+                        <strong>
+                            {{ staff["approved_at"] }}
+                        </strong>
+
+                    {% else %}
+
+                        <strong class="muted">
+                            Not yet approved
+                        </strong>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- LAST LOGIN -->
+
+                <div class="detail">
+
+                    <span class="label">
+                        Last Login
+                    </span>
+
+                    {% if staff["last_login"] %}
+
+                        <strong>
+                            {{ staff["last_login"] }}
+                        </strong>
+
+                    {% else %}
+
+                        <strong class="muted">
+                            No login recorded
+                        </strong>
+
+                    {% endif %}
+
+                </div>
+
+
+            </div>
+
+
+            <!-- BOTTOM ACTIONS -->
+
+            <div class="bottom-actions">
+
+                <div class="record-note">
+
+                    Staff record for
+                    <strong>
+                        {{ first_name }} {{ last_name }}
+                    </strong>
+
+                    · {{ company_name|default('Novera Energy & Technologies Ltd') }}
+
+                </div>
+
+
+                <a
+                    class="return-btn"
+                    href="{{ url_for('md_staff') }}"
+                >
+                    Return to Staff
+                </a>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</main>
+
+
+</body>
+
+</html>

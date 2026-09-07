@@ -2,15 +2,19 @@
 <html lang="en">
 
 <head>
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>MD Registration | {{ company_name }}</title>
 
-    <link rel="stylesheet"
-          href="{{ url_for('assets', filename='css/style.css') }}">
+    <link
+        rel="stylesheet"
+        href="{{ url_for('assets', filename='css/style.css') }}"
+    >
 
     <style>
+
         * {
             box-sizing: border-box;
         }
@@ -18,7 +22,12 @@
         body {
             margin: 0;
             min-height: 100vh;
-            font-family: Arial, Helvetica, sans-serif;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
             color: #172033;
 
             background:
@@ -33,8 +42,13 @@
             overflow-x: hidden;
         }
 
-        /* Novera logo watermark */
+
+        /* =========================================================
+           LOGO WATERMARK
+           ========================================================= */
+
         body::before {
+
             content: "";
 
             position: fixed;
@@ -45,23 +59,35 @@
             top: 50%;
             left: 50%;
 
-            transform: translate(-50%, -50%);
+            transform:
+                translate(
+                    -50%,
+                    -50%
+                );
 
             background-image:
                 url("{{ url_for('logo') }}");
 
             background-repeat: no-repeat;
+
             background-position: center;
+
             background-size: contain;
 
             opacity: 0.055;
 
             pointer-events: none;
+
             z-index: 0;
         }
 
-        /* Decorative background glow */
+
+        /* =========================================================
+           DECORATIVE GLOW
+           ========================================================= */
+
         body::after {
+
             content: "";
 
             position: fixed;
@@ -75,49 +101,94 @@
             border-radius: 50%;
 
             background:
-                rgba(255, 255, 255, 0.12);
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.12
+                );
 
             pointer-events: none;
+
             z-index: 0;
         }
 
-        /* Page */
+
+        /* =========================================================
+           PAGE
+           ========================================================= */
+
         .form-page {
+
             min-height: 100vh;
 
             display: flex;
+
             align-items: center;
+
             justify-content: center;
 
             padding: 45px 20px;
 
             position: relative;
+
             z-index: 2;
         }
 
-        /* Main card */
+
+        /* =========================================================
+           FORM CARD
+           ========================================================= */
+
         .form-card {
-            width: min(650px, 100%);
+
+            width: min(
+                650px,
+                100%
+            );
 
             padding: 38px;
 
             background:
-                rgba(255, 255, 255, 0.98);
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.98
+                );
 
             border-radius: 24px;
 
             border:
-                1px solid rgba(255, 255, 255, 0.8);
+                1px solid
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.8
+                );
 
             box-shadow:
-                0 25px 70px rgba(0, 20, 60, 0.25);
+                0 25px 70px
+                rgba(
+                    0,
+                    20,
+                    60,
+                    0.25
+                );
 
             position: relative;
+
             overflow: hidden;
         }
 
-        /* Blue top border */
+
+        /* =========================================================
+           TOP ACCENT
+           ========================================================= */
+
         .form-card::before {
+
             content: "";
 
             position: absolute;
@@ -137,11 +208,17 @@
                 );
         }
 
-        /* Brand */
+
+        /* =========================================================
+           BRAND
+           ========================================================= */
+
         .brand {
+
             display: flex;
 
             align-items: center;
+
             justify-content: center;
 
             gap: 13px;
@@ -151,10 +228,13 @@
             color: #08285f;
 
             font-size: 23px;
+
             font-weight: 800;
         }
 
+
         .brand img {
+
             width: 68px;
             height: 68px;
 
@@ -165,20 +245,30 @@
             border-radius: 10px;
         }
 
-        /* Heading */
+
+        /* =========================================================
+           HEADING
+           ========================================================= */
+
         h1 {
-            margin: 0 0 10px;
+
+            margin:
+                0 0 10px;
 
             text-align: center;
 
             color: #092d68;
 
             font-size: 34px;
+
             line-height: 1.2;
         }
 
+
         .intro {
-            margin: 0 auto 25px;
+
+            margin:
+                0 auto 25px;
 
             max-width: 500px;
 
@@ -187,49 +277,94 @@
             color: #68758a;
 
             font-size: 14px;
+
             line-height: 1.6;
         }
 
-        /* Flash messages */
+
+        /* =========================================================
+           FLASH MESSAGES
+           ========================================================= */
+
         .flash {
-            padding: 13px 16px;
+
+            padding:
+                13px 16px;
 
             margin-bottom: 18px;
 
             border-radius: 11px;
 
             font-size: 14px;
+
             font-weight: 600;
         }
 
+
         .flash.success {
+
             background: #ecfdf3;
-            border: 1px solid #bbf7d0;
+
+            border:
+                1px solid
+                #bbf7d0;
+
             color: #166534;
         }
 
+
         .flash.warning {
+
             background: #fff7ed;
-            border: 1px solid #fed7aa;
+
+            border:
+                1px solid
+                #fed7aa;
+
             color: #c2410c;
         }
 
+
         .flash.danger {
+
             background: #fef2f2;
-            border: 1px solid #fecaca;
+
+            border:
+                1px solid
+                #fecaca;
+
             color: #b91c1c;
         }
 
-        /* Important notice */
+
+        .flash.error {
+
+            background: #fef2f2;
+
+            border:
+                1px solid
+                #fecaca;
+
+            color: #b91c1c;
+        }
+
+
+        /* =========================================================
+           IMPORTANT NOTICE
+           ========================================================= */
+
         .alert-box {
-            padding: 17px 18px;
+
+            padding:
+                17px 18px;
 
             border-radius: 13px;
 
             background: #eff6ff;
 
             border:
-                1px solid #bfdbfe;
+                1px solid
+                #bfdbfe;
 
             color: #1e3a5f;
 
@@ -238,29 +373,48 @@
             line-height: 1.65;
         }
 
+
         .alert-box strong {
+
             color: #0b3d91;
         }
 
-        /* Form */
+
+        /* =========================================================
+           FORM
+           ========================================================= */
+
         form {
+
             margin-top: 22px;
         }
 
+
         .grid {
+
             display: grid;
 
             grid-template-columns:
-                repeat(2, minmax(0, 1fr));
+                repeat(
+                    2,
+                    minmax(
+                        0,
+                        1fr
+                    )
+                );
 
             gap: 16px;
         }
 
+
         .form-group {
+
             margin-bottom: 17px;
         }
 
+
         .form-group label {
+
             display: block;
 
             margin-bottom: 7px;
@@ -272,14 +426,19 @@
             font-weight: 800;
         }
 
+
         .form-group input {
+
             width: 100%;
 
             height: 48px;
 
-            padding: 0 14px;
+            padding:
+                0 14px;
 
-            border: 1px solid #cbd8e9;
+            border:
+                1px solid
+                #cbd8e9;
 
             border-radius: 10px;
 
@@ -296,22 +455,39 @@
                 box-shadow 0.2s ease;
         }
 
+
         .form-group input:focus {
+
             border-color: #0b3d91;
 
             box-shadow:
-                0 0 0 3px rgba(11, 61, 145, 0.10);
+                0 0 0 3px
+                rgba(
+                    11,
+                    61,
+                    145,
+                    0.10
+                );
         }
 
+
         .form-group input::placeholder {
+
             color: #9aa7b8;
         }
 
-        /* Registration key */
+
+        /* =========================================================
+           REGISTRATION KEY
+           ========================================================= */
+
         .key-group {
+
             background: #f7faff;
 
-            border: 1px solid #e1eaf6;
+            border:
+                1px solid
+                #e1eaf6;
 
             border-radius: 13px;
 
@@ -320,11 +496,15 @@
             margin-top: 2px;
         }
 
+
         .key-group .form-group {
+
             margin-bottom: 0;
         }
 
+
         .key-help {
+
             display: block;
 
             margin-top: 7px;
@@ -332,11 +512,47 @@
             color: #7b8799;
 
             font-size: 11px;
+
             line-height: 1.5;
         }
 
-        /* Button */
+
+        /* =========================================================
+           PASSWORD STATUS
+           ========================================================= */
+
+        .password-status {
+
+            display: block;
+
+            min-height: 16px;
+
+            margin-top: 6px;
+
+            font-size: 11px;
+
+            font-weight: 700;
+        }
+
+
+        .password-status.match {
+
+            color: #15803d;
+        }
+
+
+        .password-status.no-match {
+
+            color: #b91c1c;
+        }
+
+
+        /* =========================================================
+           BUTTON
+           ========================================================= */
+
         .btn {
+
             width: 100%;
 
             min-height: 50px;
@@ -344,6 +560,7 @@
             display: inline-flex;
 
             align-items: center;
+
             justify-content: center;
 
             border: none;
@@ -368,22 +585,49 @@
             cursor: pointer;
 
             box-shadow:
-                0 10px 25px rgba(11, 61, 145, 0.25);
+                0 10px 25px
+                rgba(
+                    11,
+                    61,
+                    145,
+                    0.25
+                );
 
             transition:
                 transform 0.2s ease,
                 box-shadow 0.2s ease;
         }
 
+
         .btn:hover {
-            transform: translateY(-2px);
+
+            transform:
+                translateY(-2px);
 
             box-shadow:
-                0 15px 30px rgba(11, 61, 145, 0.32);
+                0 15px 30px
+                rgba(
+                    11,
+                    61,
+                    145,
+                    0.32
+                );
         }
 
-        /* Bottom links */
+
+        .btn:active {
+
+            transform:
+                translateY(0);
+        }
+
+
+        /* =========================================================
+           BOTTOM LINKS
+           ========================================================= */
+
         .bottom-links {
+
             margin-top: 22px;
 
             text-align: center;
@@ -395,7 +639,9 @@
             line-height: 1.8;
         }
 
+
         .bottom-links a {
+
             color: #0b3d91;
 
             font-weight: 700;
@@ -403,12 +649,19 @@
             text-decoration: none;
         }
 
+
         .bottom-links a:hover {
+
             text-decoration: underline;
         }
 
-        /* Footer */
+
+        /* =========================================================
+           FOOTER NOTE
+           ========================================================= */
+
         .portal-note {
+
             margin-top: 20px;
 
             text-align: center;
@@ -418,44 +671,68 @@
             font-size: 11px;
         }
 
-        /* Mobile */
+
+        /* =========================================================
+           MOBILE
+           ========================================================= */
+
         @media (max-width: 650px) {
 
             .form-page {
-                padding: 25px 15px;
+
+                padding:
+                    25px 15px;
             }
 
+
             .form-card {
-                padding: 30px 20px;
+
+                padding:
+                    30px 20px;
 
                 border-radius: 20px;
             }
 
+
             .grid {
+
                 grid-template-columns: 1fr;
+
                 gap: 0;
             }
 
+
             .brand img {
+
                 width: 58px;
                 height: 58px;
             }
 
+
             .brand {
+
                 font-size: 20px;
             }
 
+
             h1 {
+
                 font-size: 28px;
             }
 
+
             body::before {
+
                 width: 450px;
+
                 height: 450px;
             }
         }
+
     </style>
+
 </head>
+
 
 <body>
 
@@ -463,7 +740,11 @@
 
     <div class="form-card">
 
-        <!-- Novera Logo -->
+
+        <!-- =====================================================
+             NOVERA BRAND
+             ===================================================== -->
+
         <div class="brand">
 
             <img
@@ -477,24 +758,37 @@
         </div>
 
 
-        <!-- Heading -->
+        <!-- =====================================================
+             HEADING
+             ===================================================== -->
+
         <h1>
             MD Registration
         </h1>
 
+
         <p class="intro">
+
             Create the Managing Director account for the
             Novera Management Portal.
+
         </p>
 
 
-        <!-- Flash Messages -->
-        {% with messages = get_flashed_messages(with_categories=true) %}
+        <!-- =====================================================
+             FLASH MESSAGES
+             ===================================================== -->
+
+        {% with messages = get_flashed_messages(
+            with_categories=true
+        ) %}
 
             {% for category, message in messages %}
 
                 <div class="flash {{ category }}">
+
                     {{ message }}
+
                 </div>
 
             {% endfor %}
@@ -502,24 +796,38 @@
         {% endwith %}
 
 
-        <!-- Important Notice -->
+        <!-- =====================================================
+             IMPORTANT NOTICE
+             ===================================================== -->
+
         <div class="alert-box">
 
             <strong>Important:</strong>
 
             Only one MD account can be registered.
 
-            Once the first MD account is created, MD registration
-            will automatically close.
+            Once the first MD account is created,
+            MD registration will automatically close.
 
-            A new MD account can only be created after an
-            administrator makes an appropriate database change.
+            A new MD account can only be created after
+            an administrator makes an appropriate
+            database change.
 
         </div>
 
 
-        <!-- Registration Form -->
-        <form method="post">
+        <!-- =====================================================
+             REGISTRATION FORM
+             ===================================================== -->
+
+        <form
+            method="post"
+            id="mdRegistrationForm"
+            novalidate
+        >
+
+
+            <!-- FIRST + LAST NAME -->
 
             <div class="grid">
 
@@ -534,6 +842,7 @@
                         name="first_name"
                         type="text"
                         autocomplete="given-name"
+                        maxlength="100"
                         required
                     >
 
@@ -551,6 +860,7 @@
                         name="last_name"
                         type="text"
                         autocomplete="family-name"
+                        maxlength="100"
                         required
                     >
 
@@ -558,6 +868,8 @@
 
             </div>
 
+
+            <!-- EMAIL -->
 
             <div class="form-group">
 
@@ -570,11 +882,14 @@
                     type="email"
                     name="email"
                     autocomplete="email"
+                    maxlength="150"
                     required
                 >
 
             </div>
 
+
+            <!-- PHONE -->
 
             <div class="form-group">
 
@@ -587,11 +902,14 @@
                     type="tel"
                     name="phone"
                     autocomplete="tel"
+                    maxlength="30"
                     required
                 >
 
             </div>
 
+
+            <!-- PASSWORDS -->
 
             <div class="grid">
 
@@ -606,6 +924,7 @@
                         type="password"
                         name="password"
                         minlength="8"
+                        maxlength="128"
                         autocomplete="new-password"
                         required
                     >
@@ -624,23 +943,36 @@
                         type="password"
                         name="confirm_password"
                         minlength="8"
+                        maxlength="128"
                         autocomplete="new-password"
                         required
                     >
+
+                    <span
+                        id="passwordStatus"
+                        class="password-status"
+                        aria-live="polite"
+                    ></span>
 
                 </div>
 
             </div>
 
 
-            <!-- Registration Key -->
+            <!-- =================================================
+                 REGISTRATION KEY
+                 ================================================= -->
+
             <div class="key-group">
 
                 <div class="form-group">
 
                     <label for="registration_key">
+
                         MD Registration Key
+
                     </label>
+
 
                     <input
                         id="registration_key"
@@ -650,10 +982,14 @@
                         autocomplete="off"
                     >
 
+
                     <span class="key-help">
+
                         A registration key is required only if
-                        MD_REGISTRATION_KEY has been configured
-                        in your .env file.
+                        <strong>MD_REGISTRATION_KEY</strong>
+                        has been configured in your
+                        <strong>.env</strong> file.
+
                     </span>
 
                 </div>
@@ -661,18 +997,27 @@
             </div>
 
 
+            <!-- SUBMIT -->
+
             <button
                 class="btn"
                 type="submit"
+                id="submitButton"
                 style="margin-top: 20px;"
             >
+
                 Create MD Account
+
             </button>
+
 
         </form>
 
 
-        <!-- Navigation -->
+        <!-- =====================================================
+             NAVIGATION
+             ===================================================== -->
+
         <div class="bottom-links">
 
             Already registered?
@@ -683,24 +1028,165 @@
 
             <br>
 
-            <a href="{{ url_for('index') }}">
+            <a href="{{ url_for('home') }}">
                 ← Back to Novera Website
             </a>
 
         </div>
 
 
+        <!-- =====================================================
+             PORTAL NOTE
+             ===================================================== -->
+
         <div class="portal-note">
 
-            {{ company_name }} · {{ company_tagline }}
+            {{ company_name }}
+
+            {% if company_tagline %}
+                · {{ company_tagline }}
+            {% endif %}
 
         </div>
+
 
     </div>
 
 </div>
 
-</body>
-</html>
-```
 
+<!-- =========================================================
+     PASSWORD VALIDATION
+     ========================================================= -->
+
+<script>
+
+    const form =
+        document.getElementById(
+            "mdRegistrationForm"
+        );
+
+    const password =
+        document.getElementById(
+            "password"
+        );
+
+    const confirmPassword =
+        document.getElementById(
+            "confirm_password"
+        );
+
+    const passwordStatus =
+        document.getElementById(
+            "passwordStatus"
+        );
+
+
+    function checkPasswords() {
+
+        const first =
+            password.value;
+
+        const second =
+            confirmPassword.value;
+
+
+        passwordStatus.textContent = "";
+
+        passwordStatus.className =
+            "password-status";
+
+
+        if (!second) {
+            return false;
+        }
+
+
+        if (first === second) {
+
+            passwordStatus.textContent =
+                "Passwords match.";
+
+            passwordStatus.classList.add(
+                "match"
+            );
+
+            return true;
+        }
+
+
+        passwordStatus.textContent =
+            "Passwords do not match.";
+
+        passwordStatus.classList.add(
+            "no-match"
+        );
+
+        return false;
+    }
+
+
+    password.addEventListener(
+        "input",
+        checkPasswords
+    );
+
+
+    confirmPassword.addEventListener(
+        "input",
+        checkPasswords
+    );
+
+
+    form.addEventListener(
+        "submit",
+        function (event) {
+
+            if (!form.checkValidity()) {
+
+                event.preventDefault();
+
+                form.reportValidity();
+
+                return;
+            }
+
+
+            if (
+                password.value !==
+                confirmPassword.value
+            ) {
+
+                event.preventDefault();
+
+                passwordStatus.textContent =
+                    "Passwords do not match.";
+
+                passwordStatus.className =
+                    "password-status no-match";
+
+                confirmPassword.focus();
+
+                return;
+            }
+
+
+            if (
+                password.value.length < 8
+            ) {
+
+                event.preventDefault();
+
+                password.focus();
+
+                return;
+            }
+
+        }
+    );
+
+</script>
+
+</body>
+
+</html>

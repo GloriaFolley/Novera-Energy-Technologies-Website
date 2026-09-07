@@ -1503,8 +1503,6 @@
                     <div class="info-grid">
 
 
-                        <!-- PHONE -->
-
                         <div class="info-item">
 
                             <div class="info-label">
@@ -1519,8 +1517,6 @@
 
                         </div>
 
-
-                        <!-- COMPANY -->
 
                         <div class="info-item">
 
@@ -1537,8 +1533,6 @@
                         </div>
 
 
-                        <!-- SERVICE -->
-
                         <div class="info-item">
 
                             <div class="info-label">
@@ -1553,8 +1547,6 @@
 
                         </div>
 
-
-                        <!-- LANGUAGE -->
 
                         <div class="info-item">
 
@@ -1571,8 +1563,6 @@
                         </div>
 
 
-                        <!-- DATE RECEIVED -->
-
                         <div class="info-item">
 
                             <div class="info-label">
@@ -1587,8 +1577,6 @@
 
                         </div>
 
-
-                        <!-- LAST UPDATED -->
 
                         <div class="info-item">
 
@@ -1930,7 +1918,7 @@
 
                             <select
                                 id="staff_id"
-                                name="staff_id"
+                                name="assigned_staff_id"
                                 required
                             >
 
@@ -1939,11 +1927,12 @@
                                 </option>
 
 
-                                {% for staff_member in staff_members %}
+                                {% for staff_member in staff %}
 
                                     <option
                                         value="{{ staff_member.id }}"
-                                        {% if consultation.assigned_staff_id == staff_member.id %}
+                                        {% if consultation.assigned_staff_id == staff_member.id
+                                              or consultation.assigned_to == staff_member.id %}
                                             selected
                                         {% endif %}
                                     >
@@ -1957,6 +1946,12 @@
 
                                         {% endif %}
 
+                                        {% if staff_member.position %}
+
+                                            — {{ staff_member.position }}
+
+                                        {% endif %}
+
                                     </option>
 
                                 {% endfor %}
@@ -1966,9 +1961,43 @@
                         </div>
 
 
+                        {% if not staff %}
+
+                            <div
+                                style="
+                                    margin-top:-8px;
+                                    margin-bottom:15px;
+                                    padding:11px 12px;
+                                    border-radius:8px;
+                                    background:#fff3cd;
+                                    border:1px solid #f1df9f;
+                                    color:#856404;
+                                    font-size:12px;
+                                    line-height:1.5;
+                                "
+                            >
+
+                                <i class="fa-solid fa-circle-info"></i>
+
+                                No active staff members are currently available
+                                for assignment.
+
+                            </div>
+
+                        {% endif %}
+
+
                         <button
                             type="submit"
                             class="save-button"
+                            {% if not staff %}
+                                disabled
+                                style="
+                                    opacity:.55;
+                                    cursor:not-allowed;
+                                    transform:none;
+                                "
+                            {% endif %}
                         >
 
                             <i class="fa-solid fa-user-plus"></i>
@@ -1982,7 +2011,8 @@
 
                     <!-- UNASSIGN -->
 
-                    {% if consultation.assigned_staff_id %}
+                    {% if consultation.assigned_staff_id
+                          or consultation.assigned_to %}
 
                         <form
                             method="POST"

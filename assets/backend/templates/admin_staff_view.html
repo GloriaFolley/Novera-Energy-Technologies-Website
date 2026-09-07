@@ -1,4 +1,3 @@
-```html
 <!doctype html>
 <html lang="en">
 <head>
@@ -29,13 +28,13 @@
             color: #172033;
         }
 
-        /* ================================
+        /* =========================================
            NAVIGATION
-        ================================= */
+        ========================================= */
 
         .nav {
             width: 100%;
-            background: rgba(255, 255, 255, 0.96);
+            background: rgba(255, 255, 255, 0.97);
             border-bottom: 1px solid #dce7f5;
             box-shadow: 0 3px 15px rgba(30, 80, 140, 0.08);
             position: sticky;
@@ -44,20 +43,28 @@
         }
 
         .nav-inner {
+            width: min(1100px, 100%);
             min-height: 78px;
+            margin: 0 auto;
+            padding: 0 20px;
+
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 20px;
         }
 
         .brand {
             display: flex;
             align-items: center;
             gap: 12px;
+
             text-decoration: none;
             color: #123d70;
+
             font-size: 22px;
             font-weight: 700;
+            white-space: nowrap;
         }
 
         .brand img {
@@ -73,9 +80,9 @@
             gap: 10px;
         }
 
-        /* ================================
-           MAIN CONTENT
-        ================================= */
+        /* =========================================
+           MAIN
+        ========================================= */
 
         .dashboard {
             min-height: calc(100vh - 78px);
@@ -91,10 +98,14 @@
             display: inline-flex;
             align-items: center;
             gap: 7px;
+
             color: #1769aa;
             text-decoration: none;
+
             font-weight: 600;
             margin-bottom: 25px;
+
+            transition: 0.2s ease;
         }
 
         .back-link:hover {
@@ -102,44 +113,67 @@
             text-decoration: underline;
         }
 
+        /* =========================================
+           PAGE HEADER
+        ========================================= */
+
         .page-header {
             margin-bottom: 28px;
         }
 
         .page-header h1 {
             margin: 0 0 8px;
+
             color: #123d70;
+
             font-size: clamp(28px, 4vw, 40px);
+            line-height: 1.15;
         }
 
         .page-header p {
             margin: 0;
+
             color: #65758b;
+            font-size: 15px;
+            line-height: 1.6;
         }
 
-        /* ================================
+        /* =========================================
            STAFF CARD
-        ================================= */
+        ========================================= */
 
         .staff-card {
             background: rgba(255, 255, 255, 0.98);
+
             border: 1px solid #dbe7f5;
             border-radius: 18px;
+
             overflow: hidden;
-            box-shadow: 0 15px 40px rgba(27, 76, 125, 0.10);
+
+            box-shadow:
+                0 15px 40px rgba(27, 76, 125, 0.10);
         }
 
+        /* =========================================
+           STAFF CARD HEADER
+        ========================================= */
+
         .staff-card-header {
-            background: linear-gradient(
-                135deg,
-                #0d4f85,
-                #1769aa
-            );
+            background:
+                linear-gradient(
+                    135deg,
+                    #0d4f85,
+                    #1769aa
+                );
+
             color: white;
+
             padding: 28px 30px;
+
             display: flex;
             align-items: center;
             justify-content: space-between;
+
             gap: 20px;
         }
 
@@ -147,81 +181,60 @@
             display: flex;
             align-items: center;
             gap: 18px;
+
+            min-width: 0;
         }
 
         .staff-avatar {
             width: 68px;
             height: 68px;
+
+            flex: 0 0 68px;
+
             border-radius: 50%;
+
             background: rgba(255, 255, 255, 0.18);
             border: 2px solid rgba(255, 255, 255, 0.55);
+
             display: flex;
             align-items: center;
             justify-content: center;
+
             font-size: 25px;
             font-weight: 700;
         }
 
         .staff-identity h2 {
             margin: 0 0 5px;
+
             font-size: 24px;
-        }
+            line-height: 1.25;
 
-        .staff-identity span {
-            opacity: 0.85;
-            font-size: 14px;
-        }
-
-        /* ================================
-           DETAILS
-        ================================= */
-
-        .staff-details {
-            padding: 30px;
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 20px;
-        }
-
-        .detail-item {
-            background: #f7faff;
-            border: 1px solid #e2ebf6;
-            border-radius: 12px;
-            padding: 18px;
-        }
-
-        .detail-label {
-            display: block;
-            color: #718096;
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 7px;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-        }
-
-        .detail-value {
-            color: #172033;
-            font-size: 16px;
-            font-weight: 600;
             word-break: break-word;
         }
 
-        .full-width {
-            grid-column: 1 / -1;
+        .staff-identity span {
+            opacity: 0.88;
+            font-size: 14px;
         }
 
-        /* ================================
-           STATUS
-        ================================= */
+        /* =========================================
+           STATUS BADGES
+        ========================================= */
 
         .badge {
             display: inline-flex;
             align-items: center;
+            justify-content: center;
+
             padding: 7px 13px;
+
             border-radius: 999px;
+
             font-size: 13px;
             font-weight: 700;
+
+            white-space: nowrap;
         }
 
         .badge.Pending {
@@ -244,31 +257,109 @@
             color: #475569;
         }
 
-        /* ================================
+        /* =========================================
+           DETAILS
+        ========================================= */
+
+        .staff-details {
+            padding: 30px;
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 20px;
+        }
+
+        .detail-item {
+            background: #f7faff;
+
+            border: 1px solid #e2ebf6;
+            border-radius: 12px;
+
+            padding: 18px;
+
+            min-width: 0;
+        }
+
+        .detail-label {
+            display: block;
+
+            color: #718096;
+
+            font-size: 13px;
+            font-weight: 600;
+
+            margin-bottom: 7px;
+
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .detail-value {
+            display: block;
+
+            color: #172033;
+
+            font-size: 16px;
+            font-weight: 600;
+
+            word-break: break-word;
+            line-height: 1.5;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .empty-value {
+            color: #94a3b8;
+            font-weight: 500;
+        }
+
+        /* =========================================
            ACTIONS
-        ================================= */
+        ========================================= */
 
         .staff-actions {
-            padding: 0 30px 30px;
+            padding: 25px 30px 30px;
+
             display: flex;
             flex-wrap: wrap;
+            align-items: center;
+
             gap: 12px;
+
             border-top: 1px solid #e5edf7;
-            padding-top: 25px;
+        }
+
+        .staff-actions form {
+            margin: 0;
         }
 
         .btn {
             border: none;
             border-radius: 9px;
+
             padding: 12px 20px;
+
+            min-height: 44px;
+
             font-size: 14px;
             font-weight: 700;
+
             cursor: pointer;
             text-decoration: none;
+
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            transition: 0.2s ease;
+
+            transition:
+                background 0.2s ease,
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
         }
 
         .btn:hover {
@@ -282,6 +373,7 @@
 
         .btn-primary:hover {
             background: #0d4f85;
+            box-shadow: 0 5px 14px rgba(23, 105, 170, 0.20);
         }
 
         .btn-success {
@@ -291,6 +383,7 @@
 
         .btn-success:hover {
             background: #166534;
+            box-shadow: 0 5px 14px rgba(21, 128, 61, 0.20);
         }
 
         .btn-danger {
@@ -300,6 +393,7 @@
 
         .btn-danger:hover {
             background: #b91c1c;
+            box-shadow: 0 5px 14px rgba(220, 38, 38, 0.20);
         }
 
         .btn-secondary {
@@ -311,13 +405,9 @@
             background: #dceafa;
         }
 
-        form {
-            margin: 0;
-        }
-
-        /* ================================
+        /* =========================================
            RESPONSIVE
-        ================================= */
+        ========================================= */
 
         @media (max-width: 700px) {
 
@@ -335,21 +425,41 @@
                 height: 48px;
             }
 
+            .nav-actions {
+                gap: 7px;
+            }
+
+            .nav-actions .btn {
+                padding: 10px 12px;
+                font-size: 12px;
+            }
+
             .dashboard {
                 padding: 30px 15px 50px;
             }
 
             .staff-card-header {
                 padding: 22px;
+
                 align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .staff-identity {
+                width: 100%;
             }
 
             .staff-identity h2 {
                 font-size: 20px;
             }
 
+            .staff-card-header > div:last-child {
+                align-self: flex-start;
+            }
+
             .staff-details {
                 padding: 20px;
+
                 grid-template-columns: 1fr;
             }
 
@@ -359,10 +469,43 @@
 
             .staff-actions {
                 padding: 20px;
+
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .staff-actions form {
+                width: 100%;
             }
 
             .btn {
                 width: 100%;
+            }
+        }
+
+        @media (max-width: 430px) {
+
+            .nav-actions .btn-secondary {
+                display: none;
+            }
+
+            .staff-identity {
+                gap: 12px;
+            }
+
+            .staff-avatar {
+                width: 58px;
+                height: 58px;
+                flex-basis: 58px;
+                font-size: 21px;
+            }
+
+            .staff-details {
+                gap: 14px;
+            }
+
+            .detail-item {
+                padding: 15px;
             }
         }
     </style>
@@ -375,11 +518,14 @@
 ========================================= -->
 
 <nav class="nav">
-    <div class="container nav-inner">
 
-        <a class="brand" href="{{ url_for('admin_dashboard') }}">
+    <div class="nav-inner">
 
-            <!-- Novera JPG Logo -->
+        <a
+            class="brand"
+            href="{{ url_for('admin_dashboard') }}"
+        >
+
             <img
                 src="{{ url_for('logo') }}"
                 alt="{{ company_name }} Logo"
@@ -388,6 +534,7 @@
             <span>Novera</span>
 
         </a>
+
 
         <div class="nav-actions">
 
@@ -408,16 +555,19 @@
         </div>
 
     </div>
+
 </nav>
 
 
 <!-- =========================================
-     STAFF DETAILS
+     MAIN CONTENT
 ========================================= -->
 
 <main class="dashboard">
 
     <div class="container">
+
+        <!-- BACK -->
 
         <a
             class="back-link"
@@ -426,6 +576,8 @@
             ← Back to Staff List
         </a>
 
+
+        <!-- PAGE HEADER -->
 
         <div class="page-header">
 
@@ -438,17 +590,26 @@
         </div>
 
 
-        <div class="staff-card">
+        <!-- =====================================
+             STAFF CARD
+        ====================================== -->
 
-            <!-- HEADER -->
+        <section class="staff-card">
+
+            <!-- =================================
+                 STAFF HEADER
+            ================================== -->
 
             <div class="staff-card-header">
 
                 <div class="staff-identity">
 
                     <div class="staff-avatar">
+
                         {{ staff["first_name"][0]|upper }}{{ staff["last_name"][0]|upper }}
+
                     </div>
+
 
                     <div>
 
@@ -458,7 +619,8 @@
                         </h2>
 
                         <span>
-                            Staff ID: {{ staff["staff_id"] }}
+                            Staff ID:
+                            {{ staff["staff_id"] }}
                         </span>
 
                     </div>
@@ -467,17 +629,23 @@
 
 
                 <div>
+
                     <span class="badge {{ staff['status'] }}">
                         {{ staff["status"] }}
                     </span>
+
                 </div>
 
             </div>
 
 
-            <!-- DETAILS -->
+            <!-- =================================
+                 STAFF DETAILS
+            ================================== -->
 
             <div class="staff-details">
+
+                <!-- STAFF ID -->
 
                 <div class="detail-item">
 
@@ -492,6 +660,8 @@
                 </div>
 
 
+                <!-- STATUS -->
+
                 <div class="detail-item">
 
                     <span class="detail-label">
@@ -499,13 +669,17 @@
                     </span>
 
                     <span class="detail-value">
+
                         <span class="badge {{ staff['status'] }}">
                             {{ staff["status"] }}
                         </span>
+
                     </span>
 
                 </div>
 
+
+                <!-- FIRST NAME -->
 
                 <div class="detail-item">
 
@@ -520,6 +694,8 @@
                 </div>
 
 
+                <!-- LAST NAME -->
+
                 <div class="detail-item">
 
                     <span class="detail-label">
@@ -532,6 +708,8 @@
 
                 </div>
 
+
+                <!-- EMAIL -->
 
                 <div class="detail-item full-width">
 
@@ -546,6 +724,8 @@
                 </div>
 
 
+                <!-- PHONE -->
+
                 <div class="detail-item">
 
                     <span class="detail-label">
@@ -553,11 +733,21 @@
                     </span>
 
                     <span class="detail-value">
-                        {{ staff["phone"] }}
+
+                        {% if staff["phone"] %}
+                            {{ staff["phone"] }}
+                        {% else %}
+                            <span class="empty-value">
+                                Not provided
+                            </span>
+                        {% endif %}
+
                     </span>
 
                 </div>
 
+
+                <!-- DEPARTMENT -->
 
                 <div class="detail-item">
 
@@ -566,11 +756,21 @@
                     </span>
 
                     <span class="detail-value">
-                        {{ staff["department"] }}
+
+                        {% if staff["department"] %}
+                            {{ staff["department"] }}
+                        {% else %}
+                            <span class="empty-value">
+                                Not provided
+                            </span>
+                        {% endif %}
+
                     </span>
 
                 </div>
 
+
+                <!-- POSITION -->
 
                 <div class="detail-item">
 
@@ -579,11 +779,21 @@
                     </span>
 
                     <span class="detail-value">
-                        {{ staff["position"] }}
+
+                        {% if staff["position"] %}
+                            {{ staff["position"] }}
+                        {% else %}
+                            <span class="empty-value">
+                                Not provided
+                            </span>
+                        {% endif %}
+
                     </span>
 
                 </div>
 
+
+                <!-- REGISTERED -->
 
                 <div class="detail-item">
 
@@ -597,6 +807,8 @@
 
                 </div>
 
+
+                <!-- APPROVED -->
 
                 {% if staff["approved_at"] %}
 
@@ -613,6 +825,9 @@
                 </div>
 
                 {% endif %}
+
+
+                <!-- LAST LOGIN -->
 
                 {% if staff["last_login"] %}
 
@@ -633,17 +848,21 @@
             </div>
 
 
-            <!-- ACTIONS -->
+            <!-- =================================
+                 ACTIONS
+            ================================== -->
 
             <div class="staff-actions">
 
                 {% if staff["status"] == "Pending" %}
 
+                    <!-- APPROVE -->
+
                     <form
                         method="post"
                         action="{{ url_for(
                             'admin_staff_action',
-                            staff_db_id=staff['id'],
+                            staff_id=staff['id'],
                             action='approve'
                         ) }}"
                     >
@@ -658,11 +877,13 @@
                     </form>
 
 
+                    <!-- REJECT -->
+
                     <form
                         method="post"
                         action="{{ url_for(
                             'admin_staff_action',
-                            staff_db_id=staff['id'],
+                            staff_id=staff['id'],
                             action='reject'
                         ) }}"
                     >
@@ -679,11 +900,13 @@
 
                 {% elif staff["status"] == "Active" %}
 
+                    <!-- DISABLE -->
+
                     <form
                         method="post"
                         action="{{ url_for(
                             'admin_staff_action',
-                            staff_db_id=staff['id'],
+                            staff_id=staff['id'],
                             action='disable'
                         ) }}"
                     >
@@ -700,11 +923,13 @@
 
                 {% elif staff["status"] == "Disabled" or staff["status"] == "Rejected" %}
 
+                    <!-- ACTIVATE -->
+
                     <form
                         method="post"
                         action="{{ url_for(
                             'admin_staff_action',
-                            staff_db_id=staff['id'],
+                            staff_id=staff['id'],
                             action='activate'
                         ) }}"
                     >
@@ -713,13 +938,15 @@
                             type="submit"
                             class="btn btn-success"
                         >
-                            Activate Account
+                            ✓ Activate Account
                         </button>
 
                     </form>
 
                 {% endif %}
 
+
+                <!-- BACK -->
 
                 <a
                     href="{{ url_for('admin_staff') }}"
@@ -730,7 +957,7 @@
 
             </div>
 
-        </div>
+        </section>
 
     </div>
 
@@ -738,5 +965,3 @@
 
 </body>
 </html>
-```
-

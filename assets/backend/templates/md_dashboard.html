@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -9,7 +11,7 @@
     >
 
     <title>
-        MD Dashboard | Novera Energy & Technologies
+        MD Dashboard | {{ company_name|default('Novera Energy & Technologies') }}
     </title>
 
     <link
@@ -62,19 +64,17 @@
         }
 
         button,
-        select {
+        select,
+        input {
             font-family: inherit;
         }
-
-        /* =====================================================
-           NOVERA COLORS
-        ===================================================== */
 
         :root {
             --novera-blue: #0757a6;
             --novera-dark-blue: #063b73;
             --novera-light-blue: #eaf4ff;
             --novera-soft-blue: #f3f8fd;
+
             --white: #ffffff;
 
             --text-dark: #142033;
@@ -95,6 +95,7 @@
                 0 12px 35px rgba(7, 87, 166, 0.08);
         }
 
+
         /* =====================================================
            LAYOUT
         ===================================================== */
@@ -104,12 +105,14 @@
             display: flex;
         }
 
+
         /* =====================================================
            SIDEBAR
         ===================================================== */
 
         .sidebar {
             width: 280px;
+
             background:
                 linear-gradient(
                     180deg,
@@ -121,6 +124,7 @@
             color: white;
 
             position: fixed;
+
             left: 0;
             top: 0;
             bottom: 0;
@@ -131,10 +135,12 @@
             flex-direction: column;
 
             box-shadow:
-                8px 0 30px rgba(6, 59, 115, 0.15);
+                8px 0 30px
+                rgba(6, 59, 115, 0.15);
 
             overflow-y: auto;
         }
+
 
         /* =====================================================
            LOGO AREA
@@ -144,7 +150,8 @@
             padding: 24px 20px 22px;
 
             border-bottom:
-                1px solid rgba(255,255,255,0.15);
+                1px solid
+                rgba(255,255,255,0.15);
 
             background:
                 rgba(255,255,255,0.06);
@@ -159,13 +166,15 @@
             border-radius: 18px;
 
             display: flex;
+
             align-items: center;
             justify-content: center;
 
             padding: 18px;
 
             box-shadow:
-                0 10px 30px rgba(0,0,0,0.15);
+                0 10px 30px
+                rgba(0,0,0,0.15);
 
             overflow: hidden;
         }
@@ -204,6 +213,7 @@
             opacity: 0.78;
         }
 
+
         /* =====================================================
            PROFILE
         ===================================================== */
@@ -219,7 +229,8 @@
                 rgba(255,255,255,0.10);
 
             border:
-                1px solid rgba(255,255,255,0.12);
+                1px solid
+                rgba(255,255,255,0.12);
         }
 
         .profile-icon {
@@ -230,16 +241,19 @@
 
             background: white;
 
-            color: var(--novera-blue);
+            color:
+                var(--novera-blue);
 
             display: flex;
+
             align-items: center;
             justify-content: center;
 
-            font-size: 17px;
+            font-size: 15px;
             font-weight: 800;
 
             float: left;
+
             margin-right: 11px;
         }
 
@@ -256,22 +270,28 @@
 
         .profile-role {
             font-size: 11px;
+
             opacity: 0.72;
+
             margin-top: 3px;
         }
 
         .profile-mini::after {
             content: "";
+
             display: block;
+
             clear: both;
         }
+
 
         /* =====================================================
            NAVIGATION
         ===================================================== */
 
         .nav-title {
-            padding: 0 20px 10px;
+            padding:
+                0 20px 10px;
 
             font-size: 10px;
 
@@ -283,16 +303,19 @@
         }
 
         .nav-menu {
-            padding: 0 12px;
+            padding:
+                0 12px;
         }
 
         .nav-link {
             display: flex;
+
             align-items: center;
 
             gap: 13px;
 
-            padding: 13px 14px;
+            padding:
+                13px 14px;
 
             margin-bottom: 4px;
 
@@ -302,6 +325,7 @@
                 rgba(255,255,255,0.80);
 
             font-size: 13px;
+
             font-weight: 500;
 
             transition:
@@ -310,7 +334,9 @@
 
         .nav-link i {
             width: 20px;
+
             text-align: center;
+
             font-size: 14px;
         }
 
@@ -327,34 +353,42 @@
         .nav-link.active {
             background: white;
 
-            color: var(--novera-blue);
+            color:
+                var(--novera-blue);
 
             font-weight: 700;
 
             box-shadow:
-                0 7px 20px rgba(0,0,0,0.12);
+                0 7px 20px
+                rgba(0,0,0,0.12);
         }
+
 
         .logout-area {
             margin-top: auto;
 
-            padding: 15px 12px;
+            padding:
+                15px 12px;
 
             border-top:
-                1px solid rgba(255,255,255,0.12);
+                1px solid
+                rgba(255,255,255,0.12);
         }
 
         .logout-link {
             display: flex;
+
             align-items: center;
 
             gap: 13px;
 
-            padding: 13px 14px;
+            padding:
+                13px 14px;
 
             border-radius: 11px;
 
-            color: #ffdede;
+            color:
+                #ffdede;
 
             font-size: 13px;
         }
@@ -366,8 +400,9 @@
             color: white;
         }
 
+
         /* =====================================================
-           MAIN CONTENT
+           MAIN
         ===================================================== */
 
         .main {
@@ -379,34 +414,45 @@
             min-height: 100vh;
         }
 
+
         /* =====================================================
-           TOP HEADER
+           TOPBAR
         ===================================================== */
 
         .topbar {
-            height: 82px;
+            min-height: 82px;
 
             background: white;
 
             border-bottom:
-                1px solid var(--border);
+                1px solid
+                var(--border);
 
             display: flex;
 
             align-items: center;
+
             justify-content: space-between;
 
+            gap: 20px;
+
             padding:
-                0 34px;
+                16px 34px;
 
             position: sticky;
+
             top: 0;
 
             z-index: 900;
         }
 
+        .page-title {
+            min-width: 0;
+        }
+
         .page-title h1 {
             font-size: 22px;
+
             font-weight: 800;
 
             color:
@@ -422,18 +468,22 @@
             font-size: 12px;
         }
 
+
         /* =====================================================
-           HEADER LOGO
+           HEADER BRAND
         ===================================================== */
 
         .header-brand {
             display: flex;
+
             align-items: center;
+
             gap: 12px;
         }
 
         .header-logo {
             height: 46px;
+
             width: 150px;
 
             object-fit: contain;
@@ -447,6 +497,7 @@
 
         .header-user {
             display: flex;
+
             align-items: center;
 
             gap: 10px;
@@ -454,7 +505,8 @@
             padding-left: 18px;
 
             border-left:
-                1px solid var(--border);
+                1px solid
+                var(--border);
         }
 
         .header-avatar {
@@ -475,6 +527,7 @@
             justify-content: center;
 
             font-size: 14px;
+
             font-weight: 800;
         }
 
@@ -495,16 +548,19 @@
                 var(--text-muted);
         }
 
+
         /* =====================================================
            CONTENT
         ===================================================== */
 
         .content {
-            padding: 30px 34px 45px;
+            padding:
+                30px 34px 45px;
         }
 
+
         /* =====================================================
-           WELCOME BANNER
+           WELCOME
         ===================================================== */
 
         .welcome-card {
@@ -523,7 +579,8 @@
 
             border-radius: 20px;
 
-            padding: 28px 30px;
+            padding:
+                28px 30px;
 
             margin-bottom: 26px;
 
@@ -552,19 +609,26 @@
 
         .welcome-card h2 {
             position: relative;
+
             z-index: 2;
 
             font-size: 24px;
+
             font-weight: 800;
         }
 
         .welcome-card p {
             position: relative;
+
             z-index: 2;
 
             margin-top: 8px;
 
+            max-width: 850px;
+
             font-size: 13px;
+
+            line-height: 1.6;
 
             color:
                 rgba(255,255,255,0.78);
@@ -579,7 +643,8 @@
 
             margin-top: 18px;
 
-            padding: 7px 12px;
+            padding:
+                7px 12px;
 
             background:
                 rgba(255,255,255,0.12);
@@ -591,18 +656,23 @@
             border-radius: 30px;
 
             font-size: 10px;
+
             font-weight: 600;
         }
 
+
         /* =====================================================
-           STAT CARDS
+           STATISTICS
         ===================================================== */
 
         .stats-grid {
             display: grid;
 
             grid-template-columns:
-                repeat(4, minmax(0, 1fr));
+                repeat(
+                    4,
+                    minmax(0, 1fr)
+                );
 
             gap: 18px;
 
@@ -613,7 +683,8 @@
             background: white;
 
             border:
-                1px solid var(--border);
+                1px solid
+                var(--border);
 
             border-radius: 16px;
 
@@ -639,6 +710,7 @@
             display: flex;
 
             align-items: center;
+
             justify-content: space-between;
         }
 
@@ -657,6 +729,7 @@
             display: flex;
 
             align-items: center;
+
             justify-content: center;
 
             font-size: 16px;
@@ -688,6 +761,7 @@
                 var(--text-dark);
         }
 
+
         /* =====================================================
            SECTION
         ===================================================== */
@@ -696,7 +770,8 @@
             background: white;
 
             border:
-                1px solid var(--border);
+                1px solid
+                var(--border);
 
             border-radius: 18px;
 
@@ -709,15 +784,20 @@
         }
 
         .section-header {
-            padding: 19px 22px;
+            padding:
+                19px 22px;
 
             border-bottom:
-                1px solid var(--border);
+                1px solid
+                var(--border);
 
             display: flex;
 
             align-items: center;
+
             justify-content: space-between;
+
+            gap: 15px;
         }
 
         .section-title {
@@ -726,11 +806,15 @@
             align-items: center;
 
             gap: 10px;
+
+            min-width: 0;
         }
 
         .section-title-icon {
             width: 34px;
             height: 34px;
+
+            flex-shrink: 0;
 
             border-radius: 9px;
 
@@ -743,6 +827,7 @@
             display: flex;
 
             align-items: center;
+
             justify-content: center;
 
             font-size: 13px;
@@ -750,6 +835,7 @@
 
         .section-header h3 {
             font-size: 14px;
+
             font-weight: 800;
         }
 
@@ -769,11 +855,14 @@
             font-size: 11px;
 
             font-weight: 700;
+
+            white-space: nowrap;
         }
 
         .view-all:hover {
             text-decoration: underline;
         }
+
 
         /* =====================================================
            TABLE
@@ -781,16 +870,19 @@
 
         .table-wrapper {
             width: 100%;
+
             overflow-x: auto;
         }
 
         table {
             width: 100%;
+
             border-collapse: collapse;
         }
 
         th {
-            padding: 13px 20px;
+            padding:
+                13px 20px;
 
             background:
                 #f8fafc;
@@ -810,10 +902,12 @@
         }
 
         td {
-            padding: 15px 20px;
+            padding:
+                15px 20px;
 
             border-top:
-                1px solid #edf1f5;
+                1px solid
+                #edf1f5;
 
             font-size: 12px;
 
@@ -828,15 +922,24 @@
                 #fbfdff;
         }
 
+
+        /* =====================================================
+           PERSON
+        ===================================================== */
+
         .person {
             display: flex;
+
             align-items: center;
+
             gap: 10px;
         }
 
         .person-avatar {
             width: 34px;
             height: 34px;
+
+            flex-shrink: 0;
 
             border-radius: 9px;
 
@@ -847,15 +950,19 @@
                 var(--novera-blue);
 
             display: flex;
+
             align-items: center;
+
             justify-content: center;
 
             font-size: 11px;
+
             font-weight: 800;
         }
 
         .person-name {
             font-weight: 700;
+
             font-size: 12px;
         }
 
@@ -868,8 +975,9 @@
             font-size: 10px;
         }
 
+
         /* =====================================================
-           STATUS BADGES
+           STATUS
         ===================================================== */
 
         .status {
@@ -879,7 +987,8 @@
 
             gap: 6px;
 
-            padding: 6px 9px;
+            padding:
+                6px 9px;
 
             border-radius: 20px;
 
@@ -977,6 +1086,7 @@
                 var(--green);
         }
 
+
         /* =====================================================
            CONSULTATION GRID
         ===================================================== */
@@ -990,12 +1100,29 @@
             gap: 24px;
         }
 
+
+        /* =====================================================
+           CONSULTATION LINK
+        ===================================================== */
+
+        .consultation-link {
+            display: block;
+        }
+
+        .consultation-link:hover
+        .person-name {
+            color:
+                var(--novera-blue);
+        }
+
+
         /* =====================================================
            EMPTY STATE
         ===================================================== */
 
         .empty {
-            padding: 50px 20px;
+            padding:
+                50px 20px;
 
             text-align: center;
 
@@ -1007,7 +1134,8 @@
             width: 54px;
             height: 54px;
 
-            margin: 0 auto 13px;
+            margin:
+                0 auto 13px;
 
             border-radius: 50%;
 
@@ -1020,6 +1148,7 @@
             display: flex;
 
             align-items: center;
+
             justify-content: center;
 
             font-size: 19px;
@@ -1040,8 +1169,82 @@
             font-size: 11px;
         }
 
+
         /* =====================================================
-           MOBILE
+           FOOTER
+        ===================================================== */
+
+        .portal-footer {
+            margin-top: 30px;
+
+            padding: 22px;
+
+            background: white;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 16px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 20px;
+
+            flex-wrap: wrap;
+        }
+
+        .footer-brand {
+            display: flex;
+
+            align-items: center;
+
+            gap: 15px;
+        }
+
+        .footer-logo {
+            width: 125px;
+            height: 42px;
+
+            object-fit: contain;
+
+            display: block;
+        }
+
+        .footer-company {
+            display: block;
+
+            font-size: 12px;
+
+            color:
+                var(--text-dark);
+        }
+
+        .footer-tagline {
+            display: block;
+
+            margin-top: 4px;
+
+            font-size: 10px;
+
+            color:
+                var(--text-muted);
+        }
+
+        .footer-copy {
+            font-size: 10px;
+
+            color:
+                #8a95a5;
+        }
+
+
+        /* =====================================================
+           MOBILE MENU
         ===================================================== */
 
         .mobile-menu {
@@ -1049,6 +1252,8 @@
 
             width: 40px;
             height: 40px;
+
+            flex-shrink: 0;
 
             border: none;
 
@@ -1063,6 +1268,11 @@
             cursor: pointer;
         }
 
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
         @media (max-width: 1200px) {
 
             .stats-grid {
@@ -1071,6 +1281,7 @@
             }
 
         }
+
 
         @media (max-width: 900px) {
 
@@ -1097,12 +1308,13 @@
                 display: flex;
 
                 align-items: center;
+
                 justify-content: center;
             }
 
             .topbar {
                 padding:
-                    0 20px;
+                    14px 20px;
             }
 
             .header-user {
@@ -1115,15 +1327,18 @@
             }
 
             .consultation-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns:
+                    1fr;
             }
 
         }
 
+
         @media (max-width: 600px) {
 
             .stats-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns:
+                    1fr;
             }
 
             .page-title h1 {
@@ -1146,43 +1361,57 @@
                 font-size: 20px;
             }
 
+            .welcome-card p {
+                font-size: 12px;
+            }
+
+            .portal-footer {
+                align-items: flex-start;
+            }
+
+            .footer-copy {
+                line-height: 1.5;
+            }
+
         }
 
     </style>
+
 </head>
+
 
 <body>
 
 <div class="app-shell">
 
+
     <!-- =====================================================
          SIDEBAR
     ====================================================== -->
 
-    <aside class="sidebar" id="sidebar">
+    <aside
+        class="sidebar"
+        id="sidebar"
+    >
+
+
+        <!-- BRAND -->
 
         <div class="brand-area">
 
             <div class="logo-box">
 
-                <!--
-                    IMPORTANT:
-                    This uses the Flask logo route.
-
-                    Do NOT use:
-                    /home/gloria/novera/assets/logo.jpg
-
-                    The browser cannot access your Linux
-                    filesystem directly.
-                -->
-
                 <img
                     src="{{ url_for('logo') }}?v=2026"
-                    alt="Novera Energy & Technologies Logo"
-                    onerror="this.onerror=null; this.src='/assets/logo.jpg';"
+                    alt="{{ company_name|default('Novera Energy & Technologies') }} Logo"
+                    onerror="
+                        this.onerror=null;
+                        this.src='/assets/logo.jpg';
+                    "
                 >
 
             </div>
+
 
             <div class="brand-text">
 
@@ -1205,26 +1434,22 @@
 
             <div class="profile-icon">
 
-                {% if session.get('md_id') %}
-                    MD
-                {% else %}
-                    <i class="fa-solid fa-user-tie"></i>
-                {% endif %}
+                <i class="fa-solid fa-user-tie"></i>
 
             </div>
+
 
             <div class="profile-name">
 
-                {% if session.get('md_id') %}
-                    Managing Director
-                {% else %}
-                    Novera Management
-                {% endif %}
+                Managing Director
 
             </div>
 
+
             <div class="profile-role">
+
                 Executive Management
+
             </div>
 
         </div>
@@ -1236,14 +1461,21 @@
             Management
         </div>
 
+
         <nav class="nav-menu">
+
 
             <a
                 href="{{ url_for('md_dashboard') }}"
                 class="nav-link active"
             >
+
                 <i class="fa-solid fa-chart-pie"></i>
-                <span>Dashboard</span>
+
+                <span>
+                    Dashboard
+                </span>
+
             </a>
 
 
@@ -1251,8 +1483,13 @@
                 href="{{ url_for('md_staff') }}"
                 class="nav-link"
             >
+
                 <i class="fa-solid fa-users"></i>
-                <span>Staff Management</span>
+
+                <span>
+                    Staff Management
+                </span>
+
             </a>
 
 
@@ -1260,16 +1497,29 @@
                 href="{{ url_for('md_consultations') }}"
                 class="nav-link"
             >
+
                 <i class="fa-solid fa-clipboard-list"></i>
-                <span>Consultations</span>
+
+                <span>
+                    Consultations
+                </span>
+
             </a>
 
         </nav>
 
 
-        <div class="nav-title" style="margin-top: 18px;">
+        <!-- ACCOUNT -->
+
+        <div
+            class="nav-title"
+            style="margin-top:18px;"
+        >
+
             Account
+
         </div>
+
 
         <nav class="nav-menu">
 
@@ -1277,12 +1527,19 @@
                 href="{{ url_for('md_logout') }}"
                 class="nav-link"
             >
+
                 <i class="fa-solid fa-right-from-bracket"></i>
-                <span>Logout</span>
+
+                <span>
+                    Logout
+                </span>
+
             </a>
 
         </nav>
 
+
+        <!-- SIGN OUT -->
 
         <div class="logout-area">
 
@@ -1290,8 +1547,13 @@
                 href="{{ url_for('md_logout') }}"
                 class="logout-link"
             >
+
                 <i class="fa-solid fa-power-off"></i>
-                <span>Sign Out</span>
+
+                <span>
+                    Sign Out
+                </span>
+
             </a>
 
         </div>
@@ -1310,12 +1572,16 @@
 
         <header class="topbar">
 
+
             <button
                 class="mobile-menu"
                 id="mobileMenu"
                 type="button"
+                aria-label="Open navigation menu"
             >
+
                 <i class="fa-solid fa-bars"></i>
+
             </button>
 
 
@@ -1326,29 +1592,34 @@
                 </h1>
 
                 <p>
-                    Novera Energy & Technologies
+                    {{ company_name|default('Novera Energy & Technologies') }}
                     executive management portal
                 </p>
 
             </div>
 
 
-            <!-- HEADER BRAND -->
-
             <div class="header-brand">
 
                 <img
                     class="header-logo"
                     src="{{ url_for('logo') }}?v=2026-header"
-                    alt="Novera Energy & Technologies"
-                    onerror="this.onerror=null; this.src='/assets/logo.jpg';"
+                    alt="{{ company_name|default('Novera Energy & Technologies') }}"
+                    onerror="
+                        this.onerror=null;
+                        this.src='/assets/logo.jpg';
+                    "
                 >
+
 
                 <div class="header-user">
 
                     <div class="header-avatar">
+
                         <i class="fa-solid fa-user-tie"></i>
+
                     </div>
+
 
                     <div class="header-user-info">
 
@@ -1369,14 +1640,14 @@
         </header>
 
 
-        <!-- CONTENT -->
+        <!-- =================================================
+             CONTENT
+        ================================================== -->
 
         <div class="content">
 
 
-            <!-- =================================================
-                 WELCOME
-            ================================================== -->
+            <!-- WELCOME -->
 
             <section class="welcome-card">
 
@@ -1385,10 +1656,13 @@
                 </h2>
 
                 <p>
+
                     Monitor staff activity, consultation requests,
                     assignments and operational activity from one
                     centralized management dashboard.
+
                 </p>
+
 
                 <div class="welcome-chip">
 
@@ -1402,13 +1676,13 @@
 
 
             <!-- =================================================
-                 STATISTICS
+                 PRIMARY STATISTICS
             ================================================== -->
 
             <section class="stats-grid">
 
 
-                <!-- STAFF -->
+                <!-- TOTAL STAFF -->
 
                 <div class="stat-card">
 
@@ -1422,9 +1696,11 @@
 
                     </div>
 
+
                     <div class="stat-label">
                         Total Staff
                     </div>
+
 
                     <div class="stat-value">
                         {{ total_staff|default(0) }}
@@ -1453,9 +1729,11 @@
 
                     </div>
 
+
                     <div class="stat-label">
                         Active Staff
                     </div>
+
 
                     <div class="stat-value">
                         {{ active_staff|default(0) }}
@@ -1484,9 +1762,11 @@
 
                     </div>
 
+
                     <div class="stat-label">
                         Pending Staff
                     </div>
+
 
                     <div class="stat-value">
                         {{ pending_staff|default(0) }}
@@ -1495,7 +1775,7 @@
                 </div>
 
 
-                <!-- CONSULTATIONS -->
+                <!-- TOTAL CONSULTATIONS -->
 
                 <div class="stat-card">
 
@@ -1509,9 +1789,11 @@
 
                     </div>
 
+
                     <div class="stat-label">
                         Total Consultations
                     </div>
+
 
                     <div class="stat-value">
                         {{ total_consultations|default(0) }}
@@ -1523,11 +1805,13 @@
 
 
             <!-- =================================================
-                 CONSULTATION SUMMARY
+                 CONSULTATION STATISTICS
             ================================================== -->
 
             <section class="stats-grid">
 
+
+                <!-- NEW -->
 
                 <div class="stat-card">
 
@@ -1541,9 +1825,11 @@
 
                     </div>
 
+
                     <div class="stat-label">
                         New Requests
                     </div>
+
 
                     <div class="stat-value">
                         {{ new_consultations|default(0) }}
@@ -1551,6 +1837,8 @@
 
                 </div>
 
+
+                <!-- IN PROGRESS -->
 
                 <div class="stat-card">
 
@@ -1570,9 +1858,11 @@
 
                     </div>
 
+
                     <div class="stat-label">
                         In Progress
                     </div>
+
 
                     <div class="stat-value">
                         {{ in_progress_consultations|default(0) }}
@@ -1580,6 +1870,8 @@
 
                 </div>
 
+
+                <!-- CLOSED -->
 
                 <div class="stat-card">
 
@@ -1599,9 +1891,11 @@
 
                     </div>
 
+
                     <div class="stat-label">
                         Closed
                     </div>
+
 
                     <div class="stat-value">
                         {{ closed_consultations|default(0) }}
@@ -1609,6 +1903,8 @@
 
                 </div>
 
+
+                <!-- UNASSIGNED -->
 
                 <div class="stat-card">
 
@@ -1628,9 +1924,11 @@
 
                     </div>
 
+
                     <div class="stat-label">
                         Unassigned
                     </div>
+
 
                     <div class="stat-value">
                         {{ unassigned_consultations|default(0) }}
@@ -1642,7 +1940,7 @@
 
 
             <!-- =================================================
-                 TWO COLUMN CONTENT
+                 RECENT INFORMATION
             ================================================== -->
 
             <div class="consultation-grid">
@@ -1664,6 +1962,7 @@
 
                             </div>
 
+
                             <div>
 
                                 <h3>
@@ -1677,6 +1976,7 @@
                             </div>
 
                         </div>
+
 
                         <a
                             href="{{ url_for('md_staff') }}"
@@ -1714,6 +2014,7 @@
 
                             </thead>
 
+
                             <tbody>
 
                             {% for member in recent_staff %}
@@ -1724,37 +2025,62 @@
 
                                         <div class="person">
 
+
                                             <div class="person-avatar">
+
+                                                {% set
+                                                    first_name =
+                                                    member["first_name"]
+                                                    or
+                                                    ""
+                                                %}
+
+                                                {% set
+                                                    last_name =
+                                                    member["last_name"]
+                                                    or
+                                                    ""
+                                                %}
 
                                                 {{
                                                     (
-                                                        member["first_name"][0]
+                                                        first_name[:1]
                                                         ~
-                                                        member["last_name"][0]
+                                                        last_name[:1]
                                                     )
                                                     |upper
+                                                    or
+                                                    "S"
                                                 }}
 
                                             </div>
 
+
                                             <div>
 
-                                                <div class="person-name">
+                                                <div
+                                                    class="person-name"
+                                                >
 
                                                     {{
-                                                        member["first_name"]
+                                                        first_name
                                                     }}
 
                                                     {{
-                                                        member["last_name"]
+                                                        last_name
                                                     }}
 
                                                 </div>
 
-                                                <div class="person-sub">
+
+                                                <div
+                                                    class="person-sub"
+                                                >
 
                                                     {{
                                                         member["staff_id"]
+                                                        or
+                                                        "No staff ID"
                                                     }}
 
                                                 </div>
@@ -1780,20 +2106,33 @@
                                     <td>
 
                                         {% set
-                                            status =
-                                            member["status"]
+                                            staff_status =
+                                            (
+                                                member["status"]
+                                                or
+                                                "Pending"
+                                            )
                                             |lower
+                                            |replace(
+                                                " ",
+                                                "-"
+                                            )
                                         %}
+
 
                                         <span
                                             class="
                                                 status
-                                                {{ status }}
+                                                {{ staff_status }}
                                             "
                                         >
+
                                             {{
                                                 member["status"]
+                                                or
+                                                "Pending"
                                             }}
+
                                         </span>
 
                                     </td>
@@ -1818,9 +2157,11 @@
 
                         </div>
 
+
                         <strong>
                             No staff records
                         </strong>
+
 
                         <p>
                             Staff registrations will appear here.
@@ -1849,6 +2190,7 @@
 
                             </div>
 
+
                             <div>
 
                                 <h3>
@@ -1862,6 +2204,7 @@
                             </div>
 
                         </div>
+
 
                         <a
                             href="{{ url_for('md_consultations') }}"
@@ -1899,6 +2242,7 @@
 
                             </thead>
 
+
                             <tbody>
 
                             {% for consultation
@@ -1909,9 +2253,10 @@
                                     <td>
 
                                         <a
+                                            class="consultation-link"
                                             href="{{
                                                 url_for(
-                                                    'md_view_consultation',
+                                                    'md_consultation_view',
                                                     consultation_id=
                                                         consultation['id']
                                                 )
@@ -1920,16 +2265,25 @@
 
                                             <div class="person">
 
-                                                <div class="person-avatar">
+
+                                                <div
+                                                    class="person-avatar"
+                                                >
+
+                                                    {% set
+                                                        client_name =
+                                                        consultation["name"]
+                                                        or
+                                                        "Client"
+                                                    %}
 
                                                     {{
-                                                        consultation[
-                                                            "name"
-                                                        ][0]
+                                                        client_name[:1]
                                                         |upper
                                                     }}
 
                                                 </div>
+
 
                                                 <div>
 
@@ -1938,18 +2292,18 @@
                                                     >
 
                                                         {{
-                                                            consultation[
-                                                                "name"
-                                                            ]
+                                                            client_name
                                                         }}
 
                                                     </div>
+
 
                                                     <div
                                                         class="person-sub"
                                                     >
 
                                                         #
+
                                                         {{
                                                             consultation[
                                                                 "id"
@@ -1970,9 +2324,7 @@
                                     <td>
 
                                         {{
-                                            consultation[
-                                                "service"
-                                            ]
+                                            consultation["service"]
                                             or
                                             "General Consultation"
                                         }}
@@ -1984,7 +2336,11 @@
 
                                         {% set
                                             consultation_status =
-                                            consultation["status"]
+                                            (
+                                                consultation["status"]
+                                                or
+                                                "New"
+                                            )
                                             |lower
                                             |replace(
                                                 " ",
@@ -1992,19 +2348,18 @@
                                             )
                                         %}
 
+
                                         <span
                                             class="
                                                 status
-                                                {{
-                                                    consultation_status
-                                                }}
-                                        "
+                                                {{ consultation_status }}
+                                            "
                                         >
 
                                             {{
-                                                consultation[
-                                                    "status"
-                                                ]
+                                                consultation["status"]
+                                                or
+                                                "New"
                                             }}
 
                                         </span>
@@ -2027,13 +2382,17 @@
 
                         <div class="empty-icon">
 
-                            <i class="fa-solid fa-clipboard-check"></i>
+                            <i
+                                class="fa-solid fa-clipboard-check"
+                            ></i>
 
                         </div>
+
 
                         <strong>
                             No consultation requests
                         </strong>
+
 
                         <p>
                             New website requests will appear here.
@@ -2049,68 +2408,42 @@
 
 
             <!-- =================================================
-                 BRAND FOOTER
+                 FOOTER
             ================================================== -->
 
-            <div
-                style="
-                    margin-top:30px;
-                    padding:22px;
-                    background:white;
-                    border:1px solid #e1e8f0;
-                    border-radius:16px;
-                    display:flex;
-                    align-items:center;
-                    justify-content:space-between;
-                    gap:20px;
-                    flex-wrap:wrap;
-                "
-            >
+            <div class="portal-footer">
 
-                <div
-                    style="
-                        display:flex;
-                        align-items:center;
-                        gap:15px;
-                    "
-                >
+
+                <div class="footer-brand">
 
                     <img
+                        class="footer-logo"
                         src="{{ url_for('logo') }}?v=2026-footer"
-                        alt="Novera Logo"
-                        style="
-                            width:125px;
-                            height:42px;
-                            object-fit:contain;
-                            display:block;
-                        "
+                        alt="{{ company_name|default('Novera Energy & Technologies') }} Logo"
                         onerror="
                             this.onerror=null;
                             this.src='/assets/logo.jpg';
                         "
                     >
 
+
                     <div>
 
-                        <strong
-                            style="
-                                display:block;
-                                font-size:12px;
-                                color:#142033;
-                            "
-                        >
-                            Novera Energy & Technologies
+                        <strong class="footer-company">
+
+                            {{ company_name|default(
+                                'Novera Energy & Technologies'
+                            ) }}
+
                         </strong>
 
-                        <span
-                            style="
-                                display:block;
-                                margin-top:4px;
-                                font-size:10px;
-                                color:#6b7788;
-                            "
-                        >
-                            Light · Motion · Intelligence
+
+                        <span class="footer-tagline">
+
+                            {{ company_tagline|default(
+                                'Light · Motion · Intelligence'
+                            ) }}
+
                         </span>
 
                     </div>
@@ -2118,14 +2451,15 @@
                 </div>
 
 
-                <div
-                    style="
-                        font-size:10px;
-                        color:#8a95a5;
-                    "
-                >
-                    © 2026 Novera Energy & Technologies.
+                <div class="footer-copy">
+
+                    © 2026
+                    {{ company_name|default(
+                        'Novera Energy & Technologies'
+                    ) }}.
+
                     Management Portal.
+
                 </div>
 
             </div>
@@ -2137,20 +2471,27 @@
 </div>
 
 
+<!-- =========================================================
+     MOBILE SIDEBAR SCRIPT
+========================================================= -->
+
 <script>
 
-    /* =========================================================
-       MOBILE SIDEBAR
-    ========================================================= */
-
     const mobileMenu =
-        document.getElementById("mobileMenu");
+        document.getElementById(
+            "mobileMenu"
+        );
 
     const sidebar =
-        document.getElementById("sidebar");
+        document.getElementById(
+            "sidebar"
+        );
 
 
-    if (mobileMenu) {
+    if (
+        mobileMenu &&
+        sidebar
+    ) {
 
         mobileMenu.addEventListener(
             "click",
@@ -2163,60 +2504,63 @@
             }
         );
 
-    }
 
+        document
+            .querySelectorAll(
+                ".nav-link"
+            )
+            .forEach(
+                function(link) {
 
-    /* =========================================================
-       CLOSE MOBILE SIDEBAR AFTER NAVIGATION
-    ========================================================= */
+                    link.addEventListener(
+                        "click",
+                        function() {
 
-    document
-        .querySelectorAll(".nav-link")
-        .forEach(function(link) {
+                            if (
+                                window.innerWidth <= 900
+                            ) {
 
-            link.addEventListener(
-                "click",
-                function() {
+                                sidebar.classList.remove(
+                                    "open"
+                                );
 
-                    if (
-                        window.innerWidth <= 900
-                    ) {
+                            }
 
-                        sidebar.classList.remove(
-                            "open"
-                        );
-
-                    }
-
-                }
-            );
-
-        });
-
-
-    /* =========================================================
-       LOGO DEBUGGING
-    ========================================================= */
-
-    document
-        .querySelectorAll("img")
-        .forEach(function(img) {
-
-            img.addEventListener(
-                "error",
-                function() {
-
-                    console.error(
-                        "Novera logo failed to load:",
-                        img.src
+                        }
                     );
 
                 }
             );
 
-        });
+    }
+
+
+    /* =========================================================
+       LOGO ERROR DEBUGGING
+    ========================================================= */
+
+    document
+        .querySelectorAll("img")
+        .forEach(
+            function(img) {
+
+                img.addEventListener(
+                    "error",
+                    function() {
+
+                        console.error(
+                            "Novera logo failed to load:",
+                            img.src
+                        );
+
+                    }
+                );
+
+            }
+        );
 
 </script>
 
 </body>
+
 </html>
