@@ -1,31 +1,29 @@
-import os
-import sqlite3
-import secrets
-import smtplib
-
 from pathlib import Path
 from functools import wraps
 from datetime import datetime, timezone
 from email.message import EmailMessage
+import os
+import smtplib
+import sqlite3
+import secrets
 
 from dotenv import load_dotenv
-
 from flask import (
     Flask,
+    abort,
+    flash,
+    jsonify,
+    redirect,
     render_template,
     request,
-    redirect,
-    url_for,
-    session,
-    flash,
-    abort,
+    send_file,
     send_from_directory,
-    jsonify
+    session,
+    url_for,
 )
-
 from werkzeug.security import (
+    check_password_hash,
     generate_password_hash,
-    check_password_hash
 )
 
 
@@ -33,48 +31,35 @@ from werkzeug.security import (
 # PATH CONFIGURATION
 # ============================================================
 
-BASE_DIR = Path(__file__).resolve().parent
+BACKEND_DIR = Path(__file__).resolve().parent
+ASSETS_DIR = BACKEND_DIR.parent
+PROJECT_DIR = ASSETS_DIR.parent
 
-# Actual Novera project
-PROJECT_DIR = Path("/home/gloria/novera")
+TEMPLATES_DIR = BACKEND_DIR / "templates"
+DATABASE_PATH = BACKEND_DIR / "novera.db"
 
-# Correct assets directory
-ASSETS_DIR = PROJECT_DIR / "assets"
-
-# Correct logo path
 LOGO_PATH = ASSETS_DIR / "logo.jpg"
+INDEX_FILE = PROJECT_DIR / "index.html"
 
-TEMPLATES_DIR = BASE_DIR / "templates"
-
-ENV_FILE = BASE_DIR / ".env"
-
-load_dotenv(ENV_FILE)
+DATABASE_PATH.parent.mkdir(
+    parents=True,
+    exist_ok=True
+)
 
 
 # ============================================================
-# FLASK CONFIGURATION
+# ENVIRONMENT
 # ============================================================
 
-app = Flask(
-    __name__,
-    template_folder=str(TEMPLATES_DIR)
-)
+BACKEND_ENV_FILE = BACKEND_DIR / ".env"
+PROJECT_ENV_FILE = PROJECT_DIR / ".env"
 
-app.secret_key = os.getenv(
-    "SECRET_KEY",
-    secrets.token_hex(32)
-)
-
-app.config["SESSION_COOKIE_HTTPONLY"] = True
-
-app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
-
-app.config["SESSION_COOKIE_SECURE"] = (
-    os.getenv(
-        "SESSION_COOKIE_SECURE",
-        "False"
-    ).lower() == "true"
-)
+if BACKEND_ENV_FILE.exists():
+    load_dotenv(BACKEND_ENV_FILE)
+elif PROJECT_ENV_FILE.exists():
+    load_dotenv(PROJECT_ENV_FILE)
+else:
+    load_dotenv()
 
 
 # ============================================================
@@ -83,42 +68,15 @@ app.config["SESSION_COOKIE_SECURE"] = (
 
 COMPANY_NAME = os.getenv(
     "COMPANY_NAME",
-    "Novera Energy & Technologies"
-)
-
-COMPANY_TAGLINE = os.getenv(
-    "COMPANY_TAGLINE",
-    "Light · Motion · Intelligence"
-)
-
-COMPANY_EMAIL_DOMAIN = os.getenv(
-    "COMPANY_EMAIL_DOMAIN",
-    "novera.com"
-)
-
-
-# ============================================================
-# DATABASE CONFIGURATION
-# ============================================================
-
-DATABASE_PATH_ENV = os.getenv(
-    "DATABASE_PATH",
-    ""
+    "Novera Energy & Technologies Ltd"
 ).strip()
 
-if DATABASE_PATH_ENV:
+COMPANY_EMAIL = os.getenv(
+    "COMPANY_EMAIL",
+    "noveratech001@gmail.com"
+).strip()
 
-    DATABASE_PATH = Path(
-        DATABASE_PATH_ENV
-    )
-
-    if not DATABASE_PATH.is_absolute():
-
-        DATABASE_PATH = BASE_DIR / DATABASE_PATH
-
-else:
-
-    DATABASE_PATH = BASE_DIR / "novera.db"
+COMPANY_TAGLINE = "Light · Motion · Intelligence"
 
 
 # ============================================================
@@ -128,86 +86,99 @@ else:
 ADMIN_EMAIL = os.getenv(
     "ADMIN_EMAIL",
     "admin@novera.com"
-)
+).strip().lower()
 
 ADMIN_PASSWORD = os.getenv(
     "ADMIN_PASSWORD",
     "ChangeThisPassword123!"
 )
 
-
-# ============================================================
-# MD REGISTRATION KEY
-# ============================================================
-
-MD_REGISTRATION_KEY = os.getenv(
-    "MD_REGISTRATION_KEY",
+STAFF_EMAIL_DOMAIN = os.getenv(
+    "STAFF_EMAIL_DOMAIN",
     ""
+).strip().lower()
+
+
+# ============================================================
+# FLASK
+# ============================================================
+
+app = Flask(
+    __name__,
+    template_folder=str(TEMPLATES_DIR)
+)
+
+app.config.update(
+    SECRET_KEY=os.getenv(
+        "SECRET_KEY",
+        "CHANGE-ME-IN-PRODUCTION"
+    ),
+
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE="Lax",
+
+    SESSION_COOKIE_SECURE=(
+        os.getenv(
+            "SESSION_COOKIE_SECURE",
+            "false"
+        ).lower() == "true"
+    ),
+
+    MAX_CONTENT_LENGTH=10 * 1024 * 1024,
 )
 
 
 # ============================================================
-# EMAIL CONFIGURATION
+# CONSTANTS
 # ============================================================
 
-SMTP_HOST = os.getenv(
-    "SMTP_HOST",
-    ""
-).strip()
-
-SMTP_PORT = int(
-    os.getenv(
-        "SMTP_PORT",
-        "587"
-    )
+STAFF_STATUSES = (
+    "Pending",
+    "Active",
+    "Rejected",
+    "Disabled",
 )
 
-SMTP_USERNAME = os.getenv(
-    "SMTP_USERNAME",
-    ""
-).strip()
-
-SMTP_PASSWORD = os.getenv(
-    "SMTP_PASSWORD",
-    ""
-).strip()
-
-SMTP_USE_TLS = (
-    os.getenv(
-        "SMTP_USE_TLS",
-        "True"
-    ).lower() == "true"
+CONSULTATION_STATUSES = (
+    "New",
+    "In Progress",
+    "Closed",
 )
 
-MAIL_FROM = os.getenv(
-    "MAIL_FROM",
-    SMTP_USERNAME
-).strip()
+TRAINING_APPLICATION_STATUSES = (
+    "New",
+    "Under Review",
+    "Accepted",
+    "Rejected",
+)
 
 
 # ============================================================
-# CONSULTATION EMAIL
+# TIME
 # ============================================================
 
-CONSULTATION_EMAIL = os.getenv(
-    "CONSULTATION_EMAIL",
-    "noveratech001@gmail.com"
-).strip()
+def utc_now():
+    return datetime.now(
+        timezone.utc
+    ).isoformat()
 
 
 # ============================================================
-# DATABASE CONNECTION
+# DATABASE
 # ============================================================
 
 def get_db():
+    """
+    Open the Novera SQLite database.
+    """
 
     db = sqlite3.connect(
-        str(DATABASE_PATH)
+        str(DATABASE_PATH),
+        timeout=30
     )
 
     db.row_factory = sqlite3.Row
 
-    # Helps SQLite handle concurrent portal requests better
     db.execute(
         "PRAGMA foreign_keys = ON"
     )
@@ -215,500 +186,635 @@ def get_db():
     return db
 
 
+def close_db(db):
+    if db is not None:
+        db.close()
+
+
+def table_columns(db, table_name):
+    return {
+        row["name"]
+        for row in db.execute(
+            f"PRAGMA table_info({table_name})"
+        ).fetchall()
+    }
+
+
+def ensure_column(
+    db,
+    table_name,
+    column_name,
+    definition
+):
+    columns = table_columns(
+        db,
+        table_name
+    )
+
+    if column_name not in columns:
+        db.execute(
+            f"""
+            ALTER TABLE {table_name}
+            ADD COLUMN {column_name} {definition}
+            """
+        )
+
+
+# ============================================================
+# TRAINING APPLICATION ID
+# ============================================================
+
+def generate_training_application_id(db):
+    """
+    Generate a unique training application reference.
+
+    Example:
+        NVR-TRN-582341
+    """
+
+    while True:
+
+        application_id = (
+            "NVR-TRN-"
+            + str(
+                secrets.randbelow(
+                    900000
+                ) + 100000
+            )
+        )
+
+        exists = db.execute(
+            """
+            SELECT id
+            FROM training_applications
+            WHERE application_id = ?
+            LIMIT 1
+            """,
+            (application_id,)
+        ).fetchone()
+
+        if not exists:
+            return application_id
+
+
 # ============================================================
 # DATABASE INITIALIZATION
 # ============================================================
 
-def init_db():
-
-    DATABASE_PATH.parent.mkdir(
-        parents=True,
-        exist_ok=True
-    )
+def init_database():
 
     db = get_db()
 
-    db.executescript(
-        """
-
-        CREATE TABLE IF NOT EXISTS staff (
-
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-
-            staff_id TEXT UNIQUE NOT NULL,
-
-            first_name TEXT NOT NULL,
-
-            last_name TEXT NOT NULL,
-
-            email TEXT UNIQUE NOT NULL,
-
-            phone TEXT NOT NULL,
-
-            department TEXT NOT NULL,
-
-            position TEXT NOT NULL,
-
-            password_hash TEXT NOT NULL,
-
-            status TEXT NOT NULL DEFAULT 'Pending',
-
-            created_at TEXT NOT NULL,
-
-            approved_at TEXT,
-
-            last_login TEXT
-
-        );
-
-
-        CREATE TABLE IF NOT EXISTS md (
-
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-
-            first_name TEXT NOT NULL,
-
-            last_name TEXT NOT NULL,
-
-            email TEXT UNIQUE NOT NULL,
-
-            phone TEXT NOT NULL,
-
-            password_hash TEXT NOT NULL,
-
-            status TEXT NOT NULL DEFAULT 'Active',
-
-            created_at TEXT NOT NULL,
-
-            last_login TEXT
-
-        );
-
-
-        CREATE TABLE IF NOT EXISTS consultations (
-
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-
-            name TEXT NOT NULL,
-
-            email TEXT,
-
-            phone TEXT,
-
-            company TEXT,
-
-            service TEXT,
-
-            message TEXT,
-
-            status TEXT NOT NULL DEFAULT 'New',
-
-            created_at TEXT NOT NULL,
-
-            assigned_staff_id INTEGER
-
-        );
-
-
-        CREATE TABLE IF NOT EXISTS activity_logs (
-
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-
-            actor TEXT,
-
-            action TEXT,
-
-            details TEXT,
-
-            created_at TEXT NOT NULL
-
-        );
-
-        """
-    )
-
-    db.commit()
-    db.close()
-
-
-# ============================================================
-# DATABASE MIGRATION
-# ============================================================
-
-def migrate_database():
-
-    db = get_db()
-
-    # --------------------------------------------------------
-    # CONSULTATIONS
-    # --------------------------------------------------------
-
-    columns = db.execute(
-        """
-        PRAGMA table_info(consultations)
-        """
-    ).fetchall()
-
-    column_names = [
-        column["name"]
-        for column in columns
-    ]
-
-    if "assigned_staff_id" not in column_names:
-
-        db.execute(
-            """
-            ALTER TABLE consultations
-            ADD COLUMN assigned_staff_id INTEGER
-            """
-        )
-
-        print(
-            "Added assigned_staff_id to consultations."
-        )
-
-    db.commit()
-
-    # --------------------------------------------------------
-    # STAFF
-    # --------------------------------------------------------
-
-    staff_columns = db.execute(
-        """
-        PRAGMA table_info(staff)
-        """
-    ).fetchall()
-
-    staff_column_names = [
-        column["name"]
-        for column in staff_columns
-    ]
-
-    print()
-    print("=" * 70)
-    print("DATABASE CHECK")
-    print("=" * 70)
-
-    print(
-        f"Database: {DATABASE_PATH}"
-    )
-
-    print(
-        f"Consultations assigned_staff_id exists: "
-        f"{'assigned_staff_id' in column_names}"
-    )
-
-    print(
-        f"Staff table exists: "
-        f"{len(staff_column_names) > 0}"
-    )
-
-    print("=" * 70)
-    print()
-
-    db.close()
-
-
-# ============================================================
-# INITIALIZE DATABASE
-# ============================================================
-
-init_db()
-migrate_database()
-
-
-# ============================================================
-# TEMPLATE GLOBALS
-# ============================================================
-
-@app.context_processor
-def inject_company():
-
-    return {
-
-        "company_name":
-            COMPANY_NAME,
-
-        "company_tagline":
-            COMPANY_TAGLINE,
-
-        "logo_url":
-            url_for("logo"),
-
-        "logo_asset_url":
-            url_for(
-                "assets",
-                filename="logo.jpg"
+    try:
+
+        # ====================================================
+        # ADMINS
+        # ====================================================
+
+        db.execute("""
+            CREATE TABLE IF NOT EXISTS admins (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                email TEXT UNIQUE NOT NULL,
+                password_hash TEXT NOT NULL,
+                first_name TEXT,
+                last_name TEXT,
+                status TEXT DEFAULT 'Active',
+                created_at TEXT,
+                last_login TEXT
             )
-    }
+        """)
 
 
-# ============================================================
-# LOGO ROUTE
-# ============================================================
+        # ====================================================
+        # STAFF
+        # ====================================================
 
-@app.route("/logo.jpg")
-def logo():
+        db.execute("""
+            CREATE TABLE IF NOT EXISTS staff (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                staff_id TEXT UNIQUE NOT NULL,
+                first_name TEXT NOT NULL,
+                last_name TEXT NOT NULL,
+                email TEXT UNIQUE,
+                phone TEXT,
+                department TEXT,
+                position TEXT,
+                password_hash TEXT NOT NULL,
+                status TEXT DEFAULT 'Pending',
+                created_at TEXT,
+                approved_at TEXT,
+                last_login TEXT
+            )
+        """)
 
-    print(
-        f"Logo requested: {LOGO_PATH}"
-    )
 
-    if not LOGO_PATH.exists():
+        # ====================================================
+        # CONSULTATIONS
+        # ====================================================
+
+        db.execute("""
+            CREATE TABLE IF NOT EXISTS consultations (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+                name TEXT NOT NULL,
+                email TEXT,
+                phone TEXT,
+                company TEXT,
+                service TEXT NOT NULL,
+                message TEXT,
+
+                language TEXT DEFAULT 'en',
+
+                status TEXT DEFAULT 'New',
+
+                assigned_staff_id INTEGER,
+                assigned_to INTEGER,
+
+                assigned_by INTEGER,
+                assigned_at TEXT,
+
+                created_at TEXT,
+                updated_at TEXT,
+
+                email_sent INTEGER DEFAULT 0,
+
+                FOREIGN KEY (assigned_staff_id)
+                    REFERENCES staff(id)
+                    ON DELETE SET NULL,
+
+                FOREIGN KEY (assigned_to)
+                    REFERENCES staff(id)
+                    ON DELETE SET NULL,
+
+                FOREIGN KEY (assigned_by)
+                    REFERENCES admins(id)
+                    ON DELETE SET NULL
+            )
+        """)
+
+
+        # ====================================================
+        # TRAINING APPLICATIONS
+        # ====================================================
+
+        db.execute("""
+            CREATE TABLE IF NOT EXISTS training_applications (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+                application_id TEXT UNIQUE NOT NULL,
+
+                full_name TEXT NOT NULL,
+
+                email TEXT NOT NULL,
+
+                phone TEXT NOT NULL,
+
+                program TEXT NOT NULL,
+
+                education TEXT,
+
+                company TEXT,
+
+                experience TEXT,
+
+                motivation TEXT NOT NULL,
+
+                message TEXT,
+
+                status TEXT DEFAULT 'New',
+
+                created_at TEXT,
+
+                updated_at TEXT,
+
+                email_sent INTEGER DEFAULT 0
+            )
+        """)
+
+
+        # ====================================================
+        # NOTIFICATIONS
+        # ====================================================
+
+        db.execute("""
+            CREATE TABLE IF NOT EXISTS notifications (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+                staff_id INTEGER NOT NULL,
+
+                title TEXT NOT NULL,
+                message TEXT NOT NULL,
+
+                is_read INTEGER DEFAULT 0,
+
+                created_at TEXT,
+
+                FOREIGN KEY (staff_id)
+                    REFERENCES staff(id)
+                    ON DELETE CASCADE
+            )
+        """)
+
+
+        # ====================================================
+        # ACTIVITY LOGS
+        # ====================================================
+
+        db.execute("""
+            CREATE TABLE IF NOT EXISTS activity_logs (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+                actor_type TEXT,
+                actor_id INTEGER,
+
+                action TEXT NOT NULL,
+                description TEXT,
+
+                created_at TEXT
+            )
+        """)
+
+
+        # ====================================================
+        # SAFE MIGRATIONS
+        # ====================================================
+
+        ensure_column(
+            db,
+            "admins",
+            "last_login",
+            "TEXT"
+        )
+
+        ensure_column(
+            db,
+            "staff",
+            "email",
+            "TEXT"
+        )
+
+        ensure_column(
+            db,
+            "staff",
+            "phone",
+            "TEXT"
+        )
+
+        ensure_column(
+            db,
+            "staff",
+            "department",
+            "TEXT"
+        )
+
+        ensure_column(
+            db,
+            "staff",
+            "position",
+            "TEXT"
+        )
+
+        ensure_column(
+            db,
+            "staff",
+            "approved_at",
+            "TEXT"
+        )
+
+        ensure_column(
+            db,
+            "staff",
+            "last_login",
+            "TEXT"
+        )
+
+        ensure_column(
+            db,
+            "consultations",
+            "company",
+            "TEXT"
+        )
+
+        ensure_column(
+            db,
+            "consultations",
+            "language",
+            "TEXT"
+        )
+
+        ensure_column(
+            db,
+            "consultations",
+            "status",
+            "TEXT DEFAULT 'New'"
+        )
+
+        ensure_column(
+            db,
+            "consultations",
+            "assigned_staff_id",
+            "INTEGER"
+        )
+
+        ensure_column(
+            db,
+            "consultations",
+            "assigned_to",
+            "INTEGER"
+        )
+
+        ensure_column(
+            db,
+            "consultations",
+            "assigned_by",
+            "INTEGER"
+        )
+
+        ensure_column(
+            db,
+            "consultations",
+            "assigned_at",
+            "TEXT"
+        )
+
+        ensure_column(
+            db,
+            "consultations",
+            "updated_at",
+            "TEXT"
+        )
+
+        ensure_column(
+            db,
+            "consultations",
+            "email_sent",
+            "INTEGER DEFAULT 0"
+        )
+
+
+        # ====================================================
+        # TRAINING APPLICATION MIGRATIONS
+        # ====================================================
+
+        ensure_column(
+            db,
+            "training_applications",
+            "application_id",
+            "TEXT"
+        )
+
+        ensure_column(
+            db,
+            "training_applications",
+            "full_name",
+            "TEXT"
+        )
+
+        ensure_column(
+            db,
+            "training_applications",
+            "email",
+            "TEXT"
+        )
+
+        ensure_column(
+            db,
+            "training_applications",
+            "phone",
+            "TEXT"
+        )
+
+        ensure_column(
+            db,
+            "training_applications",
+            "program",
+            "TEXT"
+        )
+
+        ensure_column(
+            db,
+            "training_applications",
+            "education",
+            "TEXT"
+        )
+
+        ensure_column(
+            db,
+            "training_applications",
+            "company",
+            "TEXT"
+        )
+
+        ensure_column(
+            db,
+            "training_applications",
+            "experience",
+            "TEXT"
+        )
+
+        ensure_column(
+            db,
+            "training_applications",
+            "motivation",
+            "TEXT"
+        )
+
+        ensure_column(
+            db,
+            "training_applications",
+            "message",
+            "TEXT"
+        )
+
+        ensure_column(
+            db,
+            "training_applications",
+            "status",
+            "TEXT DEFAULT 'New'"
+        )
+
+        ensure_column(
+            db,
+            "training_applications",
+            "created_at",
+            "TEXT"
+        )
+
+        ensure_column(
+            db,
+            "training_applications",
+            "updated_at",
+            "TEXT"
+        )
+
+        ensure_column(
+            db,
+            "training_applications",
+            "email_sent",
+            "INTEGER DEFAULT 0"
+        )
+
+
+        # ====================================================
+        # DEFAULT VALUES FOR EXISTING CONSULTATIONS
+        # ====================================================
+
+        db.execute("""
+            UPDATE consultations
+            SET status = 'New'
+            WHERE status IS NULL
+               OR TRIM(status) = ''
+        """)
+
+        db.execute("""
+            UPDATE consultations
+            SET language = 'en'
+            WHERE language IS NULL
+               OR TRIM(language) = ''
+        """)
+
+
+        # ====================================================
+        # DEFAULT VALUES FOR TRAINING APPLICATIONS
+        # ====================================================
+
+        db.execute("""
+            UPDATE training_applications
+            SET status = 'New'
+            WHERE status IS NULL
+               OR TRIM(status) = ''
+        """)
+
+        db.execute("""
+            UPDATE training_applications
+            SET created_at = ?
+            WHERE created_at IS NULL
+               OR TRIM(created_at) = ''
+        """, (utc_now(),))
+
+        db.execute("""
+            UPDATE training_applications
+            SET updated_at = created_at
+            WHERE updated_at IS NULL
+               OR TRIM(updated_at) = ''
+        """)
+
+
+        # ====================================================
+        # CREATE MISSING TRAINING APPLICATION IDs
+        # ====================================================
+
+        existing_training_rows = db.execute(
+            """
+            SELECT id
+            FROM training_applications
+            WHERE application_id IS NULL
+               OR TRIM(application_id) = ''
+            ORDER BY id ASC
+            """
+        ).fetchall()
+
+        for row in existing_training_rows:
+
+            application_id = generate_training_application_id(
+                db
+            )
+
+            db.execute(
+                """
+                UPDATE training_applications
+                SET application_id = ?
+                WHERE id = ?
+                """,
+                (
+                    application_id,
+                    row["id"]
+                )
+            )
+
+
+        # ====================================================
+        # CREATE ADMIN FROM .ENV
+        # ====================================================
+
+        existing_admin = db.execute(
+            """
+            SELECT id
+            FROM admins
+            WHERE LOWER(email) = LOWER(?)
+            LIMIT 1
+            """,
+            (ADMIN_EMAIL,)
+        ).fetchone()
+
+
+        if existing_admin is None:
+
+            db.execute(
+                """
+                INSERT INTO admins (
+                    email,
+                    password_hash,
+                    first_name,
+                    last_name,
+                    status,
+                    created_at
+                )
+                VALUES (?, ?, ?, ?, 'Active', ?)
+                """,
+                (
+                    ADMIN_EMAIL,
+                    generate_password_hash(
+                        ADMIN_PASSWORD
+                    ),
+                    "System",
+                    "Administrator",
+                    utc_now()
+                )
+            )
+
+            print()
+            print("=" * 65)
+            print("NOVERA ADMIN ACCOUNT CREATED")
+            print("=" * 65)
+            print(f"Email    : {ADMIN_EMAIL}")
+            print("Password : Loaded from .env")
+            print("Status   : Active")
+            print("=" * 65)
+            print()
+
+        else:
+
+            print()
+            print("=" * 65)
+            print("NOVERA ADMIN ACCOUNT ALREADY EXISTS")
+            print("=" * 65)
+            print(f"Email    : {ADMIN_EMAIL}")
+            print("Password : Existing password retained")
+            print("Status   : Active")
+            print("=" * 65)
+            print()
+
+
+        db.commit()
+
+        print(
+            f"[DATABASE] Ready: {DATABASE_PATH}"
+        )
+
+    except Exception as error:
+
+        db.rollback()
 
         print()
-        print("=" * 70)
-        print("NOVERA LOGO NOT FOUND")
-        print("=" * 70)
-
-        print(
-            f"Expected logo:"
-        )
-
-        print(
-            LOGO_PATH
-        )
-
-        print(
-            f"Assets directory:"
-        )
-
-        print(
-            ASSETS_DIR
-        )
-
-        print(
-            f"Assets directory exists:"
-        )
-
-        print(
-            ASSETS_DIR.exists()
-        )
-
-        print(
-            f"Logo exists:"
-        )
-
-        print(
-            LOGO_PATH.exists()
-        )
-
-        print("=" * 70)
+        print("[DATABASE INITIALIZATION ERROR]")
+        print(error)
         print()
 
-        return (
-            "Novera logo not found.",
-            404
-        )
+        raise
 
-    return send_from_directory(
-        str(ASSETS_DIR),
-        LOGO_FILENAME
-        if "LOGO_FILENAME" in globals()
-        else "logo.jpg"
-    )
-
-
-# ============================================================
-# ASSETS ROUTE
-# ============================================================
-
-@app.route("/assets/<path:filename>")
-def assets(filename):
-
-    file_path = ASSETS_DIR / filename
-
-    if (
-        not file_path.exists()
-        or not file_path.is_file()
-    ):
-
-        abort(404)
-
-    return send_from_directory(
-        str(ASSETS_DIR),
-        filename
-    )
-
-
-# ============================================================
-# PUBLIC WEBSITE
-# ============================================================
-
-@app.route("/")
-def index():
-
-    index_file = ASSETS_DIR / "index.html"
-
-    if index_file.exists():
-
-        return send_from_directory(
-            str(ASSETS_DIR),
-            "index.html"
-        )
-
-    return render_template(
-        "index.html"
-    )
-
-
-# ============================================================
-# PUBLIC WEBSITE FILES
-# ============================================================
-
-@app.route("/<path:filename>")
-def public_files(filename):
-
-    blocked = (
-        "staff/",
-        "admin/",
-        "md/",
-        "api/"
-    )
-
-    if filename.startswith(blocked):
-
-        abort(404)
-
-    file_path = ASSETS_DIR / filename
-
-    if (
-        file_path.exists()
-        and file_path.is_file()
-    ):
-
-        return send_from_directory(
-            str(ASSETS_DIR),
-            filename
-        )
-
-    abort(404)
-
-
-# ============================================================
-# STAFF ID GENERATOR
-# ============================================================
-
-def generate_staff_id():
-
-    year = datetime.now().year
-
-    db = get_db()
-
-    rows = db.execute(
-        """
-        SELECT staff_id
-        FROM staff
-        WHERE staff_id LIKE ?
-        ORDER BY id DESC
-        """,
-        (
-            f"NVR-{year}-%",
-        )
-    ).fetchall()
-
-    db.close()
-
-    if not rows:
-
-        number = 1
-
-    else:
-
-        highest = 0
-
-        for row in rows:
-
-            try:
-
-                current = int(
-                    row["staff_id"]
-                    .split("-")[-1]
-                )
-
-                highest = max(
-                    highest,
-                    current
-                )
-
-            except (
-                ValueError,
-                IndexError
-            ):
-
-                continue
-
-        number = highest + 1
-
-    return (
-        f"NVR-{year}-{number:04d}"
-    )
-
-
-# ============================================================
-# CLEAN NAME
-# ============================================================
-
-def clean_name(value):
-
-    value = value.strip().lower()
-
-    return "".join(
-        char
-        for char in value
-        if char.isalnum()
-    )
-
-
-# ============================================================
-# WORK EMAIL GENERATOR
-# ============================================================
-
-def generate_work_email(
-    first_name,
-    last_name
-):
-
-    first = clean_name(
-        first_name
-    )
-
-    last = clean_name(
-        last_name
-    )
-
-    base = (
-        f"{first}.{last}"
-    )
-
-    email = (
-        f"{base}@"
-        f"{COMPANY_EMAIL_DOMAIN}"
-    )
-
-    db = get_db()
-
-    counter = 2
-
-    while db.execute(
-        """
-        SELECT id
-        FROM staff
-        WHERE email = ?
-        """,
-        (email,)
-    ).fetchone():
-
-        email = (
-            f"{base}{counter}@"
-            f"{COMPANY_EMAIL_DOMAIN}"
-        )
-
-        counter += 1
-
-    db.close()
-
-    return email
+    finally:
+        close_db(db)
 
 
 # ============================================================
@@ -716,1648 +822,674 @@ def generate_work_email(
 # ============================================================
 
 def log_activity(
-    actor,
+    actor_type,
+    actor_id,
     action,
-    details
+    description=""
 ):
+
+    db = get_db()
 
     try:
 
-        db = get_db()
-
         db.execute(
             """
-            INSERT INTO activity_logs
-            (
-                actor,
+            INSERT INTO activity_logs (
+                actor_type,
+                actor_id,
                 action,
-                details,
+                description,
                 created_at
             )
-            VALUES (?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?)
             """,
             (
-                actor,
+                actor_type,
+                actor_id,
                 action,
-                details,
-                datetime.now(
-                    timezone.utc
-                ).isoformat()
+                description,
+                utc_now()
             )
         )
 
         db.commit()
-        db.close()
 
-    except Exception as error:
-
-        print(
-            f"Activity log error: {error}"
-        )
+    finally:
+        close_db(db)
 
 
 # ============================================================
-# EMAIL FUNCTION
+# NOTIFICATIONS
+# ============================================================
+
+def create_notification(
+    staff_id,
+    title,
+    message
+):
+
+    db = get_db()
+
+    try:
+
+        db.execute(
+            """
+            INSERT INTO notifications (
+                staff_id,
+                title,
+                message,
+                is_read,
+                created_at
+            )
+            VALUES (?, ?, ?, 0, ?)
+            """,
+            (
+                staff_id,
+                title,
+                message,
+                utc_now()
+            )
+        )
+
+        db.commit()
+
+    finally:
+        close_db(db)
+
+
+# ============================================================
+# EMAIL
 # ============================================================
 
 def send_email(
     recipient,
     subject,
-    body
+    body,
+    reply_to=None
 ):
 
-    print()
-    print("=" * 70)
-    print("NOVERA EMAIL")
-    print("=" * 70)
+    smtp_host = os.getenv(
+        "MAIL_SERVER",
+        ""
+    ).strip()
 
-    print(
-        f"SMTP Host: {SMTP_HOST}"
-    )
-
-    print(
-        f"SMTP Port: {SMTP_PORT}"
-    )
-
-    print(
-        f"SMTP Username: {SMTP_USERNAME}"
-    )
-
-    print(
-        f"Recipient: {recipient}"
-    )
-
-    print(
-        f"Subject: {subject}"
-    )
-
-    if not SMTP_HOST:
-
-        print(
-            "ERROR: SMTP_HOST is empty."
+    smtp_port = int(
+        os.getenv(
+            "MAIL_PORT",
+            "587"
         )
+    )
 
-        return False
+    smtp_username = os.getenv(
+        "MAIL_USERNAME",
+        ""
+    ).strip()
 
-    if not SMTP_USERNAME:
+    smtp_password = os.getenv(
+        "MAIL_PASSWORD",
+        ""
+    )
 
-        print(
-            "ERROR: SMTP_USERNAME is empty."
-        )
+    use_tls = (
+        os.getenv(
+            "MAIL_USE_TLS",
+            "true"
+        ).lower() == "true"
+    )
 
-        return False
+    if not all([
+        smtp_host,
+        smtp_username,
+        smtp_password,
+        recipient,
+    ]):
+        return False, "SMTP is not configured."
 
-    if not SMTP_PASSWORD:
+    msg = EmailMessage()
 
-        print(
-            "ERROR: SMTP_PASSWORD is empty."
-        )
+    msg["Subject"] = subject
+    msg["From"] = smtp_username
+    msg["To"] = recipient
 
-        return False
+    if reply_to:
+        msg["Reply-To"] = reply_to
 
-    if not recipient:
-
-        print(
-            "ERROR: Recipient is empty."
-        )
-
-        return False
+    msg.set_content(body)
 
     try:
 
-        message = EmailMessage()
-
-        message["From"] = MAIL_FROM
-
-        message["To"] = recipient
-
-        message["Subject"] = subject
-
-        message.set_content(body)
-
         with smtplib.SMTP(
-            SMTP_HOST,
-            SMTP_PORT,
-            timeout=30
-        ) as server:
+            smtp_host,
+            smtp_port,
+            timeout=20
+        ) as smtp:
 
-            server.ehlo()
+            if use_tls:
+                smtp.starttls()
 
-            if SMTP_USE_TLS:
-
-                server.starttls()
-
-                server.ehlo()
-
-            server.login(
-                SMTP_USERNAME,
-                SMTP_PASSWORD
+            smtp.login(
+                smtp_username,
+                smtp_password
             )
 
-            server.send_message(
-                message
-            )
+            smtp.send_message(msg)
 
-        print(
-            "EMAIL SENT SUCCESSFULLY"
-        )
-
-        print("=" * 70)
-
-        return True
+        return True, None
 
     except Exception as error:
 
-        print(
-            "EMAIL ERROR:"
+        app.logger.exception(
+            "Email sending failed"
         )
 
-        print(
-            str(error)
-        )
-
-        print("=" * 70)
-
-        return False
+        return False, str(error)
 
 
-# ============================================================
-# REGISTRATION EMAIL
-# ============================================================
-
-def send_registration_email(
-    first_name,
-    staff_id,
-    email
+def send_consultation_email(
+    consultation
 ):
 
-    subject = (
-        f"{COMPANY_NAME} - "
-        "Staff Registration"
-    )
-
     body = f"""
-Dear {first_name},
-
-Your staff registration with
-{COMPANY_NAME} has been received.
-
-Staff ID:
-{staff_id}
-
-Official Work Email:
-{email}
-
-Your account is currently pending
-administrator approval.
-
-Regards,
-
 {COMPANY_NAME}
-Staff Administration
-"""
-
-    return send_email(
-        email,
-        subject,
-        body
-    )
-
-
-# ============================================================
-# APPROVAL EMAIL
-# ============================================================
-
-def send_approval_email(
-    first_name,
-    staff_id,
-    email
-):
-
-    subject = (
-        f"{COMPANY_NAME} - "
-        "Staff Account Approved"
-    )
-
-    body = f"""
-Dear {first_name},
-
-Your {COMPANY_NAME} staff account
-has been approved.
-
-Staff ID:
-{staff_id}
-
-Official Work Email:
-{email}
-
-You can now access the Novera
-Staff Portal.
-
-Regards,
-
-{COMPANY_NAME}
-Staff Administration
-"""
-
-    return send_email(
-        email,
-        subject,
-        body
-    )
-
-
-# ============================================================
-# CONSULTATION NOTIFICATION
-# ============================================================
-
-def send_consultation_notification(
-    consultation_id,
-    name,
-    email,
-    phone,
-    company,
-    service,
-    message
-):
-
-    body = f"""
-NEW NOVERA CONSULTATION REQUEST
-================================
+New Consultation Request
 
 Consultation ID:
-#{consultation_id}
+#{consultation["id"]}
 
-Name:
-{name}
+Customer:
+{consultation["name"]}
 
 Email:
-{email or 'Not provided'}
+{consultation["email"] or "Not provided"}
 
 Phone:
-{phone or 'Not provided'}
+{consultation["phone"] or "Not provided"}
 
 Company:
-{company or 'Not provided'}
+{consultation["company"] or "Not provided"}
 
 Service:
-{service}
+{consultation["service"]}
+
+Language:
+{consultation["language"] or "en"}
 
 Message:
-{message or 'No message provided'}
+{consultation["message"] or "No additional details provided."}
 
-================================
-
-This consultation has been added
-to the Novera Consultation Management Portal.
-
-{COMPANY_NAME}
+Received:
+{consultation["created_at"]}
 """
 
     return send_email(
-        CONSULTATION_EMAIL,
-        (
-            f"New Consultation Request "
-            f"#{consultation_id} - {service}"
-        ),
-        body
+        COMPANY_EMAIL,
+        f"New Consultation Request - {consultation['service']}",
+        body,
+        consultation["email"] or None
     )
 
-
-# ============================================================
-# ASSIGNMENT EMAIL
-# ============================================================
 
 def send_assignment_email(
     staff,
     consultation
 ):
 
-    subject = (
-        f"{COMPANY_NAME} - "
-        f"Consultation #{consultation['id']} "
-        "Assigned"
-    )
+    if not staff["email"]:
+        return False, "Staff member has no email address."
 
     body = f"""
-Dear {staff['first_name']},
+{COMPANY_NAME}
 
-A consultation request has been
-assigned to you.
-
-================================
-CONSULTATION DETAILS
-================================
+A consultation has been assigned to you.
 
 Consultation ID:
-#{consultation['id']}
+#{consultation["id"]}
 
-Client:
-{consultation['name']}
-
-Email:
-{consultation['email'] or 'Not provided'}
+Customer:
+{consultation["name"]}
 
 Phone:
-{consultation['phone'] or 'Not provided'}
+{consultation["phone"] or "Not provided"}
 
-Company:
-{consultation['company'] or 'Not provided'}
+Email:
+{consultation["email"] or "Not provided"}
 
 Service:
-{consultation['service']}
+{consultation["service"]}
 
 Message:
-{consultation['message'] or 'No message provided'}
-
-================================
-
-Please log in to the Novera Staff Portal
-to review this consultation.
-
-Regards,
-
-{COMPANY_NAME}
+{consultation["message"] or "No additional details provided."}
 """
 
     return send_email(
         staff["email"],
-        subject,
-        body
+        f"Consultation #{consultation['id']} Assigned",
+        body,
+        consultation["email"] or None
     )
 
 
 # ============================================================
-# STAFF AUTH
+# TRAINING APPLICATION EMAIL
 # ============================================================
 
-def staff_required(function):
+def send_training_application_email(
+    application
+):
 
-    @wraps(function)
-    def wrapper(*args, **kwargs):
+    body = f"""
+{COMPANY_NAME}
+New Training Program Application
 
-        if not session.get("staff_id"):
+Application ID:
+{application["application_id"]}
 
-            flash(
-                "Please log in to access the staff portal.",
-                "warning"
+Applicant:
+{application["full_name"]}
+
+Email:
+{application["email"]}
+
+Phone:
+{application["phone"]}
+
+Training Program:
+{application["program"]}
+
+Educational / Professional Background:
+{application["education"] or "Not provided"}
+
+Company / Organization:
+{application["company"] or "Not provided"}
+
+Previous Experience:
+{application["experience"] or "Not provided"}
+
+Why the applicant wants to join:
+{application["motivation"]}
+
+Additional Information:
+{application["message"] or "Not provided"}
+
+Status:
+{application["status"]}
+
+Submitted:
+{application["created_at"]}
+"""
+
+    return send_email(
+        COMPANY_EMAIL,
+        (
+            "New Training Application - "
+            f"{application['application_id']}"
+        ),
+        body,
+        application["email"]
+    )
+
+
+# ============================================================
+# STAFF EMAIL
+# ============================================================
+
+def generate_staff_email(
+    first_name,
+    last_name,
+    staff_id
+):
+
+    if not STAFF_EMAIL_DOMAIN:
+        return None
+
+    first = "".join(
+        character
+        for character in first_name.lower()
+        if character.isalnum()
+    )
+
+    last = "".join(
+        character
+        for character in last_name.lower()
+        if character.isalnum()
+    )
+
+    if not first or not last:
+        return None
+
+    return (
+        f"{first}.{last}.{staff_id.lower()}"
+        f"@{STAFF_EMAIL_DOMAIN}"
+    )
+
+
+# ============================================================
+# STAFF ID
+# ============================================================
+
+def generate_staff_id(db):
+
+    while True:
+
+        staff_id = (
+            "NVR-"
+            + str(
+                secrets.randbelow(
+                    900000
+                ) + 100000
             )
-
-            return redirect(
-                url_for("staff_login")
-            )
-
-        return function(
-            *args,
-            **kwargs
         )
 
-    return wrapper
+        exists = db.execute(
+            """
+            SELECT id
+            FROM staff
+            WHERE staff_id = ?
+            """,
+            (staff_id,)
+        ).fetchone()
+
+        if not exists:
+            return staff_id
 
 
 # ============================================================
-# ADMIN AUTH
+# CONTEXT
 # ============================================================
 
-def admin_required(function):
+@app.context_processor
+def inject_company_context():
 
-    @wraps(function)
-    def wrapper(*args, **kwargs):
+    return {
+        "company_name": COMPANY_NAME,
+        "company_tagline": COMPANY_TAGLINE,
+        "logo_url": url_for("logo"),
+    }
 
-        if not session.get(
-            "admin_logged_in"
-        ):
+
+# ============================================================
+# ADMIN AUTHENTICATION
+# ============================================================
+
+def current_admin():
+
+    admin_id = session.get(
+        "admin_id"
+    )
+
+    if not admin_id:
+        return None
+
+    db = get_db()
+
+    try:
+
+        admin = db.execute(
+            """
+            SELECT *
+            FROM admins
+            WHERE id = ?
+              AND status = 'Active'
+            LIMIT 1
+            """,
+            (admin_id,)
+        ).fetchone()
+
+        return admin
+
+    finally:
+        close_db(db)
+
+
+def admin_required(view):
+
+    @wraps(view)
+    def wrapped(*args, **kwargs):
+
+        admin = current_admin()
+
+        if not admin:
 
             flash(
-                "Administrator login required.",
-                "warning"
+                "Please log in as administrator.",
+                "danger"
             )
 
             return redirect(
                 url_for("admin_login")
             )
 
-        return function(
+        return view(
             *args,
             **kwargs
         )
 
-    return wrapper
+    return wrapped
 
 
 # ============================================================
-# MD AUTH
+# STAFF AUTHENTICATION
 # ============================================================
 
-def md_required(function):
+def current_staff():
 
-    @wraps(function)
-    def wrapper(*args, **kwargs):
+    staff_db_id = session.get(
+        "staff_db_id"
+    )
 
-        if not session.get(
-            "md_logged_in"
-        ):
+    if not staff_db_id:
+        return None
+
+    db = get_db()
+
+    try:
+
+        staff = db.execute(
+            """
+            SELECT *
+            FROM staff
+            WHERE id = ?
+            LIMIT 1
+            """,
+            (staff_db_id,)
+        ).fetchone()
+
+        return staff
+
+    finally:
+        close_db(db)
+
+
+def staff_required(view):
+
+    @wraps(view)
+    def wrapped(*args, **kwargs):
+
+        staff = current_staff()
+
+        if not staff:
 
             flash(
-                "MD login required.",
-                "warning"
+                "Please log in as staff.",
+                "danger"
+            )
+
+            return redirect(
+                url_for("staff_login")
+            )
+
+        if staff["status"] != "Active":
+
+            session.clear()
+
+            flash(
+                "Your staff account is not active.",
+                "danger"
+            )
+
+            return redirect(
+                url_for("staff_login")
+            )
+
+        return view(
+            *args,
+            **kwargs
+        )
+
+    return wrapped
+
+
+# ============================================================
+# MD AUTHENTICATION
+# ============================================================
+
+def current_md():
+
+    md_id = session.get(
+        "md_id"
+    )
+
+    if not md_id:
+        return None
+
+    db = get_db()
+
+    try:
+
+        admin = db.execute(
+            """
+            SELECT *
+            FROM admins
+            WHERE id = ?
+              AND status = 'Active'
+            LIMIT 1
+            """,
+            (md_id,)
+        ).fetchone()
+
+        return admin
+
+    finally:
+        close_db(db)
+
+
+def md_required(view):
+
+    @wraps(view)
+    def wrapped(*args, **kwargs):
+
+        md = current_md()
+
+        if not md:
+
+            flash(
+                "Please log in as management.",
+                "danger"
             )
 
             return redirect(
                 url_for("md_login")
             )
 
-        return function(
+        return view(
             *args,
             **kwargs
         )
 
-    return wrapper
+    return wrapped
 
 
 # ============================================================
-# STAFF REGISTRATION
+# PUBLIC WEBSITE
 # ============================================================
 
-@app.route(
-    "/staff/register",
-    methods=["GET", "POST"]
-)
-def staff_register():
+@app.route("/")
+def home():
 
-    if request.method == "GET":
-
-        return render_template(
-            "staff_register.html"
+    if not INDEX_FILE.exists():
+        return (
+            "Novera website index.html not found.",
+            404
         )
 
-    first_name = request.form.get(
-        "first_name",
-        ""
-    ).strip()
-
-    last_name = request.form.get(
-        "last_name",
-        ""
-    ).strip()
-
-    phone = request.form.get(
-        "phone",
-        ""
-    ).strip()
-
-    department = request.form.get(
-        "department",
-        ""
-    ).strip()
-
-    position = request.form.get(
-        "position",
-        ""
-    ).strip()
-
-    password = request.form.get(
-        "password",
-        ""
-    )
-
-    confirm_password = request.form.get(
-        "confirm_password",
-        ""
-    )
-
-    if not all(
-        [
-            first_name,
-            last_name,
-            phone,
-            department,
-            position,
-            password,
-            confirm_password
-        ]
-    ):
-
-        flash(
-            "Please complete all required fields.",
-            "danger"
-        )
-
-        return render_template(
-            "staff_register.html"
-        )
-
-    if len(password) < 8:
-
-        flash(
-            "Password must contain at least 8 characters.",
-            "danger"
-        )
-
-        return render_template(
-            "staff_register.html"
-        )
-
-    if password != confirm_password:
-
-        flash(
-            "Passwords do not match.",
-            "danger"
-        )
-
-        return render_template(
-            "staff_register.html"
-        )
-
-    staff_id = generate_staff_id()
-
-    email = generate_work_email(
-        first_name,
-        last_name
-    )
-
-    created_at = datetime.now(
-        timezone.utc
-    ).isoformat()
-
-    db = get_db()
-
-    try:
-
-        db.execute(
-            """
-            INSERT INTO staff
-            (
-                staff_id,
-                first_name,
-                last_name,
-                email,
-                phone,
-                department,
-                position,
-                password_hash,
-                status,
-                created_at
-            )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            """,
-            (
-                staff_id,
-                first_name,
-                last_name,
-                email,
-                phone,
-                department,
-                position,
-                generate_password_hash(
-                    password
-                ),
-                "Pending",
-                created_at
-            )
-        )
-
-        db.commit()
-
-    except sqlite3.IntegrityError:
-
-        db.rollback()
-        db.close()
-
-        flash(
-            "Unable to create this account. Please try again.",
-            "danger"
-        )
-
-        return redirect(
-            url_for("staff_register")
-        )
-
-    db.close()
-
-    send_registration_email(
-        first_name,
-        staff_id,
-        email
-    )
-
-    log_activity(
-        "Public Registration",
-        "Staff Registration",
-        f"{staff_id} registered"
-    )
-
-    return render_template(
-        "registration_success.html",
-        staff={
-            "staff_id": staff_id,
-            "email": email
-        }
+    return send_file(
+        INDEX_FILE
     )
 
 
-# ============================================================
-# STAFF LOGIN
-# ============================================================
+@app.route("/index")
+def index():
 
-@app.route(
-    "/staff/login",
-    methods=["GET", "POST"]
-)
-def staff_login():
+    return home()
 
-    if session.get("staff_id"):
 
-        return redirect(
-            url_for("staff_dashboard")
-        )
+@app.route("/assets/<path:filename>")
+def assets(filename):
 
-    if request.method == "GET":
-
-        return render_template(
-            "staff_login.html"
-        )
-
-    login = request.form.get(
-        "login",
-        ""
-    ).strip().lower()
-
-    password = request.form.get(
-        "password",
-        ""
-    )
-
-    db = get_db()
-
-    staff = db.execute(
-        """
-        SELECT *
-        FROM staff
-        WHERE LOWER(staff_id) = ?
-        OR LOWER(email) = ?
-        LIMIT 1
-        """,
-        (
-            login,
-            login
-        )
-    ).fetchone()
-
-    if staff is None:
-
-        db.close()
-
-        flash(
-            "Invalid Staff ID/email or password.",
-            "danger"
-        )
-
-        return render_template(
-            "staff_login.html"
-        )
-
-    if not check_password_hash(
-        staff["password_hash"],
-        password
-    ):
-
-        db.close()
-
-        flash(
-            "Invalid Staff ID/email or password.",
-            "danger"
-        )
-
-        return render_template(
-            "staff_login.html"
-        )
-
-    if staff["status"] == "Pending":
-
-        db.close()
-
-        flash(
-            "Your account is awaiting administrator approval.",
-            "warning"
-        )
-
-        return render_template(
-            "staff_login.html"
-        )
-
-    if staff["status"] == "Rejected":
-
-        db.close()
-
-        flash(
-            "Your staff registration was rejected.",
-            "danger"
-        )
-
-        return render_template(
-            "staff_login.html"
-        )
-
-    if staff["status"] == "Disabled":
-
-        db.close()
-
-        flash(
-            "Your staff account has been disabled.",
-            "danger"
-        )
-
-        return render_template(
-            "staff_login.html"
-        )
-
-    db.execute(
-        """
-        UPDATE staff
-        SET last_login = ?
-        WHERE id = ?
-        """,
-        (
-            datetime.now(
-                timezone.utc
-            ).isoformat(),
-            staff["id"]
-        )
-    )
-
-    db.commit()
-
-    db.close()
-
-    session.clear()
-
-    # IMPORTANT:
-    # The session stores the permanent NVR staff ID,
-    # not the temporary SQLite database ID.
-    session["staff_id"] = staff["staff_id"]
-
-    return redirect(
-        url_for("staff_dashboard")
+    return send_from_directory(
+        ASSETS_DIR,
+        filename
     )
 
 
-# ============================================================
-# STAFF DASHBOARD
-# ============================================================
+@app.route("/logo")
+def logo():
 
-@app.route("/staff/dashboard")
-@staff_required
-def staff_dashboard():
-
-    db = get_db()
-
-    # ========================================================
-    # GET LOGGED-IN STAFF
-    # ========================================================
-
-    staff = db.execute(
-        """
-        SELECT *
-        FROM staff
-        WHERE staff_id = ?
-        """,
-        (
-            session["staff_id"],
-        )
-    ).fetchone()
-
-    if staff is None:
-
-        db.close()
-
-        session.clear()
-
-        flash(
-            "Staff account could not be found.",
-            "danger"
-        )
-
-        return redirect(
-            url_for("staff_login")
-        )
-
-    # ========================================================
-    # GET ASSIGNED CONSULTATIONS
-    # ========================================================
-
-    assigned_requests = db.execute(
-        """
-        SELECT
-            c.*,
-
-            s.staff_id AS assigned_staff_id,
-
-            s.first_name AS assigned_first_name,
-
-            s.last_name AS assigned_last_name,
-
-            s.email AS assigned_staff_email,
-
-            s.department AS assigned_department,
-
-            s.position AS assigned_position
-
-        FROM consultations c
-
-        LEFT JOIN staff s
-            ON s.id = c.assigned_to
-
-        WHERE c.assigned_to = ?
-
-        ORDER BY c.id DESC
-        """,
-        (
-            staff["id"],
-        )
-    ).fetchall()
-
-    # ========================================================
-    # STATISTICS
-    # ========================================================
-
-    assigned_count = len(assigned_requests)
-
-    in_progress_count = db.execute(
-        """
-        SELECT COUNT(*)
-        FROM consultations
-        WHERE assigned_to = ?
-        AND LOWER(REPLACE(status, '_', ' ')) = 'in progress'
-        """,
-        (
-            staff["id"],
-        )
-    ).fetchone()[0]
-
-    completed_count = db.execute(
-        """
-        SELECT COUNT(*)
-        FROM consultations
-        WHERE assigned_to = ?
-        AND LOWER(status) = 'completed'
-        """,
-        (
-            staff["id"],
-        )
-    ).fetchone()[0]
-
-    pending_count = db.execute(
-        """
-        SELECT COUNT(*)
-        FROM consultations
-        WHERE assigned_to = ?
-        AND (
-            LOWER(status) = 'new'
-            OR LOWER(status) = 'pending'
-        )
-        """,
-        (
-            staff["id"],
-        )
-    ).fetchone()[0]
-
-    db.close()
-
-    # ========================================================
-    # DASHBOARD
-    # ========================================================
-
-    return render_template(
-        "staff_dashboard.html",
-
-        staff=staff,
-
-        assigned_requests=assigned_requests,
-
-        assigned_count=assigned_count,
-
-        pending_count=pending_count,
-
-        in_progress_count=in_progress_count,
-
-        completed_count=completed_count
-    )
-
-# ============================================================
-# STAFF LOGOUT
-# ============================================================
-
-@app.route("/staff/logout")
-def staff_logout():
-
-    session.pop(
-        "staff_id",
-        None
-    )
-
-    flash(
-        "You have been logged out.",
-        "success"
-    )
-
-    return redirect(
-        url_for("staff_login")
-    )
-
-
-# ============================================================
-# ADMIN LOGIN
-# ============================================================
-
-@app.route(
-    "/admin/login",
-    methods=["GET", "POST"]
-)
-def admin_login():
-
-    if session.get(
-        "admin_logged_in"
-    ):
-
-        return redirect(
-            url_for("admin_dashboard")
-        )
-
-    if request.method == "GET":
-
-        return render_template(
-            "admin_login.html"
-        )
-
-    email = request.form.get(
-        "email",
-        ""
-    ).strip().lower()
-
-    password = request.form.get(
-        "password",
-        ""
-    )
-
-    if (
-        email == ADMIN_EMAIL.lower()
-        and password == ADMIN_PASSWORD
-    ):
-
-        session.clear()
-
-        session["admin_logged_in"] = True
-
-        session["admin_email"] = ADMIN_EMAIL
-
-        log_activity(
-            ADMIN_EMAIL,
-            "Admin Login",
-            "Administrator logged in"
-        )
-
-        return redirect(
-            url_for("admin_dashboard")
-        )
-
-    flash(
-        "Invalid administrator credentials.",
-        "danger"
-    )
-
-    return render_template(
-        "admin_login.html"
-    )
-
-
-# ============================================================
-# ADMIN DASHBOARD
-# ============================================================
-
-@app.route("/admin/dashboard")
-@admin_required
-def admin_dashboard():
-
-    db = get_db()
-
-    total_staff = db.execute(
-        "SELECT COUNT(*) FROM staff"
-    ).fetchone()[0]
-
-    active_staff = db.execute(
-        """
-        SELECT COUNT(*)
-        FROM staff
-        WHERE status = 'Active'
-        """
-    ).fetchone()[0]
-
-    pending_staff = db.execute(
-        """
-        SELECT COUNT(*)
-        FROM staff
-        WHERE status = 'Pending'
-        """
-    ).fetchone()[0]
-
-    disabled_staff = db.execute(
-        """
-        SELECT COUNT(*)
-        FROM staff
-        WHERE status = 'Disabled'
-        """
-    ).fetchone()[0]
-
-    rejected_staff = db.execute(
-        """
-        SELECT COUNT(*)
-        FROM staff
-        WHERE status = 'Rejected'
-        """
-    ).fetchone()[0]
-
-    total_consultations = db.execute(
-        "SELECT COUNT(*) FROM consultations"
-    ).fetchone()[0]
-
-    new_consultations = db.execute(
-        """
-        SELECT COUNT(*)
-        FROM consultations
-        WHERE status = 'New'
-        """
-    ).fetchone()[0]
-
-    in_progress_consultations = db.execute(
-        """
-        SELECT COUNT(*)
-        FROM consultations
-        WHERE status = 'In Progress'
-        """
-    ).fetchone()[0]
-
-    closed_consultations = db.execute(
-        """
-        SELECT COUNT(*)
-        FROM consultations
-        WHERE status = 'Closed'
-        """
-    ).fetchone()[0]
-
-    unassigned_consultations = db.execute(
-        """
-        SELECT COUNT(*)
-        FROM consultations
-        WHERE assigned_staff_id IS NULL
-        """
-    ).fetchone()[0]
-
-    assigned_consultations = db.execute(
-        """
-        SELECT COUNT(*)
-        FROM consultations
-        WHERE assigned_staff_id IS NOT NULL
-        """
-    ).fetchone()[0]
-
-    recent_consultations = db.execute(
-        """
-        SELECT
-            consultations.*,
-
-            staff.first_name
-                AS assigned_first_name,
-
-            staff.last_name
-                AS assigned_last_name,
-
-            staff.staff_id
-                AS assigned_staff_code
-
-        FROM consultations
-
-        LEFT JOIN staff
-            ON consultations.assigned_staff_id = staff.id
-
-        ORDER BY consultations.id DESC
-
-        LIMIT 10
-        """
-    ).fetchall()
-
-    recent_staff = db.execute(
-        """
-        SELECT *
-        FROM staff
-        ORDER BY id DESC
-        LIMIT 10
-        """
-    ).fetchall()
-
-    db.close()
-
-    return render_template(
-        "admin_dashboard.html",
-
-        total_staff=total_staff,
-
-        active_staff=active_staff,
-
-        pending_staff=pending_staff,
-
-        disabled_staff=disabled_staff,
-
-        rejected_staff=rejected_staff,
-
-        total_consultations=
-            total_consultations,
-
-        new_consultations=
-            new_consultations,
-
-        in_progress_consultations=
-            in_progress_consultations,
-
-        closed_consultations=
-            closed_consultations,
-
-        unassigned_consultations=
-            unassigned_consultations,
-
-        assigned_consultations=
-            assigned_consultations,
-
-        recent_consultations=
-            recent_consultations,
-
-        recent_staff=
-            recent_staff
-    )
-
-
-# ============================================================
-# ADMIN STAFF
-# ============================================================
-
-@app.route("/admin/staff")
-@admin_required
-def admin_staff():
-
-    db = get_db()
-
-    staff = db.execute(
-        """
-        SELECT *
-        FROM staff
-        ORDER BY id DESC
-        """
-    ).fetchall()
-
-    db.close()
-
-    return render_template(
-        "admin_staff.html",
-        staff=staff
-    )
-
-
-# ============================================================
-# ADMIN VIEW STAFF
-# ============================================================
-
-@app.route(
-    "/admin/staff/<int:staff_db_id>"
-)
-@admin_required
-def admin_view_staff(
-    staff_db_id
-):
-
-    db = get_db()
-
-    staff = db.execute(
-        """
-        SELECT *
-        FROM staff
-        WHERE id = ?
-        """,
-        (
-            staff_db_id,
-        )
-    ).fetchone()
-
-    db.close()
-
-    if staff is None:
-
+    if not LOGO_PATH.exists():
         abort(404)
 
-    return render_template(
-        "admin_view_staff.html",
-        staff=staff
+    return send_file(
+        LOGO_PATH,
+        mimetype="image/jpeg"
     )
 
 
-# ============================================================
-# ADMIN STAFF ACTION
-# ============================================================
+@app.route("/company-profile")
+def company_profile():
 
-@app.route(
-    "/admin/staff/<int:staff_db_id>/<action>",
-    methods=["POST"]
-)
-@admin_required
-def admin_staff_action(
-    staff_db_id,
-    action
-):
-
-    allowed_actions = (
-        "approve",
-        "reject",
-        "disable",
-        "activate"
+    pdf_path = (
+        ASSETS_DIR
+        / "documents"
+        / "Company Profile Presentation .pdf"
     )
 
-    if action not in allowed_actions:
-
-        abort(400)
-
-    db = get_db()
-
-    staff = db.execute(
-        """
-        SELECT *
-        FROM staff
-        WHERE id = ?
-        """,
-        (
-            staff_db_id,
-        )
-    ).fetchone()
-
-    if staff is None:
-
-        db.close()
-
+    if not pdf_path.exists():
         abort(404)
 
-    if action == "approve":
-
-        db.execute(
-            """
-            UPDATE staff
-            SET status = 'Active',
-                approved_at = ?
-            WHERE id = ?
-            """,
-            (
-                datetime.now(
-                    timezone.utc
-                ).isoformat(),
-                staff_db_id
-            )
-        )
-
-        message = (
-            f"{staff['first_name']} "
-            f"{staff['last_name']} "
-            "has been approved."
-        )
-
-        category = "success"
-
-        send_approval_email(
-            staff["first_name"],
-            staff["staff_id"],
-            staff["email"]
-        )
-
-    elif action == "reject":
-
-        db.execute(
-            """
-            UPDATE staff
-            SET status = 'Rejected'
-            WHERE id = ?
-            """,
-            (
-                staff_db_id,
-            )
-        )
-
-        message = (
-            f"{staff['first_name']} "
-            f"{staff['last_name']} "
-            "has been rejected."
-        )
-
-        category = "warning"
-
-    elif action == "disable":
-
-        db.execute(
-            """
-            UPDATE staff
-            SET status = 'Disabled'
-            WHERE id = ?
-            """,
-            (
-                staff_db_id,
-            )
-        )
-
-        message = (
-            "Staff account has been disabled."
-        )
-
-        category = "warning"
-
-    else:
-
-        db.execute(
-            """
-            UPDATE staff
-            SET status = 'Active'
-            WHERE id = ?
-            """,
-            (
-                staff_db_id,
-            )
-        )
-
-        message = (
-            "Staff account has been activated."
-        )
-
-        category = "success"
-
-    db.commit()
-
-    db.close()
-
-    log_activity(
-        ADMIN_EMAIL,
-        f"Staff {action}",
-        f"Staff database ID: {staff_db_id}"
-    )
-
-    flash(
-        message,
-        category
-    )
-
-    return redirect(
-        url_for(
-            "admin_view_staff",
-            staff_db_id=staff_db_id
-        )
+    return send_file(
+        pdf_path,
+        mimetype="application/pdf",
+        as_attachment=False
     )
 
 
 # ============================================================
-# ADMIN CONSULTATION MANAGEMENT
-# ============================================================
-
-def ensure_consultation_columns():
-    """
-    Safely adds consultation management columns to an existing
-    Novera database without deleting existing consultation data.
-    """
-
-    db = get_db()
-
-    columns = {
-        row["name"]
-        for row in db.execute(
-            "PRAGMA table_info(consultations)"
-        ).fetchall()
-    }
-
-    # Staff assignment
-    if "assigned_to" not in columns:
-        db.execute(
-            """
-            ALTER TABLE consultations
-            ADD COLUMN assigned_to INTEGER
-            """
-        )
-
-    # Last update timestamp
-    if "updated_at" not in columns:
-        db.execute(
-            """
-            ALTER TABLE consultations
-            ADD COLUMN updated_at TEXT
-            """
-        )
-
-    db.commit()
-    db.close()
-
-
-def get_consultation(consultation_id):
-    """
-    Retrieve one consultation together with the assigned staff member.
-    """
-
-    ensure_consultation_columns()
-
-    db = get_db()
-
-    consultation = db.execute(
-        """
-        SELECT
-            c.*,
-
-            s.id AS assigned_staff_id,
-            s.staff_id AS assigned_staff_code,
-            s.first_name AS assigned_first_name,
-            s.last_name AS assigned_last_name,
-            s.email AS assigned_staff_email,
-            s.phone AS assigned_staff_phone,
-            s.department AS assigned_department,
-            s.position AS assigned_position,
-            s.status AS assigned_staff_status
-
-        FROM consultations c
-
-        LEFT JOIN staff s
-            ON s.id = c.assigned_to
-
-        WHERE c.id = ?
-
-        LIMIT 1
-        """,
-        (consultation_id,)
-    ).fetchone()
-
-    db.close()
-
-    return consultation
-
-
-def get_assignable_staff():
-    """
-    Return staff members who can be assigned consultation requests.
-    """
-
-    db = get_db()
-
-    staff = db.execute(
-        """
-        SELECT
-            id,
-            staff_id,
-            first_name,
-            last_name,
-            email,
-            department,
-            position,
-            status
-        FROM staff
-        WHERE status = 'Active'
-        ORDER BY first_name ASC, last_name ASC
-        """
-    ).fetchall()
-
-    db.close()
-
-    return staff
-
-
-# ============================================================
-# ADMIN CONSULTATIONS LIST
-# ============================================================
-
-@app.route("/admin/consultations")
-@admin_required
-def admin_consultations():
-
-    ensure_consultation_columns()
-
-    db = get_db()
-
-    consultations = db.execute(
-        """
-        SELECT
-            c.*,
-
-            s.first_name AS assigned_first_name,
-            s.last_name AS assigned_last_name,
-            s.staff_id AS assigned_staff_code,
-            s.department AS assigned_department
-
-        FROM consultations c
-
-        LEFT JOIN staff s
-            ON s.id = c.assigned_to
-
-        ORDER BY c.id DESC
-        """
-    ).fetchall()
-
-    # Statistics
-    total_consultations = db.execute(
-        """
-        SELECT COUNT(*)
-        FROM consultations
-        """
-    ).fetchone()[0]
-
-    new_consultations = db.execute(
-        """
-        SELECT COUNT(*)
-        FROM consultations
-        WHERE LOWER(status) = 'new'
-        """
-    ).fetchone()[0]
-
-    in_progress_consultations = db.execute(
-        """
-        SELECT COUNT(*)
-        FROM consultations
-        WHERE LOWER(status) IN (
-            'in progress',
-            'processing'
-        )
-        """
-    ).fetchone()[0]
-
-    completed_consultations = db.execute(
-        """
-        SELECT COUNT(*)
-        FROM consultations
-        WHERE LOWER(status) IN (
-            'completed',
-            'closed'
-        )
-        """
-    ).fetchone()[0]
-
-    db.close()
-
-    return render_template(
-        "admin_consultations.html",
-        consultations=consultations,
-        total_consultations=total_consultations,
-        new_consultations=new_consultations,
-        in_progress_consultations=in_progress_consultations,
-        completed_consultations=completed_consultations
-    )
-
-
-# ============================================================
-# ADMIN VIEW CONSULTATION
+# TRAINING PROGRAM APPLICATION
 # ============================================================
 
 @app.route(
-    "/admin/consultation/<int:consultation_id>"
+    "/training/apply",
+    methods=["GET", "POST"]
 )
-@admin_required
-def admin_view_consultation(consultation_id):
+def training_apply():
 
-    consultation = get_consultation(
-        consultation_id
-    )
+    # --------------------------------------------------------
+    # DISPLAY FORM
+    # --------------------------------------------------------
 
-    if consultation is None:
-        flash(
-            "Consultation request not found.",
-            "danger"
+    if request.method == "GET":
+
+        return render_template(
+            "training_apply.html"
         )
 
-        return redirect(
-            url_for("admin_consultations")
-        )
 
-    staff = get_assignable_staff()
+    # --------------------------------------------------------
+    # READ FORM
+    # --------------------------------------------------------
 
-    return render_template(
-        "admin_view_consultation.html",
-        request=consultation,
-        staff=staff
-    )
-
-
-# ============================================================
-# ADMIN UPDATE CONSULTATION
-# ============================================================
-
-@app.route(
-    "/admin/consultation/<int:consultation_id>/update",
-    methods=["POST"]
-)
-@admin_required
-def update_admin_consultation(
-    consultation_id
-):
-
-    ensure_consultation_columns()
-
-    name = request.form.get(
-        "name",
+    full_name = request.form.get(
+        "full_name",
         ""
     ).strip()
 
@@ -2368,6 +1500,16 @@ def update_admin_consultation(
 
     phone = request.form.get(
         "phone",
+        ""
+    ).strip()
+
+    program = request.form.get(
+        "program",
+        ""
+    ).strip()
+
+    education = request.form.get(
+        "education",
         ""
     ).strip()
 
@@ -2376,8 +1518,13 @@ def update_admin_consultation(
         ""
     ).strip()
 
-    service = request.form.get(
-        "service",
+    experience = request.form.get(
+        "experience",
+        ""
+    ).strip()
+
+    motivation = request.form.get(
+        "motivation",
         ""
     ).strip()
 
@@ -2386,1788 +1533,379 @@ def update_admin_consultation(
         ""
     ).strip()
 
-    status = request.form.get(
-        "status",
-        "New"
-    ).strip()
-
-    allowed_statuses = (
-        "New",
-        "In Progress",
-        "Completed",
-        "Closed",
-        "Cancelled"
-    )
-
-    if status not in allowed_statuses:
-        status = "New"
-
-    if not name:
-        flash(
-            "Client name is required.",
-            "danger"
-        )
-
-        return redirect(
-            url_for(
-                "admin_view_consultation",
-                consultation_id=consultation_id
-            )
-        )
-
-    if not service:
-        flash(
-            "Service is required.",
-            "danger"
-        )
-
-        return redirect(
-            url_for(
-                "admin_view_consultation",
-                consultation_id=consultation_id
-            )
-        )
-
-    db = get_db()
-
-    consultation = db.execute(
-        """
-        SELECT id
-        FROM consultations
-        WHERE id = ?
-        """,
-        (consultation_id,)
-    ).fetchone()
-
-    if consultation is None:
-        db.close()
-
-        flash(
-            "Consultation request not found.",
-            "danger"
-        )
-
-        return redirect(
-            url_for("admin_consultations")
-        )
-
-    updated_at = datetime.now(
-        timezone.utc
-    ).isoformat()
-
-    db.execute(
-        """
-        UPDATE consultations
-
-        SET
-            name = ?,
-            email = ?,
-            phone = ?,
-            company = ?,
-            service = ?,
-            message = ?,
-            status = ?,
-            updated_at = ?
-
-        WHERE id = ?
-        """,
-        (
-            name,
-            email,
-            phone,
-            company,
-            service,
-            message,
-            status,
-            updated_at,
-            consultation_id
-        )
-    )
-
-    db.commit()
-    db.close()
-
-    flash(
-        "Consultation request updated successfully.",
-        "success"
-    )
-
-    return redirect(
-        url_for(
-            "admin_view_consultation",
-            consultation_id=consultation_id
-        )
-    )
-
-
-# ============================================================
-# ADMIN CHANGE CONSULTATION STATUS
-# ============================================================
-
-@app.route(
-    "/admin/consultation/<int:consultation_id>/status",
-    methods=["POST"]
-)
-@admin_required
-def update_consultation_status(
-    consultation_id
-):
-
-    ensure_consultation_columns()
-
-    status = request.form.get(
-        "status",
-        "New"
-    ).strip()
-
-    allowed_statuses = (
-        "New",
-        "In Progress",
-        "Completed",
-        "Closed",
-        "Cancelled"
-    )
-
-    if status not in allowed_statuses:
-        status = "New"
-
-    db = get_db()
-
-    consultation = db.execute(
-        """
-        SELECT id
-        FROM consultations
-        WHERE id = ?
-        """,
-        (consultation_id,)
-    ).fetchone()
-
-    if consultation is None:
-        db.close()
-
-        flash(
-            "Consultation request not found.",
-            "danger"
-        )
-
-        return redirect(
-            url_for("admin_consultations")
-        )
-
-    updated_at = datetime.now(
-        timezone.utc
-    ).isoformat()
-
-    db.execute(
-        """
-        UPDATE consultations
-        SET
-            status = ?,
-            updated_at = ?
-        WHERE id = ?
-        """,
-        (
-            status,
-            updated_at,
-            consultation_id
-        )
-    )
-
-    db.commit()
-    db.close()
-
-    flash(
-        "Consultation status updated.",
-        "success"
-    )
-
-    return redirect(
-        url_for(
-            "admin_view_consultation",
-            consultation_id=consultation_id
-        )
-    )
-
-
-# ============================================================
-# ADMIN ASSIGN CONSULTATION
-# ============================================================
-
-@app.route(
-    "/admin/consultation/<int:consultation_id>/assign",
-    methods=["POST"]
-)
-@admin_required
-def assign_admin_consultation(
-    consultation_id
-):
-
-    ensure_consultation_columns()
-
-    assigned_to = request.form.get(
-        "assigned_to",
+    agreement = request.form.get(
+        "agreement",
         ""
     ).strip()
 
-    if assigned_to:
-        try:
-            assigned_to = int(
-                assigned_to
-            )
-        except ValueError:
-            assigned_to = None
-    else:
-        assigned_to = None
 
-    db = get_db()
+    # --------------------------------------------------------
+    # REQUIRED FIELD VALIDATION
+    # --------------------------------------------------------
 
-    consultation = db.execute(
-        """
-        SELECT *
-        FROM consultations
-        WHERE id = ?
-        """,
-        (consultation_id,)
-    ).fetchone()
-
-    if consultation is None:
-        db.close()
+    if not full_name:
 
         flash(
-            "Consultation request not found.",
+            "Full name is required.",
             "danger"
         )
 
         return redirect(
-            url_for("admin_consultations")
+            url_for("training_apply")
         )
 
-    staff_member = None
 
-    if assigned_to is not None:
-
-        staff_member = db.execute(
-            """
-            SELECT *
-            FROM staff
-            WHERE id = ?
-            AND status = 'Active'
-            """,
-            (assigned_to,)
-        ).fetchone()
-
-        if staff_member is None:
-            db.close()
-
-            flash(
-                "The selected staff member is not active or does not exist.",
-                "danger"
-            )
-
-            return redirect(
-                url_for(
-                    "admin_view_consultation",
-                    consultation_id=consultation_id
-                )
-            )
-
-    updated_at = datetime.now(
-        timezone.utc
-    ).isoformat()
-
-    db.execute(
-        """
-        UPDATE consultations
-        SET
-            assigned_to = ?,
-            updated_at = ?
-        WHERE id = ?
-        """,
-        (
-            assigned_to,
-            updated_at,
-            consultation_id
-        )
-    )
-
-    # Notify assigned staff member
-    if staff_member:
-
-        notification_message = (
-            f"A consultation request has been assigned to you. "
-            f"Request #{consultation_id}: "
-            f"{consultation['service'] or 'Consultation'}."
-        )
-
-        # Create notification table if it does not exist.
-        db.execute(
-            """
-            CREATE TABLE IF NOT EXISTS notifications (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                staff_id INTEGER,
-                title TEXT NOT NULL,
-                message TEXT NOT NULL,
-                read INTEGER NOT NULL DEFAULT 0,
-                created_at TEXT NOT NULL
-            )
-            """
-        )
-
-        db.execute(
-            """
-            INSERT INTO notifications
-            (
-                staff_id,
-                title,
-                message,
-                created_at
-            )
-            VALUES (?, ?, ?, ?)
-            """,
-            (
-                staff_member["id"],
-                "New Consultation Assigned",
-                notification_message,
-                updated_at
-            )
-        )
-
-    db.commit()
-    db.close()
-
-    if staff_member:
+    if not email:
 
         flash(
-            f"Consultation assigned to "
-            f"{staff_member['first_name']} "
-            f"{staff_member['last_name']}.",
-            "success"
-        )
-
-    else:
-
-        flash(
-            "Consultation assignment removed.",
-            "success"
-        )
-
-    return redirect(
-        url_for(
-            "admin_view_consultation",
-            consultation_id=consultation_id
-        )
-    )
-
-
-# ============================================================
-# ADMIN DELETE CONSULTATION
-# ============================================================
-
-@app.route(
-    "/admin/consultation/<int:consultation_id>/delete",
-    methods=["POST"]
-)
-@admin_required
-def delete_admin_consultation(
-    consultation_id
-):
-
-    db = get_db()
-
-    consultation = db.execute(
-        """
-        SELECT *
-        FROM consultations
-        WHERE id = ?
-        """,
-        (consultation_id,)
-    ).fetchone()
-
-    if consultation is None:
-        db.close()
-
-        flash(
-            "Consultation request not found.",
+            "Email address is required.",
             "danger"
         )
 
         return redirect(
-            url_for("admin_consultations")
+            url_for("training_apply")
         )
 
-    db.execute(
-        """
-        DELETE FROM consultations
-        WHERE id = ?
-        """,
-        (consultation_id,)
-    )
 
-    db.commit()
-    db.close()
-
-    flash(
-        f"Consultation request #{consultation_id} "
-        "was deleted successfully.",
-        "success"
-    )
-
-    return redirect(
-        url_for("admin_consultations")
-    )
-
-# ============================================================
-# ADMIN LOGOUT
-# ============================================================
-
-@app.route("/admin/logout")
-def admin_logout():
-
-    session.pop(
-        "admin_logged_in",
-        None
-    )
-
-    session.pop(
-        "admin_email",
-        None
-    )
-
-    flash(
-        "Administrator logged out.",
-        "success"
-    )
-
-    return redirect(
-        url_for("admin_login")
-    )
-
-
-# ============================================================
-# MD REGISTRATION
-# ============================================================
-
-@app.route(
-    "/md/register",
-    methods=["GET", "POST"]
-)
-def md_register():
-
-    db = get_db()
-
-    existing_md = db.execute(
-        """
-        SELECT id
-        FROM md
-        LIMIT 1
-        """
-    ).fetchone()
-
-    db.close()
-
-    if existing_md:
+    if not phone:
 
         flash(
-            "An MD account has already been registered.",
-            "warning"
+            "Phone number is required.",
+            "danger"
         )
 
         return redirect(
-            url_for("md_login")
+            url_for("training_apply")
         )
 
-    if request.method == "GET":
 
-        return render_template(
-            "md_register.html"
-        )
-
-    first_name = request.form.get(
-        "first_name",
-        ""
-    ).strip()
-
-    last_name = request.form.get(
-        "last_name",
-        ""
-    ).strip()
-
-    email = request.form.get(
-        "email",
-        ""
-    ).strip().lower()
-
-    phone = request.form.get(
-        "phone",
-        ""
-    ).strip()
-
-    password = request.form.get(
-        "password",
-        ""
-    )
-
-    confirm_password = request.form.get(
-        "confirm_password",
-        ""
-    )
-
-    registration_key = request.form.get(
-        "registration_key",
-        ""
-    )
-
-    if not all(
-        [
-            first_name,
-            last_name,
-            email,
-            phone,
-            password,
-            confirm_password
-        ]
-    ):
+    if not program:
 
         flash(
-            "Please complete all required fields.",
+            "Please select a training program.",
             "danger"
         )
 
-        return render_template(
-            "md_register.html"
+        return redirect(
+            url_for("training_apply")
         )
 
-    if len(password) < 8:
+
+    if not motivation:
 
         flash(
-            "Password must contain at least 8 characters.",
+            "Please explain why you want to join the training program.",
             "danger"
         )
 
-        return render_template(
-            "md_register.html"
+        return redirect(
+            url_for("training_apply")
         )
 
-    if password != confirm_password:
+
+    if agreement != "1":
 
         flash(
-            "Passwords do not match.",
+            "Please confirm the application declaration.",
             "danger"
         )
 
-        return render_template(
-            "md_register.html"
+        return redirect(
+            url_for("training_apply")
         )
 
-    if (
-        MD_REGISTRATION_KEY
-        and registration_key != MD_REGISTRATION_KEY
-    ):
+
+    # --------------------------------------------------------
+    # BASIC LENGTH VALIDATION
+    # --------------------------------------------------------
+
+    if len(full_name) > 120:
 
         flash(
-            "Invalid MD registration key.",
+            "Full name is too long.",
             "danger"
         )
 
-        return render_template(
-            "md_register.html"
+        return redirect(
+            url_for("training_apply")
         )
+
+
+    if len(email) > 150:
+
+        flash(
+            "Email address is too long.",
+            "danger"
+        )
+
+        return redirect(
+            url_for("training_apply")
+        )
+
+
+    if len(phone) > 30:
+
+        flash(
+            "Phone number is too long.",
+            "danger"
+        )
+
+        return redirect(
+            url_for("training_apply")
+        )
+
+
+    if len(education) > 150:
+
+        flash(
+            "Educational background is too long.",
+            "danger"
+        )
+
+        return redirect(
+            url_for("training_apply")
+        )
+
+
+    if len(company) > 150:
+
+        flash(
+            "Company or organization name is too long.",
+            "danger"
+        )
+
+        return redirect(
+            url_for("training_apply")
+        )
+
+
+    if len(experience) > 1000:
+
+        flash(
+            "Previous experience is too long.",
+            "danger"
+        )
+
+        return redirect(
+            url_for("training_apply")
+        )
+
+
+    if len(motivation) > 1500:
+
+        flash(
+            "Motivation message is too long.",
+            "danger"
+        )
+
+        return redirect(
+            url_for("training_apply")
+        )
+
+
+    if len(message) > 1000:
+
+        flash(
+            "Additional information is too long.",
+            "danger"
+        )
+
+        return redirect(
+            url_for("training_apply")
+        )
+
+
+    # --------------------------------------------------------
+    # DATABASE
+    # --------------------------------------------------------
+
+    created_at = utc_now()
 
     db = get_db()
 
     try:
 
-        db.execute(
-            """
-            INSERT INTO md
-            (
-                first_name,
-                last_name,
-                email,
-                phone,
-                password_hash,
-                status,
-                created_at
-            )
-            VALUES (?, ?, ?, ?, ?, 'Active', ?)
-            """,
-            (
-                first_name,
-                last_name,
-                email,
-                phone,
-                generate_password_hash(
-                    password
-                ),
-                datetime.now(
-                    timezone.utc
-                ).isoformat()
+        application_id = (
+            generate_training_application_id(
+                db
             )
         )
+
+
+        cursor = db.execute(
+            """
+            INSERT INTO training_applications (
+                application_id,
+                full_name,
+                email,
+                phone,
+                program,
+                education,
+                company,
+                experience,
+                motivation,
+                message,
+                status,
+                created_at,
+                updated_at,
+                email_sent
+            )
+            VALUES (
+                ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
+                'New',
+                ?, ?,
+                0
+            )
+            """,
+            (
+                application_id,
+                full_name,
+                email,
+                phone,
+                program,
+                education,
+                company,
+                experience,
+                motivation,
+                message,
+                created_at,
+                created_at
+            )
+        )
+
+
+        application_db_id = cursor.lastrowid
+
+
+        application = db.execute(
+            """
+            SELECT *
+            FROM training_applications
+            WHERE id = ?
+            LIMIT 1
+            """,
+            (
+                application_db_id,
+            )
+        ).fetchone()
+
 
         db.commit()
 
-    except sqlite3.IntegrityError:
+
+    except Exception:
 
         db.rollback()
-        db.close()
+
+        app.logger.exception(
+            "Failed to save training application."
+        )
 
         flash(
-            "An account with this email already exists.",
+            "We could not submit your application. Please try again.",
             "danger"
-        )
-
-        return render_template(
-            "md_register.html"
-        )
-
-    db.close()
-
-    flash(
-        "MD account created successfully.",
-        "success"
-    )
-
-    return redirect(
-        url_for("md_login")
-    )
-
-
-# ============================================================
-# MD LOGIN
-# ============================================================
-
-@app.route(
-    "/md/login",
-    methods=["GET", "POST"]
-)
-def md_login():
-
-    if session.get(
-        "md_logged_in"
-    ):
-
-        return redirect(
-            url_for("md_dashboard")
-        )
-
-    if request.method == "GET":
-
-        return render_template(
-            "md_login.html"
-        )
-
-    email = request.form.get(
-        "email",
-        ""
-    ).strip().lower()
-
-    password = request.form.get(
-        "password",
-        ""
-    )
-
-    db = get_db()
-
-    md = db.execute(
-        """
-        SELECT *
-        FROM md
-        WHERE LOWER(email) = ?
-        AND status = 'Active'
-        LIMIT 1
-        """,
-        (
-            email,
-        )
-    ).fetchone()
-
-    if md is None:
-
-        db.close()
-
-        flash(
-            "Invalid MD email or password.",
-            "danger"
-        )
-
-        return render_template(
-            "md_login.html"
-        )
-
-    if not check_password_hash(
-        md["password_hash"],
-        password
-    ):
-
-        db.close()
-
-        flash(
-            "Invalid MD email or password.",
-            "danger"
-        )
-
-        return render_template(
-            "md_login.html"
-        )
-
-    db.execute(
-        """
-        UPDATE md
-        SET last_login = ?
-        WHERE id = ?
-        """,
-        (
-            datetime.now(
-                timezone.utc
-            ).isoformat(),
-            md["id"]
-        )
-    )
-
-    db.commit()
-
-    db.close()
-
-    session.clear()
-
-    session["md_logged_in"] = True
-
-    session["md_id"] = md["id"]
-
-    return redirect(
-        url_for("md_dashboard")
-    )
-
-
-# ============================================================
-# MD DASHBOARD
-# ============================================================
-
-@app.route("/md/dashboard")
-@md_required
-def md_dashboard():
-
-    db = get_db()
-
-    md = db.execute(
-        """
-        SELECT *
-        FROM md
-        WHERE id = ?
-        """,
-        (
-            session.get("md_id"),
-        )
-    ).fetchone()
-
-    total_staff = db.execute(
-        """
-        SELECT COUNT(*)
-        FROM staff
-        """
-    ).fetchone()[0]
-
-    pending_staff = db.execute(
-        """
-        SELECT COUNT(*)
-        FROM staff
-        WHERE status = 'Pending'
-        """
-    ).fetchone()[0]
-
-    active_staff = db.execute(
-        """
-        SELECT COUNT(*)
-        FROM staff
-        WHERE status = 'Active'
-        """
-    ).fetchone()[0]
-
-    disabled_staff = db.execute(
-        """
-        SELECT COUNT(*)
-        FROM staff
-        WHERE status = 'Disabled'
-        """
-    ).fetchone()[0]
-
-    rejected_staff = db.execute(
-        """
-        SELECT COUNT(*)
-        FROM staff
-        WHERE status = 'Rejected'
-        """
-    ).fetchone()[0]
-
-    total_consultations = db.execute(
-        """
-        SELECT COUNT(*)
-        FROM consultations
-        """
-    ).fetchone()[0]
-
-    new_consultations = db.execute(
-        """
-        SELECT COUNT(*)
-        FROM consultations
-        WHERE status = 'New'
-        """
-    ).fetchone()[0]
-
-    in_progress_consultations = db.execute(
-        """
-        SELECT COUNT(*)
-        FROM consultations
-        WHERE status = 'In Progress'
-        """
-    ).fetchone()[0]
-
-    closed_consultations = db.execute(
-        """
-        SELECT COUNT(*)
-        FROM consultations
-        WHERE status = 'Closed'
-        """
-    ).fetchone()[0]
-
-    unassigned_consultations = db.execute(
-        """
-        SELECT COUNT(*)
-        FROM consultations
-        WHERE assigned_staff_id IS NULL
-        """
-    ).fetchone()[0]
-
-    assigned_consultations = db.execute(
-        """
-        SELECT COUNT(*)
-        FROM consultations
-        WHERE assigned_staff_id IS NOT NULL
-        """
-    ).fetchone()[0]
-
-    recent_staff = db.execute(
-        """
-        SELECT *
-        FROM staff
-        ORDER BY id DESC
-        LIMIT 10
-        """
-    ).fetchall()
-
-    recent_consultations = db.execute(
-        """
-        SELECT
-            consultations.*,
-
-            staff.first_name
-                AS assigned_first_name,
-
-            staff.last_name
-                AS assigned_last_name,
-
-            staff.staff_id
-                AS assigned_staff_code
-
-        FROM consultations
-
-        LEFT JOIN staff
-            ON consultations.assigned_staff_id = staff.id
-
-        ORDER BY consultations.id DESC
-
-        LIMIT 10
-        """
-    ).fetchall()
-
-    db.close()
-
-    return render_template(
-        "md_dashboard.html",
-
-        md=md,
-
-        total_staff=total_staff,
-
-        pending_staff=pending_staff,
-
-        active_staff=active_staff,
-
-        disabled_staff=disabled_staff,
-
-        rejected_staff=rejected_staff,
-
-        total_consultations=
-            total_consultations,
-
-        consultations=
-            total_consultations,
-
-        new_consultations=
-            new_consultations,
-
-        in_progress_consultations=
-            in_progress_consultations,
-
-        closed_consultations=
-            closed_consultations,
-
-        unassigned_consultations=
-            unassigned_consultations,
-
-        assigned_consultations=
-            assigned_consultations,
-
-        recent_staff=
-            recent_staff,
-
-        recent_consultations=
-            recent_consultations
-    )
-
-
-# ============================================================
-# MD STAFF
-# ============================================================
-
-@app.route("/md/staff")
-@md_required
-def md_staff():
-
-    db = get_db()
-
-    staff = db.execute(
-        """
-        SELECT *
-        FROM staff
-        ORDER BY id DESC
-        """
-    ).fetchall()
-
-    db.close()
-
-    return render_template(
-        "md_staff.html",
-        staff=staff
-    )
-
-
-# ============================================================
-# MD VIEW STAFF
-# ============================================================
-
-@app.route(
-    "/md/staff/<int:staff_db_id>"
-)
-@md_required
-def md_view_staff(
-    staff_db_id
-):
-
-    db = get_db()
-
-    staff = db.execute(
-        """
-        SELECT *
-        FROM staff
-        WHERE id = ?
-        """,
-        (
-            staff_db_id,
-        )
-    ).fetchone()
-
-    db.close()
-
-    if staff is None:
-
-        abort(404)
-
-    return render_template(
-        "md_view_staff.html",
-        staff=staff
-    )
-
-
-# ============================================================
-# MD STAFF ACTION
-# ============================================================
-
-@app.route(
-    "/md/staff/<int:staff_db_id>/<action>",
-    methods=["POST"]
-)
-@md_required
-def md_staff_action(
-    staff_db_id,
-    action
-):
-
-    allowed_actions = (
-        "approve",
-        "reject",
-        "disable",
-        "activate"
-    )
-
-    if action not in allowed_actions:
-
-        abort(400)
-
-    db = get_db()
-
-    staff = db.execute(
-        """
-        SELECT *
-        FROM staff
-        WHERE id = ?
-        """,
-        (
-            staff_db_id,
-        )
-    ).fetchone()
-
-    if staff is None:
-
-        db.close()
-
-        abort(404)
-
-    if action == "approve":
-
-        db.execute(
-            """
-            UPDATE staff
-            SET status = 'Active',
-                approved_at = ?
-            WHERE id = ?
-            """,
-            (
-                datetime.now(
-                    timezone.utc
-                ).isoformat(),
-                staff_db_id
-            )
-        )
-
-        message = (
-            f"{staff['first_name']} "
-            f"{staff['last_name']} "
-            "has been approved."
-        )
-
-        category = "success"
-
-        send_approval_email(
-            staff["first_name"],
-            staff["staff_id"],
-            staff["email"]
-        )
-
-    elif action == "reject":
-
-        db.execute(
-            """
-            UPDATE staff
-            SET status = 'Rejected'
-            WHERE id = ?
-            """,
-            (
-                staff_db_id,
-            )
-        )
-
-        message = (
-            f"{staff['first_name']} "
-            f"{staff['last_name']} "
-            "has been rejected."
-        )
-
-        category = "warning"
-
-    elif action == "disable":
-
-        db.execute(
-            """
-            UPDATE staff
-            SET status = 'Disabled'
-            WHERE id = ?
-            """,
-            (
-                staff_db_id,
-            )
-        )
-
-        message = (
-            "Staff account has been disabled."
-        )
-
-        category = "warning"
-
-    else:
-
-        db.execute(
-            """
-            UPDATE staff
-            SET status = 'Active'
-            WHERE id = ?
-            """,
-            (
-                staff_db_id,
-            )
-        )
-
-        message = (
-            "Staff account has been activated."
-        )
-
-        category = "success"
-
-    db.commit()
-
-    db.close()
-
-    log_activity(
-        "MD",
-        f"Staff {action}",
-        f"Staff database ID: {staff_db_id}"
-    )
-
-    flash(
-        message,
-        category
-    )
-
-    return redirect(
-        url_for("md_staff")
-    )
-
-
-# ============================================================
-# MD CONSULTATIONS
-# ============================================================
-
-@app.route("/md/consultations")
-@md_required
-def md_consultations():
-
-    db = get_db()
-
-    consultations = db.execute(
-        """
-        SELECT
-            consultations.*,
-
-            staff.first_name
-                AS assigned_first_name,
-
-            staff.last_name
-                AS assigned_last_name,
-
-            staff.staff_id
-                AS assigned_staff_code,
-
-            staff.department
-                AS assigned_department,
-
-            staff.position
-                AS assigned_position,
-
-            staff.email
-                AS assigned_email
-
-        FROM consultations
-
-        LEFT JOIN staff
-            ON consultations.assigned_staff_id = staff.id
-
-        ORDER BY consultations.id DESC
-        """
-    ).fetchall()
-
-    staff = db.execute(
-        """
-        SELECT
-            id,
-            staff_id,
-            first_name,
-            last_name,
-            department,
-            position,
-            email
-
-        FROM staff
-
-        WHERE status = 'Active'
-
-        ORDER BY first_name ASC,
-                 last_name ASC
-        """
-    ).fetchall()
-
-    total_consultations = db.execute(
-        """
-        SELECT COUNT(*)
-        FROM consultations
-        """
-    ).fetchone()[0]
-
-    new_consultations = db.execute(
-        """
-        SELECT COUNT(*)
-        FROM consultations
-        WHERE status = 'New'
-        """
-    ).fetchone()[0]
-
-    in_progress_consultations = db.execute(
-        """
-        SELECT COUNT(*)
-        FROM consultations
-        WHERE status = 'In Progress'
-        """
-    ).fetchone()[0]
-
-    closed_consultations = db.execute(
-        """
-        SELECT COUNT(*)
-        FROM consultations
-        WHERE status = 'Closed'
-        """
-    ).fetchone()[0]
-
-    unassigned_consultations = db.execute(
-        """
-        SELECT COUNT(*)
-        FROM consultations
-        WHERE assigned_staff_id IS NULL
-        """
-    ).fetchone()[0]
-
-    db.close()
-
-    return render_template(
-        "md_consultations.html",
-
-        consultations=consultations,
-
-        staff=staff,
-
-        total_consultations=
-            total_consultations,
-
-        new_consultations=
-            new_consultations,
-
-        in_progress_consultations=
-            in_progress_consultations,
-
-        closed_consultations=
-            closed_consultations,
-
-        unassigned_consultations=
-            unassigned_consultations
-    )
-
-
-# ============================================================
-# MD CONSULTATION DETAIL
-# ============================================================
-
-@app.route(
-    "/md/consultation/<int:consultation_id>"
-)
-@md_required
-def md_view_consultation(
-    consultation_id
-):
-
-    db = get_db()
-
-    consultation = db.execute(
-        """
-        SELECT
-            consultations.*,
-
-            staff.first_name
-                AS assigned_first_name,
-
-            staff.last_name
-                AS assigned_last_name,
-
-            staff.staff_id
-                AS assigned_staff_code,
-
-            staff.department
-                AS assigned_department,
-
-            staff.position
-                AS assigned_position,
-
-            staff.email
-                AS assigned_email
-
-        FROM consultations
-
-        LEFT JOIN staff
-            ON consultations.assigned_staff_id = staff.id
-
-        WHERE consultations.id = ?
-        """,
-        (
-            consultation_id,
-        )
-    ).fetchone()
-
-    staff = db.execute(
-        """
-        SELECT
-            id,
-            staff_id,
-            first_name,
-            last_name,
-            department,
-            position,
-            email
-
-        FROM staff
-
-        WHERE status = 'Active'
-
-        ORDER BY first_name ASC,
-                 last_name ASC
-        """
-    ).fetchall()
-
-    db.close()
-
-    if consultation is None:
-
-        abort(404)
-
-    return render_template(
-        "md_consultation_detail.html",
-
-        consultation=consultation,
-
-        staff=staff
-    )
-
-
-# ============================================================
-# MD ASSIGN CONSULTATION
-# ============================================================
-
-@app.route(
-    "/md/consultation/<int:consultation_id>/assign",
-    methods=["POST"]
-)
-@md_required
-def md_assign_consultation(
-    consultation_id
-):
-
-    selected_staff_id = request.form.get(
-        "staff_id",
-        ""
-    ).strip()
-
-    if not selected_staff_id:
-
-        flash(
-            "Please select a staff member.",
-            "warning"
         )
 
         return redirect(
-            request.referrer
-            or url_for(
-                "md_consultations"
-            )
+            url_for("training_apply")
         )
+
+    finally:
+
+        close_db(db)
+
+
+    # --------------------------------------------------------
+    # ACTIVITY LOG
+    # --------------------------------------------------------
 
     try:
 
-        selected_staff_db_id = int(
-            selected_staff_id
-        )
-
-    except ValueError:
-
-        flash(
-            "Invalid staff selection.",
-            "danger"
-        )
-
-        return redirect(
-            request.referrer
-            or url_for(
-                "md_consultations"
-            )
-        )
-
-    db = get_db()
-
-    consultation = db.execute(
-        """
-        SELECT *
-        FROM consultations
-        WHERE id = ?
-        """,
-        (
-            consultation_id,
-        )
-    ).fetchone()
-
-    if consultation is None:
-
-        db.close()
-
-        abort(404)
-
-    staff = db.execute(
-        """
-        SELECT *
-        FROM staff
-        WHERE id = ?
-        AND status = 'Active'
-        LIMIT 1
-        """,
-        (
-            selected_staff_db_id,
-        )
-    ).fetchone()
-
-    if staff is None:
-
-        db.close()
-
-        flash(
-            "Selected staff member is not active.",
-            "danger"
-        )
-
-        return redirect(
-            request.referrer
-            or url_for(
-                "md_consultations"
-            )
-        )
-
-    db.execute(
-        """
-        UPDATE consultations
-
-        SET assigned_staff_id = ?
-
-        WHERE id = ?
-        """,
-        (
-            staff["id"],
-            consultation_id
-        )
-    )
-
-    if consultation["status"] == "New":
-
-        db.execute(
-            """
-            UPDATE consultations
-
-            SET status = 'In Progress'
-
-            WHERE id = ?
-            """,
+        log_activity(
+            "public",
+            None,
+            "training_application",
             (
-                consultation_id,
+                "New training application received. "
+                f"Application ID: {application_id}. "
+                f"Program: {program}."
             )
         )
 
-    db.commit()
+    except Exception:
 
-    verification = db.execute(
-        """
-        SELECT
-            assigned_staff_id,
-            status
-        FROM consultations
-        WHERE id = ?
-        """,
-        (
-            consultation_id,
-        )
-    ).fetchone()
-
-    db.close()
-
-    if verification is None:
-
-        flash(
-            "Assignment verification failed.",
-            "danger"
+        app.logger.exception(
+            "Failed to log training application activity."
         )
 
-        return redirect(
-            request.referrer
-            or url_for(
-                "md_consultations"
-            )
-        )
+
+    # --------------------------------------------------------
+    # EMAIL COMPANY
+    # --------------------------------------------------------
+
+    email_sent = False
 
     if (
-        verification["assigned_staff_id"]
-        != staff["id"]
+        os.getenv("MAIL_SERVER")
+        and os.getenv("MAIL_USERNAME")
+        and os.getenv("MAIL_PASSWORD")
     ):
 
-        flash(
-            "The consultation could not be assigned.",
-            "danger"
+        email_sent, _ = send_training_application_email(
+            application
         )
 
-        return redirect(
-            request.referrer
-            or url_for(
-                "md_consultations"
+
+        db = get_db()
+
+        try:
+
+            db.execute(
+                """
+                UPDATE training_applications
+                SET
+                    email_sent = ?,
+                    updated_at = ?
+                WHERE id = ?
+                """,
+                (
+                    1 if email_sent else 0,
+                    utc_now(),
+                    application_db_id
+                )
             )
-        )
 
-    email_sent = send_assignment_email(
-        staff,
-        consultation
-    )
+            db.commit()
 
-    log_activity(
-        "MD",
-        "Consultation Assigned",
-        (
-            f"Consultation #{consultation_id} "
-            f"assigned to {staff['staff_id']}"
-        )
-    )
+        except Exception:
 
-    if email_sent:
+            db.rollback()
 
-        flash(
-            f"Consultation #{consultation_id} "
-            f"assigned successfully to "
-            f"{staff['first_name']} "
-            f"{staff['last_name']}. "
-            "Notification email sent.",
-            "success"
-        )
-
-    else:
-
-        flash(
-            f"Consultation #{consultation_id} "
-            f"assigned successfully to "
-            f"{staff['first_name']} "
-            f"{staff['last_name']}, "
-            "but notification email failed.",
-            "warning"
-        )
-
-    return redirect(
-        request.referrer
-        or url_for(
-            "md_consultations"
-        )
-    )
-
-
-# ============================================================
-# MD UNASSIGN CONSULTATION
-# ============================================================
-
-@app.route(
-    "/md/consultation/<int:consultation_id>/unassign",
-    methods=["POST"]
-)
-@md_required
-def md_unassign_consultation(
-    consultation_id
-):
-
-    db = get_db()
-
-    consultation = db.execute(
-        """
-        SELECT id
-        FROM consultations
-        WHERE id = ?
-        """,
-        (
-            consultation_id,
-        )
-    ).fetchone()
-
-    if consultation is None:
-
-        db.close()
-
-        abort(404)
-
-    db.execute(
-        """
-        UPDATE consultations
-
-        SET assigned_staff_id = NULL
-
-        WHERE id = ?
-        """,
-        (
-            consultation_id,
-        )
-    )
-
-    db.commit()
-
-    db.close()
-
-    log_activity(
-        "MD",
-        "Consultation Unassigned",
-        (
-            f"Consultation #{consultation_id} "
-            "unassigned"
-        )
-    )
-
-    flash(
-        "Consultation has been unassigned.",
-        "success"
-    )
-
-    return redirect(
-        request.referrer
-        or url_for(
-            "md_consultations"
-        )
-    )
-
-
-# ============================================================
-# MD UPDATE CONSULTATION STATUS
-# ============================================================
-
-@app.route(
-    "/md/consultation/<int:consultation_id>/status",
-    methods=["POST"]
-)
-@md_required
-def md_update_consultation_status(
-    consultation_id
-):
-
-    status = request.form.get(
-        "status",
-        "New"
-    ).strip()
-
-    allowed_statuses = (
-        "New",
-        "In Progress",
-        "Closed"
-    )
-
-    if status not in allowed_statuses:
-
-        flash(
-            "Invalid consultation status.",
-            "danger"
-        )
-
-        return redirect(
-            request.referrer
-            or url_for(
-                "md_consultations"
+            app.logger.exception(
+                "Failed to update training email status."
             )
-        )
 
-    db = get_db()
+        finally:
 
-    consultation = db.execute(
-        """
-        SELECT id
-        FROM consultations
-        WHERE id = ?
-        """,
-        (
-            consultation_id,
-        )
-    ).fetchone()
+            close_db(db)
 
-    if consultation is None:
 
-        db.close()
-
-        abort(404)
-
-    db.execute(
-        """
-        UPDATE consultations
-
-        SET status = ?
-
-        WHERE id = ?
-        """,
-        (
-            status,
-            consultation_id
-        )
-    )
-
-    db.commit()
-
-    db.close()
-
-    log_activity(
-        "MD",
-        "Consultation Status Updated",
-        (
-            f"Consultation #{consultation_id}: "
-            f"{status}"
-        )
-    )
+    # --------------------------------------------------------
+    # SUCCESS
+    # --------------------------------------------------------
 
     flash(
-        "Consultation status updated.",
+        (
+            "Your training application has been submitted "
+            "successfully. Your application reference is "
+            f"{application_id}."
+        ),
         "success"
     )
 
-    return redirect(
-        request.referrer
-        or url_for(
-            "md_consultations"
-        )
-    )
-
-
-# ============================================================
-# MD LOGOUT
-# ============================================================
-
-@app.route("/md/logout")
-def md_logout():
-
-    session.pop(
-        "md_logged_in",
-        None
-    )
-
-    session.pop(
-        "md_id",
-        None
-    )
-
-    flash(
-        "MD logged out.",
-        "success"
-    )
 
     return redirect(
-        url_for("md_login")
+        url_for("training_apply")
     )
 
 
@@ -4179,7 +1917,7 @@ def md_logout():
     "/api/consultation",
     methods=["POST"]
 )
-def create_consultation():
+def consultation_api():
 
     data = (
         request.get_json(
@@ -4230,367 +1968,3207 @@ def create_consultation():
         )
     ).strip()
 
-    if not name or not service:
+    language = str(
+        data.get(
+            "language",
+            "en"
+        )
+    ).strip() or "en"
+
+
+    if not name:
 
         return jsonify(
             success=False,
-            message=(
-                "Name and service are required."
-            )
+            message="Name is required."
         ), 400
 
-    created_at = datetime.now(
-        timezone.utc
-    ).isoformat()
+
+    if not phone:
+
+        return jsonify(
+            success=False,
+            message="Phone is required."
+        ), 400
+
+
+    if not service:
+
+        return jsonify(
+            success=False,
+            message="Service is required."
+        ), 400
+
+
+    created_at = utc_now()
 
     db = get_db()
 
-    cursor = db.execute(
-        """
-        INSERT INTO consultations
-        (
-            name,
-            email,
-            phone,
-            company,
-            service,
-            message,
-            status,
-            created_at,
-            assigned_staff_id
+    try:
+
+        cursor = db.execute(
+            """
+            INSERT INTO consultations (
+                name,
+                email,
+                phone,
+                company,
+                service,
+                message,
+                language,
+                status,
+                created_at,
+                updated_at,
+                email_sent
+            )
+            VALUES (
+                ?, ?, ?, ?, ?, ?, ?,
+                'New',
+                ?, ?,
+                0
+            )
+            """,
+            (
+                name,
+                email,
+                phone,
+                company,
+                service,
+                message,
+                language,
+                created_at,
+                created_at
+            )
         )
-        VALUES (?, ?, ?, ?, ?, ?, 'New', ?, NULL)
-        """,
-        (
-            name,
-            email,
-            phone,
-            company,
-            service,
-            message,
-            created_at
+
+        consultation_id = cursor.lastrowid
+
+        consultation = db.execute(
+            """
+            SELECT *
+            FROM consultations
+            WHERE id = ?
+            """,
+            (consultation_id,)
+        ).fetchone()
+
+
+        # Notify active staff.
+        staff_members = db.execute(
+            """
+            SELECT id
+            FROM staff
+            WHERE status = 'Active'
+            """
+        ).fetchall()
+
+        for staff_member in staff_members:
+
+            db.execute(
+                """
+                INSERT INTO notifications (
+                    staff_id,
+                    title,
+                    message,
+                    is_read,
+                    created_at
+                )
+                VALUES (?, ?, ?, 0, ?)
+                """,
+                (
+                    staff_member["id"],
+                    "New consultation request",
+                    (
+                        f"{name} submitted a "
+                        f"{service} consultation."
+                    ),
+                    created_at
+                )
+            )
+
+
+        db.commit()
+
+    except Exception:
+
+        db.rollback()
+        raise
+
+    finally:
+
+        close_db(db)
+
+
+    # Email company separately.
+    email_sent = False
+
+    if (
+        os.getenv("MAIL_SERVER")
+        and os.getenv("MAIL_USERNAME")
+        and os.getenv("MAIL_PASSWORD")
+    ):
+
+        email_sent, _ = send_consultation_email(
+            consultation
         )
-    )
 
-    consultation_id = cursor.lastrowid
+        db = get_db()
 
-    db.commit()
+        try:
 
-    db.close()
+            db.execute(
+                """
+                UPDATE consultations
+                SET email_sent = ?,
+                    updated_at = ?
+                WHERE id = ?
+                """,
+                (
+                    1 if email_sent else 0,
+                    utc_now(),
+                    consultation_id
+                )
+            )
 
-    email_sent = send_consultation_notification(
-        consultation_id,
-        name,
-        email,
-        phone,
-        company,
-        service,
-        message
-    )
+            db.commit()
 
-    log_activity(
-        "Public Website",
-        "Consultation Created",
-        (
-            f"Consultation #{consultation_id}"
-        )
-    )
+        finally:
+
+            close_db(db)
+
 
     return jsonify(
         success=True,
-        message=(
-            "Consultation request received."
-        ),
+        message="Consultation request received.",
         consultation_id=consultation_id,
         email_sent=email_sent
     )
 
 
 # ============================================================
-# ERROR HANDLER - 404
+# STAFF REGISTRATION
+# ============================================================
+
+@app.route(
+    "/staff/register",
+    methods=["GET", "POST"]
+)
+def staff_register():
+
+    if request.method == "GET":
+
+        return render_template(
+            "staff_register.html"
+        )
+
+
+    first_name = request.form.get(
+        "first_name",
+        ""
+    ).strip()
+
+    last_name = request.form.get(
+        "last_name",
+        ""
+    ).strip()
+
+    phone = request.form.get(
+        "phone",
+        ""
+    ).strip()
+
+    department = request.form.get(
+        "department",
+        ""
+    ).strip()
+
+    position = request.form.get(
+        "position",
+        ""
+    ).strip()
+
+    password = request.form.get(
+        "password",
+        ""
+    )
+
+    confirm_password = request.form.get(
+        "confirm_password",
+        ""
+    )
+
+
+    if not all([
+        first_name,
+        last_name,
+        phone,
+        department,
+        position,
+        password,
+        confirm_password,
+    ]):
+
+        flash(
+            "All required fields must be completed.",
+            "danger"
+        )
+
+        return redirect(
+            url_for("staff_register")
+        )
+
+
+    if len(password) < 8:
+
+        flash(
+            "Password must be at least 8 characters.",
+            "danger"
+        )
+
+        return redirect(
+            url_for("staff_register")
+        )
+
+
+    if password != confirm_password:
+
+        flash(
+            "Passwords do not match.",
+            "danger"
+        )
+
+        return redirect(
+            url_for("staff_register")
+        )
+
+
+    db = get_db()
+
+    try:
+
+        duplicate = db.execute(
+            """
+            SELECT id
+            FROM staff
+            WHERE phone = ?
+            LIMIT 1
+            """,
+            (phone,)
+        ).fetchone()
+
+        if duplicate:
+
+            flash(
+                "A staff registration already exists with this phone number.",
+                "danger"
+            )
+
+            return redirect(
+                url_for("staff_register")
+            )
+
+
+        staff_id = generate_staff_id(
+            db
+        )
+
+        email = generate_staff_email(
+            first_name,
+            last_name,
+            staff_id
+        )
+
+
+        cursor = db.execute(
+            """
+            INSERT INTO staff (
+                staff_id,
+                first_name,
+                last_name,
+                email,
+                phone,
+                department,
+                position,
+                password_hash,
+                status,
+                created_at
+            )
+            VALUES (
+                ?, ?, ?, ?, ?, ?, ?, ?, 'Pending', ?
+            )
+            """,
+            (
+                staff_id,
+                first_name,
+                last_name,
+                email,
+                phone,
+                department,
+                position,
+                generate_password_hash(
+                    password
+                ),
+                utc_now()
+            )
+        )
+
+        staff_db_id = cursor.lastrowid
+
+        db.commit()
+
+
+        log_activity(
+            "staff",
+            staff_db_id,
+            "staff_registration",
+            (
+                f"Staff registration received "
+                f"for {staff_id}."
+            )
+        )
+
+
+        flash(
+            (
+                f"Registration submitted successfully. "
+                f"Your Staff ID is {staff_id}. "
+                f"Your account is awaiting approval."
+            ),
+            "success"
+        )
+
+    except sqlite3.IntegrityError:
+
+        db.rollback()
+
+        flash(
+            "Unable to complete registration. Please try again.",
+            "danger"
+        )
+
+    finally:
+
+        close_db(db)
+
+
+    return redirect(
+        url_for("staff_login")
+    )
+
+
+# ============================================================
+# STAFF LOGIN
+# ============================================================
+
+@app.route(
+    "/staff/login",
+    methods=["GET", "POST"]
+)
+def staff_login():
+
+    if request.method == "GET":
+
+        return render_template(
+            "staff_login.html"
+        )
+
+
+    identifier = (
+        request.form.get("login")
+        or request.form.get("email")
+        or request.form.get("staff_id")
+        or ""
+    ).strip()
+
+
+    password = (
+        request.form.get("password")
+        or ""
+    )
+
+
+    if not identifier or not password:
+
+        flash(
+            "Work Email or Staff ID and password are required.",
+            "danger"
+        )
+
+        return redirect(
+            url_for("staff_login")
+        )
+
+
+    db = get_db()
+
+    try:
+
+        staff = db.execute(
+            """
+            SELECT *
+            FROM staff
+            WHERE
+                UPPER(TRIM(staff_id)) = UPPER(TRIM(?))
+                OR (
+                    email IS NOT NULL
+                    AND TRIM(email) != ''
+                    AND LOWER(TRIM(email)) = LOWER(TRIM(?))
+                )
+            LIMIT 1
+            """,
+            (
+                identifier,
+                identifier
+            )
+        ).fetchone()
+
+
+        if not staff:
+
+            flash(
+                "Invalid Staff ID/email or password.",
+                "danger"
+            )
+
+            return redirect(
+                url_for("staff_login")
+            )
+
+
+        if not check_password_hash(
+            staff["password_hash"],
+            password
+        ):
+
+            flash(
+                "Invalid Staff ID/email or password.",
+                "danger"
+            )
+
+            return redirect(
+                url_for("staff_login")
+            )
+
+
+        status = (
+            staff["status"]
+            or ""
+        ).strip().lower()
+
+
+        if status != "active":
+
+            if status == "pending":
+
+                flash(
+                    "Your staff account is still awaiting approval.",
+                    "warning"
+                )
+
+            elif status == "rejected":
+
+                flash(
+                    "Your staff registration was rejected.",
+                    "danger"
+                )
+
+            elif status == "disabled":
+
+                flash(
+                    "Your staff account is disabled.",
+                    "danger"
+                )
+
+            else:
+
+                flash(
+                    "Your staff account is not active.",
+                    "danger"
+                )
+
+            return redirect(
+                url_for("staff_login")
+            )
+
+
+        db.execute(
+            """
+            UPDATE staff
+            SET last_login = ?
+            WHERE id = ?
+            """,
+            (
+                utc_now(),
+                staff["id"]
+            )
+        )
+
+        db.commit()
+
+
+        session.clear()
+
+        session["staff_db_id"] = staff["id"]
+
+        session["staff_id"] = staff["staff_id"]
+
+        session["staff_email"] = (
+            staff["email"]
+            or ""
+        )
+
+        session["staff_logged_in"] = True
+
+
+        log_activity(
+            "staff",
+            staff["id"],
+            "staff_login",
+            "Staff member logged in."
+        )
+
+
+        return redirect(
+            url_for("staff_dashboard")
+        )
+
+
+    finally:
+
+        close_db(db)
+
+
+# ============================================================
+# STAFF DASHBOARD
+# ============================================================
+
+@app.route("/staff/dashboard")
+@staff_required
+def staff_dashboard():
+
+    staff = current_staff()
+
+    db = get_db()
+
+    try:
+
+        consultations = db.execute(
+            """
+            SELECT
+                c.*,
+
+                s.first_name AS assigned_first_name,
+                s.last_name AS assigned_last_name,
+                s.staff_id AS assigned_staff_code
+
+            FROM consultations c
+
+            LEFT JOIN staff s
+                ON s.id = COALESCE(
+                    c.assigned_staff_id,
+                    c.assigned_to
+                )
+
+            WHERE COALESCE(
+                c.assigned_staff_id,
+                c.assigned_to
+            ) = ?
+
+            ORDER BY c.id DESC
+            """,
+            (
+                staff["id"],
+            )
+        ).fetchall()
+
+
+        notifications = db.execute(
+            """
+            SELECT *
+            FROM notifications
+
+            WHERE staff_id = ?
+
+            ORDER BY id DESC
+
+            LIMIT 15
+            """,
+            (
+                staff["id"],
+            )
+        ).fetchall()
+
+
+    finally:
+
+        close_db(db)
+
+
+    assigned_count = len(consultations)
+
+    in_progress_count = sum(
+        1
+        for consultation in consultations
+        if (
+            consultation["status"] or ""
+        ).lower().replace("_", " ") in {
+            "in progress",
+            "assigned",
+            "pending"
+        }
+    )
+
+    closed_count = sum(
+        1
+        for consultation in consultations
+        if (
+            consultation["status"] or ""
+        ).lower().replace("_", " ") in {
+            "closed",
+            "completed",
+            "complete",
+            "resolved"
+        }
+    )
+
+
+    return render_template(
+        "staff_dashboard.html",
+
+        staff=staff,
+
+        consultations=consultations,
+
+        assigned_requests=consultations,
+
+        notifications=notifications,
+
+        assigned_count=assigned_count,
+
+        in_progress_count=in_progress_count,
+
+        closed_count=closed_count,
+
+        completed_count=closed_count
+    )
+
+
+# ============================================================
+# STAFF CONSULTATIONS
+# ============================================================
+
+@app.route("/staff/consultations")
+@staff_required
+def staff_consultations():
+
+    staff = current_staff()
+
+    db = get_db()
+
+    try:
+
+        consultations = db.execute(
+            """
+            SELECT
+                c.*,
+
+                s.first_name AS assigned_first_name,
+                s.last_name AS assigned_last_name,
+                s.staff_id AS assigned_staff_code
+
+            FROM consultations c
+
+            LEFT JOIN staff s
+                ON s.id = COALESCE(
+                    c.assigned_staff_id,
+                    c.assigned_to
+                )
+
+            WHERE COALESCE(
+                c.assigned_staff_id,
+                c.assigned_to
+            ) = ?
+
+            ORDER BY c.id DESC
+            """,
+            (
+                staff["id"],
+            )
+        ).fetchall()
+
+    finally:
+
+        close_db(db)
+
+
+    return render_template(
+        "staff_consultations.html",
+
+        consultations=consultations,
+
+        staff=staff
+    )
+
+
+# ============================================================
+# STAFF CONSULTATION DETAIL
+# ============================================================
+
+@app.route(
+    "/staff/consultations/<int:consultation_id>"
+)
+@staff_required
+def staff_consultation_view(
+    consultation_id
+):
+
+    staff = current_staff()
+
+    db = get_db()
+
+    try:
+
+        consultation = db.execute(
+            """
+            SELECT
+                c.*,
+
+                s.first_name AS assigned_first_name,
+                s.last_name AS assigned_last_name,
+                s.staff_id AS assigned_staff_code,
+                s.email AS assigned_staff_email
+
+            FROM consultations c
+
+            LEFT JOIN staff s
+                ON s.id = COALESCE(
+                    c.assigned_staff_id,
+                    c.assigned_to
+                )
+
+            WHERE c.id = ?
+
+              AND COALESCE(
+                  c.assigned_staff_id,
+                  c.assigned_to
+              ) = ?
+
+            LIMIT 1
+            """,
+            (
+                consultation_id,
+                staff["id"]
+            )
+        ).fetchone()
+
+    finally:
+
+        close_db(db)
+
+
+    if not consultation:
+
+        flash(
+            "Consultation not found.",
+            "danger"
+        )
+
+        return redirect(
+            url_for("staff_consultations")
+        )
+
+
+    return render_template(
+        "staff_consultation_view.html",
+
+        consultation=consultation,
+
+        staff=staff
+    )
+
+
+# ============================================================
+# STAFF CONSULTATION STATUS
+# ============================================================
+
+@app.route(
+    "/staff/consultations/<int:consultation_id>/status",
+    methods=["POST"]
+)
+@staff_required
+def staff_consultation_status(
+    consultation_id
+):
+
+    staff = current_staff()
+
+    status = request.form.get(
+        "status",
+        "New"
+    ).strip()
+
+    if status not in CONSULTATION_STATUSES:
+
+        status = "New"
+
+
+    db = get_db()
+
+    try:
+
+        consultation = db.execute(
+            """
+            SELECT id
+            FROM consultations
+            WHERE id = ?
+              AND assigned_staff_id = ?
+            """,
+            (
+                consultation_id,
+                staff["id"]
+            )
+        ).fetchone()
+
+        if not consultation:
+
+            flash(
+                "Consultation not found.",
+                "danger"
+            )
+
+            return redirect(
+                url_for("staff_consultations")
+            )
+
+
+        db.execute(
+            """
+            UPDATE consultations
+            SET status = ?,
+                updated_at = ?
+            WHERE id = ?
+            """,
+            (
+                status,
+                utc_now(),
+                consultation_id
+            )
+        )
+
+        db.commit()
+
+    finally:
+
+        close_db(db)
+
+
+    log_activity(
+        "staff",
+        staff["id"],
+        "consultation_status",
+        (
+            f"Consultation #{consultation_id} "
+            f"changed to {status}."
+        )
+    )
+
+
+    flash(
+        "Consultation status updated.",
+        "success"
+    )
+
+    return redirect(
+        url_for(
+            "staff_consultation_view",
+            consultation_id=consultation_id
+        )
+    )
+
+
+staff_update_consultation_status = staff_consultation_status
+
+
+# ============================================================
+# STAFF NOTIFICATION READ
+# ============================================================
+
+@app.route(
+    "/staff/notifications/<int:notification_id>/read",
+    methods=["POST"]
+)
+@staff_required
+def mark_notification_read(
+    notification_id
+):
+
+    staff = current_staff()
+
+    db = get_db()
+
+    try:
+
+        db.execute(
+            """
+            UPDATE notifications
+            SET is_read = 1
+            WHERE id = ?
+              AND staff_id = ?
+            """,
+            (
+                notification_id,
+                staff["id"]
+            )
+        )
+
+        db.commit()
+
+    finally:
+
+        close_db(db)
+
+
+    return redirect(
+        request.referrer
+        or url_for("staff_dashboard")
+    )
+
+
+# ============================================================
+# STAFF PROFILE
+# ============================================================
+
+@app.route(
+    "/staff/profile",
+    methods=["GET"]
+)
+@staff_required
+def staff_profile():
+
+    staff = current_staff()
+
+    return render_template(
+        "staff_profile.html",
+        staff=staff
+    )
+
+
+# ============================================================
+# STAFF LOGOUT
+# ============================================================
+
+@app.route("/staff/logout")
+def staff_logout():
+
+    staff = current_staff()
+
+    if staff:
+
+        log_activity(
+            "staff",
+            staff["id"],
+            "staff_logout",
+            "Staff member logged out."
+        )
+
+    session.clear()
+
+    flash(
+        "You have been logged out.",
+        "success"
+    )
+
+    return redirect(
+        url_for("staff_login")
+    )
+
+
+# ============================================================
+# ADMIN LOGIN
+# ============================================================
+
+@app.route(
+    "/admin/login",
+    methods=["GET", "POST"]
+)
+def admin_login():
+
+    if request.method == "GET":
+
+        return render_template(
+            "admin_login.html"
+        )
+
+
+    email = request.form.get(
+        "email",
+        ""
+    ).strip().lower()
+
+    password = request.form.get(
+        "password",
+        ""
+    )
+
+
+    if not email or not password:
+
+        flash(
+            "Email and password are required.",
+            "danger"
+        )
+
+        return render_template(
+            "admin_login.html"
+        )
+
+
+    db = get_db()
+
+    try:
+
+        admin = db.execute(
+            """
+            SELECT *
+            FROM admins
+            WHERE LOWER(email) = LOWER(?)
+            LIMIT 1
+            """,
+            (
+                email,
+            )
+        ).fetchone()
+
+
+        if not admin:
+
+            flash(
+                "Invalid email or password.",
+                "danger"
+            )
+
+            return render_template(
+                "admin_login.html"
+            )
+
+
+        if not check_password_hash(
+            admin["password_hash"],
+            password
+        ):
+
+            flash(
+                "Invalid email or password.",
+                "danger"
+            )
+
+            return render_template(
+                "admin_login.html"
+            )
+
+
+        if admin["status"] != "Active":
+
+            flash(
+                "This administrator account is not active.",
+                "danger"
+            )
+
+            return render_template(
+                "admin_login.html"
+            )
+
+
+        db.execute(
+            """
+            UPDATE admins
+            SET last_login = ?
+            WHERE id = ?
+            """,
+            (
+                utc_now(),
+                admin["id"]
+            )
+        )
+
+        db.commit()
+
+
+        session.clear()
+
+        session["admin_id"] = admin["id"]
+        session["admin_email"] = admin["email"]
+
+
+    finally:
+
+        close_db(db)
+
+
+    log_activity(
+        "admin",
+        admin["id"],
+        "admin_login",
+        "Administrator logged in."
+    )
+
+
+    return redirect(
+        url_for("admin_dashboard")
+    )
+
+
+# ============================================================
+# ADMIN DASHBOARD
+# ============================================================
+
+@app.route("/admin/dashboard")
+@admin_required
+def admin_dashboard():
+
+    db = get_db()
+
+    try:
+
+        total_staff = db.execute(
+            """
+            SELECT COUNT(*)
+            FROM staff
+            """
+        ).fetchone()[0]
+
+        active_staff = db.execute(
+            """
+            SELECT COUNT(*)
+            FROM staff
+            WHERE status = 'Active'
+            """
+        ).fetchone()[0]
+
+        pending_staff = db.execute(
+            """
+            SELECT COUNT(*)
+            FROM staff
+            WHERE status = 'Pending'
+            """
+        ).fetchone()[0]
+
+        disabled_staff = db.execute(
+            """
+            SELECT COUNT(*)
+            FROM staff
+            WHERE status = 'Disabled'
+            """
+        ).fetchone()[0]
+
+
+        total_consultations = db.execute(
+            """
+            SELECT COUNT(*)
+            FROM consultations
+            """
+        ).fetchone()[0]
+
+        new_consultations = db.execute(
+            """
+            SELECT COUNT(*)
+            FROM consultations
+            WHERE status = 'New'
+            """
+        ).fetchone()[0]
+
+        in_progress_consultations = db.execute(
+            """
+            SELECT COUNT(*)
+            FROM consultations
+            WHERE status = 'In Progress'
+            """
+        ).fetchone()[0]
+
+        closed_consultations = db.execute(
+            """
+            SELECT COUNT(*)
+            FROM consultations
+            WHERE status = 'Closed'
+            """
+        ).fetchone()[0]
+
+        unassigned_consultations = db.execute(
+            """
+            SELECT COUNT(*)
+            FROM consultations
+            WHERE assigned_staff_id IS NULL
+              AND assigned_to IS NULL
+            """
+        ).fetchone()[0]
+
+        assigned_consultations = db.execute(
+            """
+            SELECT COUNT(*)
+            FROM consultations
+            WHERE assigned_staff_id IS NOT NULL
+               OR assigned_to IS NOT NULL
+            """
+        ).fetchone()[0]
+
+
+        recent_consultations = db.execute(
+            """
+            SELECT
+                c.*,
+
+                s.first_name AS assigned_first_name,
+                s.last_name AS assigned_last_name,
+                s.email AS assigned_staff_email,
+                s.staff_id AS assigned_staff_code,
+
+                s.first_name AS staff_first_name,
+                s.last_name AS staff_last_name,
+                s.email AS staff_email
+
+            FROM consultations c
+
+            LEFT JOIN staff s
+                ON s.id = COALESCE(
+                    c.assigned_staff_id,
+                    c.assigned_to
+                )
+
+            ORDER BY c.id DESC
+            LIMIT 10
+            """
+        ).fetchall()
+
+
+        recent_staff = db.execute(
+            """
+            SELECT *
+            FROM staff
+            ORDER BY id DESC
+            LIMIT 10
+            """
+        ).fetchall()
+
+
+        stats = {
+            "total_staff": total_staff,
+            "active_staff": active_staff,
+            "pending_staff": pending_staff,
+            "disabled_staff": disabled_staff,
+
+            "total_consultations": total_consultations,
+            "new_consultations": new_consultations,
+            "in_progress_consultations": in_progress_consultations,
+            "closed_consultations": closed_consultations,
+            "unassigned_consultations": unassigned_consultations,
+            "assigned_consultations": assigned_consultations,
+        }
+
+    finally:
+
+        close_db(db)
+
+
+    return render_template(
+        "admin_dashboard.html",
+
+        total_staff=total_staff,
+        active_staff=active_staff,
+        pending_staff=pending_staff,
+        disabled_staff=disabled_staff,
+
+        total_consultations=total_consultations,
+        new_consultations=new_consultations,
+        in_progress_consultations=in_progress_consultations,
+        closed_consultations=closed_consultations,
+
+        unassigned_consultations=unassigned_consultations,
+        assigned_consultations=assigned_consultations,
+
+        recent_consultations=recent_consultations,
+        recent_staff=recent_staff,
+
+        stats=stats
+    )
+
+
+# ============================================================
+# ADMIN STAFF LIST
+# ============================================================
+
+@app.route("/admin/staff")
+@admin_required
+def admin_staff():
+
+    db = get_db()
+
+    try:
+
+        staff = db.execute(
+            """
+            SELECT *
+            FROM staff
+            ORDER BY id DESC
+            """
+        ).fetchall()
+
+    finally:
+
+        close_db(db)
+
+
+    return render_template(
+        "admin_staff.html",
+        staff=staff
+    )
+
+
+# ============================================================
+# ADMIN STAFF VIEW
+# ============================================================
+
+@app.route(
+    "/admin/staff/<int:staff_id>"
+)
+@admin_required
+def admin_staff_view(
+    staff_id
+):
+
+    db = get_db()
+
+    try:
+
+        staff = db.execute(
+            """
+            SELECT *
+            FROM staff
+            WHERE id = ?
+            LIMIT 1
+            """,
+            (
+                staff_id,
+            )
+        ).fetchone()
+
+    finally:
+
+        close_db(db)
+
+
+    if not staff:
+
+        flash(
+            "Staff member not found.",
+            "danger"
+        )
+
+        return redirect(
+            url_for("admin_staff")
+        )
+
+
+    return render_template(
+        "admin_staff_view.html",
+        staff=staff
+    )
+
+
+# ============================================================
+# ADMIN STAFF ACTION
+# ============================================================
+
+@app.route(
+    "/admin/staff/<int:staff_id>/action",
+    methods=["POST"]
+)
+@admin_required
+def admin_staff_action(
+    staff_id
+):
+
+    action = request.form.get(
+        "action",
+        ""
+    ).strip().lower()
+
+
+    if action not in (
+        "approve",
+        "reject",
+        "disable",
+        "activate",
+    ):
+
+        flash(
+            "Invalid staff action.",
+            "danger"
+        )
+
+        return redirect(
+            url_for(
+                "admin_staff_view",
+                staff_id=staff_id
+            )
+        )
+
+
+    db = get_db()
+
+    try:
+
+        staff = db.execute(
+            """
+            SELECT *
+            FROM staff
+            WHERE id = ?
+            LIMIT 1
+            """,
+            (
+                staff_id,
+            )
+        ).fetchone()
+
+
+        if not staff:
+
+            flash(
+                "Staff member not found.",
+                "danger"
+            )
+
+            return redirect(
+                url_for("admin_staff")
+            )
+
+
+        new_status = {
+            "approve": "Active",
+            "reject": "Rejected",
+            "disable": "Disabled",
+            "activate": "Active",
+        }[action]
+
+
+        email = staff["email"]
+
+
+        if (
+            action in ("approve", "activate")
+            and not email
+        ):
+
+            email = generate_staff_email(
+                staff["first_name"],
+                staff["last_name"],
+                staff["staff_id"]
+            )
+
+
+        if action in (
+            "approve",
+            "activate"
+        ):
+
+            db.execute(
+                """
+                UPDATE staff
+                SET status = ?,
+                    email = COALESCE(?, email),
+                    approved_at = COALESCE(
+                        approved_at,
+                        ?
+                    )
+                WHERE id = ?
+                """,
+                (
+                    new_status,
+                    email,
+                    utc_now(),
+                    staff_id
+                )
+            )
+
+        else:
+
+            db.execute(
+                """
+                UPDATE staff
+                SET status = ?
+                WHERE id = ?
+                """,
+                (
+                    new_status,
+                    staff_id
+                )
+            )
+
+
+        db.commit()
+
+
+    finally:
+
+        close_db(db)
+
+
+    action_description = {
+        "approve": "Staff account approved.",
+        "reject": "Staff account rejected.",
+        "disable": "Staff account disabled.",
+        "activate": "Staff account activated.",
+    }[action]
+
+
+    log_activity(
+        "admin",
+        session["admin_id"],
+        f"staff_{action}",
+        (
+            f"{action_description} "
+            f"Staff ID: {staff['staff_id']}"
+        )
+    )
+
+
+    if action in (
+        "approve",
+        "activate"
+    ):
+
+        create_notification(
+            staff_id,
+            "Account Activated",
+            (
+                "Your Novera staff account "
+                "has been activated."
+            )
+        )
+
+
+        if email:
+
+            send_email(
+                email,
+                "Novera Staff Account Activated",
+                f"""
+{COMPANY_NAME}
+
+Your staff account has been activated.
+
+Staff ID:
+{staff["staff_id"]}
+
+You can now log in to the staff portal.
+"""
+            )
+
+
+    flash(
+        action_description,
+        "success"
+    )
+
+
+    return redirect(
+        url_for(
+            "admin_staff_view",
+            staff_id=staff_id
+        )
+    )
+
+
+# ============================================================
+# ADMIN CONSULTATIONS
+# ============================================================
+
+@app.route("/admin/consultations")
+@admin_required
+def admin_consultations():
+
+    db = get_db()
+
+    try:
+
+        consultations = db.execute(
+            """
+            SELECT
+                c.*,
+
+                s.first_name AS assigned_first_name,
+                s.last_name AS assigned_last_name,
+                s.email AS assigned_staff_email,
+                s.staff_id AS assigned_staff_code,
+
+                s.first_name AS staff_first_name,
+                s.last_name AS staff_last_name,
+                s.email AS staff_email
+
+            FROM consultations c
+
+            LEFT JOIN staff s
+                ON s.id = COALESCE(
+                    c.assigned_staff_id,
+                    c.assigned_to
+                )
+
+            ORDER BY c.id DESC
+            """
+        ).fetchall()
+
+    finally:
+
+        close_db(db)
+
+
+    return render_template(
+        "admin_consultations.html",
+        consultations=consultations
+    )
+
+
+# ============================================================
+# ADMIN CONSULTATION VIEW
+# ============================================================
+
+@app.route(
+    "/admin/consultations/<int:consultation_id>"
+)
+@admin_required
+def admin_consultation_view(
+    consultation_id
+):
+
+    db = get_db()
+
+    try:
+
+        consultation = db.execute(
+            """
+            SELECT
+                c.*,
+
+                s.first_name AS assigned_first_name,
+                s.last_name AS assigned_last_name,
+                s.staff_id AS assigned_staff_code,
+                s.email AS assigned_staff_email,
+                s.department AS assigned_department,
+                s.position AS assigned_position,
+
+                a.first_name AS assigned_by_first_name,
+                a.last_name AS assigned_by_last_name,
+                a.email AS assigned_by_email
+
+            FROM consultations c
+
+            LEFT JOIN staff s
+                ON s.id = COALESCE(
+                    c.assigned_staff_id,
+                    c.assigned_to
+                )
+
+            LEFT JOIN admins a
+                ON a.id = c.assigned_by
+
+            WHERE c.id = ?
+
+            LIMIT 1
+            """,
+            (
+                consultation_id,
+            )
+        ).fetchone()
+
+
+        staff = db.execute(
+            """
+            SELECT
+                id,
+                staff_id,
+                first_name,
+                last_name,
+                email,
+                department,
+                position,
+                status
+
+            FROM staff
+
+            WHERE status = 'Active'
+
+            ORDER BY first_name, last_name
+            """
+        ).fetchall()
+
+    finally:
+
+        close_db(db)
+
+
+    if not consultation:
+
+        flash(
+            "Consultation not found.",
+            "danger"
+        )
+
+        return redirect(
+            url_for("admin_consultations")
+        )
+
+
+    return render_template(
+        "admin_consultation_view.html",
+        consultation=consultation,
+        staff=staff
+    )
+
+
+# ============================================================
+# ADMIN CONSULTATION STATUS
+# ============================================================
+
+@app.route(
+    "/admin/consultations/<int:consultation_id>/status",
+    methods=["POST"]
+)
+@admin_required
+def admin_consultation_status(
+    consultation_id
+):
+
+    status = request.form.get(
+        "status",
+        "New"
+    ).strip()
+
+
+    if status not in CONSULTATION_STATUSES:
+
+        status = "New"
+
+
+    db = get_db()
+
+    try:
+
+        consultation = db.execute(
+            """
+            SELECT id
+            FROM consultations
+            WHERE id = ?
+            """,
+            (
+                consultation_id,
+            )
+        ).fetchone()
+
+
+        if not consultation:
+
+            flash(
+                "Consultation not found.",
+                "danger"
+            )
+
+            return redirect(
+                url_for("admin_consultations")
+            )
+
+
+        db.execute(
+            """
+            UPDATE consultations
+            SET status = ?,
+                updated_at = ?
+            WHERE id = ?
+            """,
+            (
+                status,
+                utc_now(),
+                consultation_id
+            )
+        )
+
+        db.commit()
+
+    finally:
+
+        close_db(db)
+
+
+    log_activity(
+        "admin",
+        session["admin_id"],
+        "consultation_status",
+        (
+            f"Consultation #{consultation_id} "
+            f"changed to {status}."
+        )
+    )
+
+
+    flash(
+        "Consultation status updated.",
+        "success"
+    )
+
+
+    return redirect(
+        url_for(
+            "admin_consultation_view",
+            consultation_id=consultation_id
+        )
+    )
+
+
+admin_update_consultation_status = (
+    admin_consultation_status
+)
+
+
+# ============================================================
+# ADMIN CONSULTATION ASSIGN
+# ============================================================
+
+@app.route(
+    "/admin/consultations/<int:consultation_id>/assign",
+    methods=["POST"]
+)
+@admin_required
+def admin_consultation_assign(
+    consultation_id
+):
+
+    assigned_staff_id = request.form.get(
+        "assigned_staff_id"
+    )
+
+    if not assigned_staff_id:
+
+        assigned_staff_id = request.form.get(
+            "assigned_to"
+        )
+
+
+    try:
+
+        assigned_staff_id = int(
+            assigned_staff_id
+        )
+
+    except (
+        TypeError,
+        ValueError
+    ):
+
+        flash(
+            "Please select a valid staff member.",
+            "danger"
+        )
+
+        return redirect(
+            url_for(
+                "admin_consultation_view",
+                consultation_id=consultation_id
+            )
+        )
+
+
+    db = get_db()
+
+    try:
+
+        consultation = db.execute(
+            """
+            SELECT *
+            FROM consultations
+            WHERE id = ?
+            LIMIT 1
+            """,
+            (
+                consultation_id,
+            )
+        ).fetchone()
+
+
+        staff = db.execute(
+            """
+            SELECT *
+            FROM staff
+            WHERE id = ?
+              AND status = 'Active'
+            LIMIT 1
+            """,
+            (
+                assigned_staff_id,
+            )
+        ).fetchone()
+
+
+        if not consultation:
+
+            flash(
+                "Consultation not found.",
+                "danger"
+            )
+
+            return redirect(
+                url_for("admin_consultations")
+            )
+
+
+        if not staff:
+
+            flash(
+                "Selected staff member is not active.",
+                "danger"
+            )
+
+            return redirect(
+                url_for(
+                    "admin_consultation_view",
+                    consultation_id=consultation_id
+                )
+            )
+
+
+        db.execute(
+            """
+            UPDATE consultations
+            SET
+                assigned_staff_id = ?,
+                assigned_to = ?,
+                assigned_by = ?,
+                assigned_at = ?,
+                updated_at = ?
+
+            WHERE id = ?
+            """,
+            (
+                staff["id"],
+                staff["id"],
+                session["admin_id"],
+                utc_now(),
+                utc_now(),
+                consultation_id
+            )
+        )
+
+
+        db.commit()
+
+
+    finally:
+
+        close_db(db)
+
+
+    create_notification(
+        staff["id"],
+        "Consultation Assigned",
+        (
+            f"Consultation #{consultation_id} "
+            "has been assigned to you."
+        )
+    )
+
+
+    send_assignment_email(
+        staff,
+        consultation
+    )
+
+
+    log_activity(
+        "admin",
+        session["admin_id"],
+        "consultation_assigned",
+        (
+            f"Consultation #{consultation_id} "
+            f"assigned to {staff['staff_id']}."
+        )
+    )
+
+
+    flash(
+        (
+            f"Consultation assigned to "
+            f"{staff['first_name']} {staff['last_name']}."
+        ),
+        "success"
+    )
+
+
+    return redirect(
+        url_for(
+            "admin_consultation_view",
+            consultation_id=consultation_id
+        )
+    )
+
+
+admin_assign_consultation = (
+    admin_consultation_assign
+)
+
+
+# ============================================================
+# ADMIN CONSULTATION UNASSIGN
+# ============================================================
+
+@app.route(
+    "/admin/consultations/<int:consultation_id>/unassign",
+    methods=["POST"]
+)
+@admin_required
+def admin_consultation_unassign(
+    consultation_id
+):
+
+    db = get_db()
+
+    try:
+
+        consultation = db.execute(
+            """
+            SELECT *
+            FROM consultations
+            WHERE id = ?
+            LIMIT 1
+            """,
+            (
+                consultation_id,
+            )
+        ).fetchone()
+
+
+        if not consultation:
+
+            flash(
+                "Consultation not found.",
+                "danger"
+            )
+
+            return redirect(
+                url_for("admin_consultations")
+            )
+
+
+        db.execute(
+            """
+            UPDATE consultations
+            SET
+                assigned_staff_id = NULL,
+                assigned_to = NULL,
+                assigned_by = NULL,
+                assigned_at = NULL,
+                updated_at = ?
+
+            WHERE id = ?
+            """,
+            (
+                utc_now(),
+                consultation_id
+            )
+        )
+
+        db.commit()
+
+    finally:
+
+        close_db(db)
+
+
+    log_activity(
+        "admin",
+        session["admin_id"],
+        "consultation_unassigned",
+        (
+            f"Consultation #{consultation_id} "
+            "was unassigned."
+        )
+    )
+
+
+    flash(
+        "Consultation unassigned.",
+        "success"
+    )
+
+
+    return redirect(
+        url_for(
+            "admin_consultation_view",
+            consultation_id=consultation_id
+        )
+    )
+
+
+admin_unassign_consultation = (
+    admin_consultation_unassign
+)
+
+
+# ============================================================
+# ADMIN CONSULTATION DELETE
+# ============================================================
+
+@app.route(
+    "/admin/consultations/<int:consultation_id>/delete",
+    methods=["POST"]
+)
+@admin_required
+def admin_consultation_delete(
+    consultation_id
+):
+
+    db = get_db()
+
+    try:
+
+        consultation = db.execute(
+            """
+            SELECT *
+            FROM consultations
+            WHERE id = ?
+            LIMIT 1
+            """,
+            (
+                consultation_id,
+            )
+        ).fetchone()
+
+
+        if not consultation:
+
+            flash(
+                "Consultation not found.",
+                "danger"
+            )
+
+            return redirect(
+                url_for("admin_consultations")
+            )
+
+
+        db.execute(
+            """
+            DELETE FROM consultations
+            WHERE id = ?
+            """,
+            (
+                consultation_id,
+            )
+        )
+
+        db.commit()
+
+    finally:
+
+        close_db(db)
+
+
+    log_activity(
+        "admin",
+        session["admin_id"],
+        "consultation_deleted",
+        (
+            f"Consultation #{consultation_id} "
+            "was deleted."
+        )
+    )
+
+
+    flash(
+        "Consultation deleted.",
+        "success"
+    )
+
+
+    return redirect(
+        url_for("admin_consultations")
+    )
+
+
+admin_delete_consultation = (
+    admin_consultation_delete
+)
+
+
+# ============================================================
+# ADMIN LOGOUT
+# ============================================================
+
+@app.route("/admin/logout")
+def admin_logout():
+
+    admin = current_admin()
+
+    if admin:
+
+        log_activity(
+            "admin",
+            admin["id"],
+            "admin_logout",
+            "Administrator logged out."
+        )
+
+    session.clear()
+
+    flash(
+        "Administrator logged out.",
+        "success"
+    )
+
+    return redirect(
+        url_for("admin_login")
+    )
+
+
+# ============================================================
+# MD REGISTRATION
+# ============================================================
+
+@app.route(
+    "/md/register",
+    methods=["GET", "POST"]
+)
+def md_register():
+
+    if request.method == "GET":
+        return render_template(
+            "md_register.html"
+        )
+
+    email = request.form.get(
+        "email",
+        ""
+    ).strip().lower()
+
+    password = request.form.get(
+        "password",
+        ""
+    )
+
+    confirm_password = request.form.get(
+        "confirm_password",
+        ""
+    )
+
+    first_name = request.form.get(
+        "first_name",
+        ""
+    ).strip()
+
+    last_name = request.form.get(
+        "last_name",
+        ""
+    ).strip()
+
+
+    if not email:
+        flash(
+            "Email address is required.",
+            "danger"
+        )
+
+        return redirect(
+            url_for("md_register")
+        )
+
+
+    if not password:
+        flash(
+            "Password is required.",
+            "danger"
+        )
+
+        return redirect(
+            url_for("md_register")
+        )
+
+
+    if len(password) < 8:
+        flash(
+            "Password must be at least 8 characters.",
+            "danger"
+        )
+
+        return redirect(
+            url_for("md_register")
+        )
+
+
+    if password != confirm_password:
+        flash(
+            "Passwords do not match.",
+            "danger"
+        )
+
+        return redirect(
+            url_for("md_register")
+        )
+
+
+    db = get_db()
+
+    try:
+
+        existing = db.execute(
+            """
+            SELECT id
+            FROM admins
+            WHERE LOWER(email) = LOWER(?)
+            LIMIT 1
+            """,
+            (
+                email,
+            )
+        ).fetchone()
+
+
+        if existing:
+
+            flash(
+                "An account with this email already exists.",
+                "danger"
+            )
+
+            return redirect(
+                url_for("md_register")
+            )
+
+
+        db.execute(
+            """
+            INSERT INTO admins (
+                email,
+                password_hash,
+                first_name,
+                last_name,
+                status,
+                created_at
+            )
+            VALUES (?, ?, ?, ?, 'Active', ?)
+            """,
+            (
+                email,
+                generate_password_hash(password),
+                first_name or "Management",
+                last_name or "Director",
+                utc_now()
+            )
+        )
+
+        db.commit()
+
+
+    except sqlite3.IntegrityError:
+
+        db.rollback()
+
+        flash(
+            "An account with this email already exists.",
+            "danger"
+        )
+
+        return redirect(
+            url_for("md_register")
+        )
+
+
+    finally:
+
+        close_db(db)
+
+
+    flash(
+        "Management account created successfully. You can now log in.",
+        "success"
+    )
+
+    return redirect(
+        url_for("md_login")
+    )
+
+
+# ============================================================
+# MD LOGIN
+# ============================================================
+
+@app.route(
+    "/md/login",
+    methods=["GET", "POST"]
+)
+def md_login():
+
+    if request.method == "GET":
+
+        return render_template(
+            "md_login.html"
+        )
+
+
+    email = request.form.get(
+        "email",
+        ""
+    ).strip().lower()
+
+    password = request.form.get(
+        "password",
+        ""
+    )
+
+
+    if not email or not password:
+
+        flash(
+            "Email and password are required.",
+            "danger"
+        )
+
+        return render_template(
+            "md_login.html"
+        )
+
+
+    db = get_db()
+
+    try:
+
+        md = db.execute(
+            """
+            SELECT *
+            FROM admins
+            WHERE LOWER(email) = LOWER(?)
+              AND status = 'Active'
+            LIMIT 1
+            """,
+            (
+                email,
+            )
+        ).fetchone()
+
+
+        if not md:
+
+            flash(
+                "Invalid management email or password.",
+                "danger"
+            )
+
+            return render_template(
+                "md_login.html"
+            )
+
+
+        if not check_password_hash(
+            md["password_hash"],
+            password
+        ):
+
+            flash(
+                "Invalid management email or password.",
+                "danger"
+            )
+
+            return render_template(
+                "md_login.html"
+            )
+
+
+        session.clear()
+
+        session["md_id"] = md["id"]
+        session["md_email"] = md["email"]
+
+
+    finally:
+
+        close_db(db)
+
+
+    return redirect(
+        url_for("md_dashboard")
+    )
+
+
+# ============================================================
+# MD DASHBOARD
+# ============================================================
+
+@app.route("/md/dashboard")
+@md_required
+def md_dashboard():
+
+    db = get_db()
+
+    try:
+
+        total_staff = db.execute(
+            """
+            SELECT COUNT(*)
+            FROM staff
+            """
+        ).fetchone()[0]
+
+        pending_staff = db.execute(
+            """
+            SELECT COUNT(*)
+            FROM staff
+            WHERE status = 'Pending'
+            """
+        ).fetchone()[0]
+
+        active_staff = db.execute(
+            """
+            SELECT COUNT(*)
+            FROM staff
+            WHERE status = 'Active'
+            """
+        ).fetchone()[0]
+
+        consultations = db.execute(
+            """
+            SELECT COUNT(*)
+            FROM consultations
+            WHERE status = 'New'
+            """
+        ).fetchone()[0]
+
+        recent_staff = db.execute(
+            """
+            SELECT *
+            FROM staff
+            ORDER BY id DESC
+            LIMIT 10
+            """
+        ).fetchall()
+
+    finally:
+
+        close_db(db)
+
+
+    return render_template(
+        "md_dashboard.html",
+
+        total_staff=total_staff,
+        pending_staff=pending_staff,
+        active_staff=active_staff,
+
+        consultations=consultations,
+
+        recent_staff=recent_staff
+    )
+
+
+# ============================================================
+# MD STAFF
+# ============================================================
+
+@app.route("/md/staff")
+@md_required
+def md_staff():
+
+    db = get_db()
+
+    try:
+
+        staff = db.execute(
+            """
+            SELECT *
+            FROM staff
+            ORDER BY id DESC
+            """
+        ).fetchall()
+
+    finally:
+
+        close_db(db)
+
+
+    return render_template(
+        "md_staff.html",
+        staff=staff
+    )
+
+
+# ============================================================
+# MD STAFF VIEW
+# ============================================================
+
+@app.route(
+    "/md/staff/<int:staff_id>"
+)
+@md_required
+def md_staff_view(
+    staff_id
+):
+
+    db = get_db()
+
+    try:
+
+        staff = db.execute(
+            """
+            SELECT *
+            FROM staff
+            WHERE id = ?
+            LIMIT 1
+            """,
+            (
+                staff_id,
+            )
+        ).fetchone()
+
+    finally:
+
+        close_db(db)
+
+
+    if not staff:
+
+        flash(
+            "Staff member not found.",
+            "danger"
+        )
+
+        return redirect(
+            url_for("md_staff")
+        )
+
+
+    return render_template(
+        "md_staff_view.html",
+        staff=staff
+    )
+
+
+# ============================================================
+# MD STAFF ACTION
+# ============================================================
+
+@app.route(
+    "/md/staff/<int:staff_id>/action",
+    methods=["POST"]
+)
+@md_required
+def md_staff_action(
+    staff_id
+):
+
+    action = request.form.get(
+        "action",
+        ""
+    ).strip().lower()
+
+
+    if action not in (
+        "approve",
+        "reject",
+        "disable",
+        "activate",
+    ):
+
+        flash(
+            "Invalid staff action.",
+            "danger"
+        )
+
+        return redirect(
+            url_for(
+                "md_staff_view",
+                staff_id=staff_id
+            )
+        )
+
+
+    db = get_db()
+
+    try:
+
+        staff = db.execute(
+            """
+            SELECT *
+            FROM staff
+            WHERE id = ?
+            LIMIT 1
+            """,
+            (
+                staff_id,
+            )
+        ).fetchone()
+
+
+        if not staff:
+
+            flash(
+                "Staff member not found.",
+                "danger"
+            )
+
+            return redirect(
+                url_for("md_staff")
+            )
+
+
+        new_status = {
+            "approve": "Active",
+            "reject": "Rejected",
+            "disable": "Disabled",
+            "activate": "Active",
+        }[action]
+
+
+        email = staff["email"]
+
+
+        if (
+            action in ("approve", "activate")
+            and not email
+        ):
+
+            email = generate_staff_email(
+                staff["first_name"],
+                staff["last_name"],
+                staff["staff_id"]
+            )
+
+
+        if action in (
+            "approve",
+            "activate"
+        ):
+
+            db.execute(
+                """
+                UPDATE staff
+                SET
+                    status = ?,
+                    email = COALESCE(?, email),
+                    approved_at = COALESCE(
+                        approved_at,
+                        ?
+                    )
+
+                WHERE id = ?
+                """,
+                (
+                    new_status,
+                    email,
+                    utc_now(),
+                    staff_id
+                )
+            )
+
+        else:
+
+            db.execute(
+                """
+                UPDATE staff
+                SET status = ?
+                WHERE id = ?
+                """,
+                (
+                    new_status,
+                    staff_id
+                )
+            )
+
+
+        db.commit()
+
+    finally:
+
+        close_db(db)
+
+
+    log_activity(
+        "md",
+        session["md_id"],
+        f"staff_{action}",
+        (
+            f"MD performed {action} "
+            f"on Staff ID {staff['staff_id']}."
+        )
+    )
+
+
+    if action in (
+        "approve",
+        "activate"
+    ):
+
+        create_notification(
+            staff_id,
+            "Account Activated",
+            (
+                "Your Novera staff account "
+                "has been activated."
+            )
+        )
+
+
+        if email:
+
+            send_email(
+                email,
+                "Novera Staff Account Activated",
+                f"""
+{COMPANY_NAME}
+
+Your staff account has been activated.
+
+Staff ID:
+{staff["staff_id"]}
+
+You can now log in to the staff portal.
+"""
+            )
+
+
+    flash(
+        "Staff status updated.",
+        "success"
+    )
+
+
+    return redirect(
+        url_for(
+            "md_staff_view",
+            staff_id=staff_id
+        )
+    )
+
+
+# ============================================================
+# MD CONSULTATIONS
+# ============================================================
+
+@app.route("/md/consultations")
+@md_required
+def md_consultations():
+
+    db = get_db()
+
+    try:
+
+        consultations = db.execute(
+            """
+            SELECT
+                c.*,
+
+                s.first_name AS assigned_first_name,
+                s.last_name AS assigned_last_name,
+                s.staff_id AS assigned_staff_code,
+                s.email AS assigned_staff_email,
+                s.department AS assigned_department,
+                s.position AS assigned_position,
+
+                a.first_name AS assigned_by_first_name,
+                a.last_name AS assigned_by_last_name,
+                a.email AS assigned_by_email
+
+            FROM consultations c
+
+            LEFT JOIN staff s
+                ON s.id = COALESCE(
+                    c.assigned_staff_id,
+                    c.assigned_to
+                )
+
+            LEFT JOIN admins a
+                ON a.id = c.assigned_by
+
+            ORDER BY c.id DESC
+            """
+        ).fetchall()
+
+    finally:
+
+        close_db(db)
+
+
+    return render_template(
+        "md_consultations.html",
+        consultations=consultations
+    )
+
+
+# ============================================================
+# MD CONSULTATION VIEW
+# READ ONLY
+# ============================================================
+
+@app.route(
+    "/md/consultations/<int:consultation_id>"
+)
+@md_required
+def md_consultation_view(
+    consultation_id
+):
+
+    db = get_db()
+
+    try:
+
+        consultation = db.execute(
+            """
+            SELECT
+                c.*,
+
+                s.first_name AS assigned_first_name,
+                s.last_name AS assigned_last_name,
+                s.staff_id AS assigned_staff_code,
+                s.email AS assigned_staff_email,
+                s.department AS assigned_department,
+                s.position AS assigned_position,
+
+                a.first_name AS assigned_by_first_name,
+                a.last_name AS assigned_by_last_name,
+                a.email AS assigned_by_email
+
+            FROM consultations c
+
+            LEFT JOIN staff s
+                ON s.id = COALESCE(
+                    c.assigned_staff_id,
+                    c.assigned_to
+                )
+
+            LEFT JOIN admins a
+                ON a.id = c.assigned_by
+
+            WHERE c.id = ?
+
+            LIMIT 1
+            """,
+            (
+                consultation_id,
+            )
+        ).fetchone()
+
+    finally:
+
+        close_db(db)
+
+
+    if not consultation:
+
+        flash(
+            "Consultation not found.",
+            "danger"
+        )
+
+        return redirect(
+            url_for("md_consultations")
+        )
+
+
+    return render_template(
+        "md_consultation_view.html",
+        consultation=consultation
+    )
+
+
+# ============================================================
+# MD CONSULTATION MUTATION COMPATIBILITY ROUTES
+# ============================================================
+
+@app.route(
+    "/md/consultations/<int:consultation_id>/assign",
+    methods=["POST"]
+)
+@md_required
+def md_consultation_assign(
+    consultation_id
+):
+
+    flash(
+        "Management consultation view is read-only.",
+        "warning"
+    )
+
+    return redirect(
+        url_for(
+            "md_consultation_view",
+            consultation_id=consultation_id
+        )
+    )
+
+
+@app.route(
+    "/md/consultations/<int:consultation_id>/unassign",
+    methods=["POST"]
+)
+@md_required
+def md_consultation_unassign(
+    consultation_id
+):
+
+    flash(
+        "Management consultation view is read-only.",
+        "warning"
+    )
+
+    return redirect(
+        url_for(
+            "md_consultation_view",
+            consultation_id=consultation_id
+        )
+    )
+
+
+@app.route(
+    "/md/consultations/<int:consultation_id>/status",
+    methods=["POST"]
+)
+@md_required
+def md_consultation_status(
+    consultation_id
+):
+
+    flash(
+        "Management consultation view is read-only.",
+        "warning"
+    )
+
+    return redirect(
+        url_for(
+            "md_consultation_view",
+            consultation_id=consultation_id
+        )
+    )
+
+
+# ============================================================
+# MD LOGOUT
+# ============================================================
+
+@app.route("/md/logout")
+def md_logout():
+
+    session.pop(
+        "md_id",
+        None
+    )
+
+    session.pop(
+        "md_email",
+        None
+    )
+
+    flash(
+        "Management logged out.",
+        "success"
+    )
+
+    return redirect(
+        url_for("md_login")
+    )
+
+
+# ============================================================
+# GENERIC 404
 # ============================================================
 
 @app.errorhandler(404)
-def page_not_found(error):
+def not_found(error):
 
-    try:
-
-        return render_template(
+    return (
+        render_template(
             "404.html"
-        ), 404
-
-    except Exception:
-
-        return (
-            "Page not found.",
-            404
         )
+        if (
+            TEMPLATES_DIR / "404.html"
+        ).exists()
+        else "Page not found.",
+        404
+    )
 
 
 # ============================================================
-# ERROR HANDLER - 500
+# GENERIC 500
 # ============================================================
 
 @app.errorhandler(500)
-def internal_server_error(error):
+def internal_error(error):
 
-    try:
+    app.logger.exception(
+        "Internal server error"
+    )
 
-        return render_template(
+    return (
+        render_template(
             "500.html"
-        ), 500
-
-    except Exception:
-
-        return (
-            "Internal server error.",
-            500
         )
+        if (
+            TEMPLATES_DIR / "500.html"
+        ).exists()
+        else "Internal server error.",
+        500
+    )
 
 
 # ============================================================
-# START SERVER
+# STARTUP
+# ============================================================
+
+try:
+
+    init_database()
+
+except Exception as startup_error:
+
+    print()
+    print("=" * 65)
+    print("NOVERA DATABASE STARTUP ERROR")
+    print("=" * 65)
+    print(startup_error)
+    print(f"Database: {DATABASE_PATH}")
+    print("=" * 65)
+    print()
+
+    raise
+
+
+# ============================================================
+# RUN
 # ============================================================
 
 if __name__ == "__main__":
 
-    init_db()
-
-    migrate_database()
-
     print()
-    print("=" * 70)
-    print("NOVERA ENERGY & TECHNOLOGIES PORTAL")
-    print("=" * 70)
-
+    print("=" * 65)
+    print("NOVERA ENERGY & TECHNOLOGIES LTD")
+    print("BACKEND SERVER")
+    print("=" * 65)
+    print(f"Database : {DATABASE_PATH}")
+    print(f"Templates: {TEMPLATES_DIR}")
+    print(f"Website  : {INDEX_FILE}")
+    print(f"Logo     : {LOGO_PATH}")
+    print("=" * 65)
+    print("Website:")
+    print("http://127.0.0.1:5000/")
     print()
-
-    print(
-        "Project Directory:"
-    )
-
-    print(
-        PROJECT_DIR
-    )
-
+    print("Training Application:")
+    print("http://127.0.0.1:5000/training/apply")
     print()
-
-    print(
-        "Backend Directory:"
-    )
-
-    print(
-        BASE_DIR
-    )
-
+    print("Admin:")
+    print("http://127.0.0.1:5000/admin/login")
     print()
-
-    print(
-        "Templates Directory:"
-    )
-
-    print(
-        TEMPLATES_DIR
-    )
-
+    print("Staff:")
+    print("http://127.0.0.1:5000/staff/login")
     print()
-
-    print(
-        "Assets Directory:"
-    )
-
-    print(
-        ASSETS_DIR
-    )
-
+    print("MD:")
+    print("http://127.0.0.1:5000/md/login")
+    print("=" * 65)
     print()
-
-    print(
-        "Database:"
-    )
-
-    print(
-        DATABASE_PATH
-    )
-
-    print()
-
-    print(
-        "Logo:"
-    )
-
-    print(
-        LOGO_PATH
-    )
-
-    print()
-
-    print(
-        "Logo Exists:"
-    )
-
-    print(
-        LOGO_PATH.exists()
-    )
-
-    print()
-
-    print(
-        "Consultation Email:"
-    )
-
-    print(
-        CONSULTATION_EMAIL
-    )
-
-    print()
-
-    print(
-        "Main Portal:"
-    )
-
-    print(
-        "http://127.0.0.1:5000/"
-    )
-
-    print()
-
-    print(
-        "Staff Registration:"
-    )
-
-    print(
-        "http://127.0.0.1:5000/staff/register"
-    )
-
-    print()
-
-    print(
-        "Staff Login:"
-    )
-
-    print(
-        "http://127.0.0.1:5000/staff/login"
-    )
-
-    print()
-
-    print(
-        "Staff Dashboard:"
-    )
-
-    print(
-        "http://127.0.0.1:5000/staff/dashboard"
-    )
-
-    print()
-
-    print(
-        "Staff Consultations:"
-    )
-
-    print(
-        "http://127.0.0.1:5000/staff/consultations"
-    )
-
-    print()
-
-    print(
-        "MD Registration:"
-    )
-
-    print(
-        "http://127.0.0.1:5000/md/register"
-    )
-
-    print()
-
-    print(
-        "MD Login:"
-    )
-
-    print(
-        "http://127.0.0.1:5000/md/login"
-    )
-
-    print()
-
-    print(
-        "MD Dashboard:"
-    )
-
-    print(
-        "http://127.0.0.1:5000/md/dashboard"
-    )
-
-    print()
-
-    print(
-        "MD Consultations:"
-    )
-
-    print(
-        "http://127.0.0.1:5000/md/consultations"
-    )
-
-    print()
-
-    print(
-        "Admin Login:"
-    )
-
-    print(
-        "http://127.0.0.1:5000/admin/login"
-    )
-
-    print()
-
-    print(
-        "Admin Dashboard:"
-    )
-
-    print(
-        "http://127.0.0.1:5000/admin/dashboard"
-    )
-
-    print()
-
-    print(
-        "Admin Consultations:"
-    )
-
-    print(
-        "http://127.0.0.1:5000/admin/consultations"
-    )
-
-    print()
-
-    print(
-        "Logo URL:"
-    )
-
-    print(
-        "http://127.0.0.1:5000/logo.jpg"
-    )
-
-    print()
-
-    print("=" * 70)
 
     app.run(
         host="0.0.0.0",
-
-        port=int(
-            os.getenv(
-                "PORT",
-                "5000"
-            )
-        ),
-
-        debug=(
-            os.getenv(
-                "FLASK_DEBUG",
-                "False"
-            ).lower() == "true"
-        )
+        port=5000,
+        debug=True
     )

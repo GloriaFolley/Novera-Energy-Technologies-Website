@@ -8,10 +8,10 @@
 <meta name="viewport"
       content="width=device-width, initial-scale=1.0">
 
-<title>Novera Energy & Technologies Ltd</title>
+<title>Novera Energy & Technologies</title>
 
 <meta name="description"
-      content="Novera Energy & Technologies Ltd provides professional security, electrical, automation, PA system and fire alarm solutions for homes and businesses in Ghana.">
+      content="Novera Energy & Technologies provides professional security, electrical, automation, PA system and fire alarm solutions for homes and businesses in Ghana.">
 
 <link rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -1368,6 +1368,305 @@ footer{
 }
 
 
+
+/* =========================================================
+   NOVERA INTERNAL STANDARDS
+========================================================= */
+
+.novera-standard{
+    cursor:default;
+}
+
+.standards-note{
+    margin-top:18px;
+    padding:13px 15px;
+    background:#f7f9fc;
+    border-left:4px solid #0072ff;
+    border-radius:8px;
+    color:#5b6573;
+    font-size:12px;
+    line-height:1.7;
+}
+
+
+/* =========================================================
+   COMPANY GALLERY / SLIDESHOW
+========================================================= */
+
+.company-gallery{
+    background:
+        radial-gradient(circle at 10% 20%, rgba(106,27,154,.10), transparent 35%),
+        radial-gradient(circle at 90% 80%, rgba(0,114,255,.10), transparent 35%),
+        #f8fafc;
+}
+
+.gallery-intro{
+    max-width:760px;
+    margin:-20px auto 35px;
+    text-align:center;
+    color:#667085;
+}
+
+.company-slideshow{
+    position:relative;
+    width:100%;
+    height:620px;
+    overflow:hidden;
+    border-radius:22px;
+    background:#0b1730;
+    box-shadow:0 20px 50px rgba(0,0,0,.16);
+}
+
+.company-slide{
+    position:absolute;
+    inset:0;
+    opacity:0;
+    transition:opacity 1.1s ease;
+}
+
+.company-slide.active{
+    opacity:1;
+}
+
+.company-slide img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    filter:brightness(.55);
+    transform:scale(1.02);
+    transition:transform 6s ease;
+}
+
+.company-slide.active img{
+    transform:scale(1);
+}
+
+.gallery-overlay{
+    position:absolute;
+    inset:0;
+    z-index:2;
+    background:
+        linear-gradient(
+            90deg,
+            rgba(31,10,55,.78),
+            rgba(0,55,120,.45),
+            rgba(0,0,0,.18)
+        );
+}
+
+.gallery-caption{
+    position:absolute;
+    left:7%;
+    bottom:12%;
+    z-index:3;
+    max-width:620px;
+    color:white;
+}
+
+.gallery-caption span{
+    display:inline-block;
+    margin-bottom:12px;
+    padding:7px 13px;
+    border-radius:20px;
+    background:rgba(255,193,7,.92);
+    color:#241335;
+    font-size:12px;
+    font-weight:800;
+    letter-spacing:1px;
+}
+
+.gallery-caption h3{
+    font-size:38px;
+    line-height:1.2;
+    margin-bottom:12px;
+}
+
+.gallery-caption p{
+    color:#f2f5fa;
+    font-size:15px;
+    line-height:1.7;
+}
+
+.gallery-arrow{
+    position:absolute;
+    top:50%;
+    z-index:5;
+    transform:translateY(-50%);
+    width:48px;
+    height:48px;
+    border:none;
+    border-radius:50%;
+    background:rgba(255,255,255,.18);
+    color:white;
+    backdrop-filter:blur(8px);
+    cursor:pointer;
+    transition:.3s;
+}
+
+.gallery-arrow:hover{
+    background:#ffc107;
+    color:#241335;
+}
+
+.gallery-prev{
+    left:22px;
+}
+
+.gallery-next{
+    right:22px;
+}
+
+.gallery-dots{
+    position:absolute;
+    left:50%;
+    bottom:25px;
+    z-index:5;
+    transform:translateX(-50%);
+    display:flex;
+    gap:9px;
+}
+
+.gallery-dot{
+    width:11px;
+    height:11px;
+    border:none;
+    border-radius:50%;
+    background:rgba(255,255,255,.5);
+    cursor:pointer;
+    padding:0;
+    transition:.3s;
+}
+
+.gallery-dot.active{
+    background:#ffc107;
+    transform:scale(1.25);
+}
+
+
+/* =========================================================
+   COMPANY PROFILE PDF
+========================================================= */
+
+.company-profile{
+    background:
+        linear-gradient(
+            135deg,
+            rgba(106,27,154,.07),
+            rgba(0,114,255,.07),
+            rgba(255,193,7,.08)
+        );
+}
+
+.profile-card{
+    max-width:920px;
+    margin:0 auto;
+    padding:35px;
+    display:flex;
+    align-items:center;
+    gap:30px;
+    background:rgba(255,255,255,.92);
+    border:1px solid #e8edf5;
+    border-radius:20px;
+    box-shadow:0 15px 40px rgba(0,0,0,.08);
+}
+
+.profile-icon{
+    flex:0 0 90px;
+    width:90px;
+    height:90px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:20px;
+    background:linear-gradient(135deg,#6a1b9a,#0072ff);
+    color:white;
+    font-size:38px;
+}
+
+.profile-content h3{
+    color:#003b82;
+    font-size:25px;
+    margin-bottom:10px;
+}
+
+.profile-content p{
+    color:#667085;
+    line-height:1.75;
+    margin-bottom:20px;
+}
+
+.profile-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    margin-right:10px;
+    margin-top:5px;
+    padding:12px 20px;
+    border-radius:25px;
+    background:#003b82;
+    color:white;
+    font-weight:700;
+    font-size:13px;
+    transition:.3s;
+}
+
+.profile-btn:hover{
+    background:#6a1b9a;
+    transform:translateY(-2px);
+}
+
+.profile-btn-outline{
+    background:white;
+    color:#003b82;
+    border:1px solid #cfd9e8;
+}
+
+.profile-btn-outline:hover{
+    background:#f2f6ff;
+    color:#6a1b9a;
+}
+
+
+/* =========================================================
+   NOVERA BRAND ACCENTS
+========================================================= */
+
+.section-title{
+    color:#3b176d;
+}
+
+.section-title::after{
+    background:linear-gradient(90deg,#6a1b9a,#0072ff,#ffc107);
+}
+
+.about-container h3,
+.services-intro h3,
+.card h3,
+.process-card h3,
+.academy-card h4,
+.contact-left h2,
+.contact-form h3{
+    color:#3b176d;
+}
+
+.about-badges span:nth-child(1){
+    background:#6a1b9a;
+}
+
+.about-badges span:nth-child(2){
+    background:#0072ff;
+}
+
+.about-badges span:nth-child(3){
+    background:#ffc107;
+    color:#241335;
+}
+
+.novera-standard{
+    border-color:#e4d7f0;
+}
+
+
 /* =========================================================
    MOBILE
 ========================================================= */
@@ -1438,6 +1737,41 @@ footer{
     }
 
 }
+
+
+@media(max-width:800px){
+
+    .company-slideshow{
+        height:520px;
+    }
+
+    .gallery-caption{
+        left:6%;
+        right:6%;
+        bottom:13%;
+    }
+
+    .gallery-caption h3{
+        font-size:29px;
+    }
+
+    .gallery-caption p{
+        font-size:14px;
+    }
+
+    .profile-card{
+        flex-direction:column;
+        text-align:center;
+        padding:28px 22px;
+    }
+
+    .profile-btn{
+        margin-right:4px;
+        margin-left:4px;
+    }
+
+}
+
 
 @media(max-width:560px){
 
@@ -1524,9 +1858,7 @@ footer{
            data-fr="À propos"
            data-de="Über uns"
            data-es="Sobre nosotros"
-           data-tw="Yɛn Ho"
-           data-ee="Mía ŋu"
-           data-da="Mia ŋu">
+           data-tw="Yɛn Ho">
             About
         </a>
 
@@ -1535,9 +1867,7 @@ footer{
            data-fr="Services"
            data-de="Dienstleistungen"
            data-es="Servicios"
-           data-tw="Yɛn Nnwuma"
-           data-ee="Mía ƒe Dɔwɔnuwo"
-           data-da="Mia Dɔwɔnu">
+           data-tw="Yɛn Nnwuma">
             Services
         </a>
 
@@ -1546,9 +1876,7 @@ footer{
            data-fr="Produits"
            data-de="Produkte"
            data-es="Productos"
-           data-tw="Nneɛma"
-           data-ee="Nuwo"
-           data-da="Núwo">
+           data-tw="Nneɛma">
             Products
         </a>
 
@@ -1557,9 +1885,7 @@ footer{
            data-fr="Académie"
            data-de="Akademie"
            data-es="Academia"
-           data-tw="Adesua"
-           data-ee="Akademi"
-           data-da="Adesua">
+           data-tw="Adesua">
             Academy
         </a>
 
@@ -1568,9 +1894,7 @@ footer{
            data-fr="Contact"
            data-de="Kontakt"
            data-es="Contacto"
-           data-tw="Nkitahodi"
-           data-ee="Nɔnɔmetata"
-           data-da="Nɔŋɔ">
+           data-tw="Nkitahodi">
             Contact
         </a>
 
@@ -1624,16 +1948,6 @@ footer{
                     data-language="tw">
                 Twi
             </button>
-            
-            <button type="button"
-                    data-language="ee">
-                Ewe
-            </button>
-
-            <button type="button"
-                    data-language="da">
-                Dangme
-            </button>
 
         </div>
 
@@ -1651,27 +1965,27 @@ footer{
     <div class="hero-slides">
 
         <div class="hero-slide active">
-            <img src="assets/hero/hero-cctv.jpg"
+            <img src="assets/gallery/IMG_0461.PNG"
                  alt="CCTV Installation">
         </div>
 
         <div class="hero-slide">
-            <img src="assets/hero/hero-gate.jpg"
+            <img src="assets/gallery/IMG_0385.jpg"
                  alt="Automatic Gate">
         </div>
 
         <div class="hero-slide">
-            <img src="assets/hero/hero-wiring.jpg"
+            <img src="assets/gallery/IMG_0452.PNG"
                  alt="Electrical Wiring">
         </div>
 
         <div class="hero-slide">
-            <img src="assets/hero/hero-fire-alarm.jpg"
+            <img src="assets/gallery/B174F68B-F98C-4EAF-B392-683B315C4D68.PNG"
                  alt="Fire Alarm System">
         </div>
 
         <div class="hero-slide">
-            <img src="assets/hero/hero-access.jpg"
+            <img src="assets/gallery/IMG_0384.JPG"
                  alt="Access Control">
         </div>
 
@@ -1688,9 +2002,7 @@ footer{
             data-fr="Des espaces sécurisés.<br>Installés professionnellement."
             data-de="Sichere Räume.<br>Professionell installiert."
             data-es="Espacios seguros.<br>Instalados profesionalmente."
-            data-tw="Fa ahotɔ no.<br>Yɛde adwuma no yie."
-            data-ee="Aƒeviwo kple nɔƒewo me dzidzedze.<br>Yɛwɔ dɔ nyuie."
-            data-da="Nɔ̃ɔ nɔ ŋmɛ.<br>Yɛ yɛ dɔ nyuie.">
+            data-tw="Fa ahotɔ no.<br>Yɛde adwuma no yie.">
 
             Secure Spaces.<br>
             Installed Professionally.
@@ -1703,9 +2015,7 @@ footer{
             data-fr="Des solutions professionnelles de sécurité, d'électricité, d'automatisation et de technologies intelligentes pour les maisons et les entreprises au Ghana."
             data-de="Professionelle Lösungen für Sicherheit, Elektroinstallationen, Automatisierung und intelligente Technologien für Häuser und Unternehmen in Ghana."
             data-es="Soluciones profesionales de seguridad, electricidad, automatización y tecnología inteligente para hogares y empresas en Ghana."
-            data-tw="Yɛma professional security, electrical, automation ne smart technology solutions ma afie ne nnwuma wɔ Ghana."
-            data-ee="Míena security, electrical, automation kple smart technology ƒe nɔnɔme vɛ afima kple dɔwɔƒewo le Ghana."
-            data-da="Mia security, electrical, automation kple smart technology dɔwɔnu ma afie kple nnwuma le Ghana.">
+            data-tw="Yɛma professional security, electrical, automation ne smart technology solutions ma afie ne nnwuma wɔ Ghana.">
 
             Professional security, electrical, automation and smart
             technology solutions for homes and businesses in Ghana.
@@ -1721,9 +2031,7 @@ footer{
                data-fr="Demander une consultation"
                data-de="Beratung anfordern"
                data-es="Solicitar consulta"
-               data-tw="Bisa yɛn afotu"
-               data-ee="Ɖe biabia"
-               data-da="Bisa nɔŋɔ">
+               data-tw="Bisa yɛn afotu">
                 Request Consultation
             </a>
 
@@ -1734,9 +2042,7 @@ footer{
                data-fr="Voir les produits"
                data-de="Produkte ansehen"
                data-es="Ver productos"
-               data-tw="Hwɛ nneɛma"
-               data-ee="Kpɔ nuwo"
-               data-da="Kpɔ núwo">
+               data-tw="Hwɛ nneɛma">
                 View Products
             </a>
 
@@ -1772,6 +2078,144 @@ footer{
 </section>
 
 
+
+<!-- =====================================================
+     COMPANY GALLERY / SLIDESHOW
+========================================================= -->
+
+<section id="gallery" class="company-gallery">
+
+    <h2 class="section-title"
+        data-en="Novera in Action"
+        data-fr="Novera en action"
+        data-de="Novera in Aktion"
+        data-es="Novera en acción"
+        data-tw="Novera Wɔ Adwuma Mu">
+        Novera in Action
+    </h2>
+
+    <p class="gallery-intro">
+        A visual look at our installations, technology solutions,
+        projects and professional workmanship.
+    </p>
+
+    <div class="company-slideshow">
+
+
+        <div class="company-slide active">
+            <img src="assets/gallery/IMG_0929.jpg"
+                 alt="Novera Energy & Technologies project">
+        </div>
+
+        <div class="company-slide">
+            <img src="assets/gallery/IMG_0924.jpg"
+                 alt="Novera professional installation">
+        </div>
+
+        <div class="company-slide">
+            <img src="assets/gallery/IMG_0385.jpg"
+                 alt="Novera technology installation">
+        </div>
+
+        <div class="company-slide">
+            <img src="assets/gallery/IMG_0451.JPG"
+                 alt="Novera security and electrical solution">
+        </div>
+
+        <div class="gallery-overlay"></div>
+
+        <div class="gallery-caption">
+            <span>Light · Motion · Intelligence</span>
+            <h3>Professional Installation. Practical Technology.</h3>
+            <p>
+                Security, electrical, automation and safety solutions
+                delivered with attention to detail.
+            </p>
+        </div>
+
+        <button type="button"
+                class="gallery-arrow gallery-prev"
+                aria-label="Previous image">
+            <i class="fa-solid fa-chevron-left"></i>
+        </button>
+
+        <button type="button"
+                class="gallery-arrow gallery-next"
+                aria-label="Next image">
+            <i class="fa-solid fa-chevron-right"></i>
+        </button>
+
+        <div class="gallery-dots">
+            <button type="button" class="gallery-dot active" data-gallery-slide="0"></button>
+            <button type="button" class="gallery-dot" data-gallery-slide="1"></button>
+            <button type="button" class="gallery-dot" data-gallery-slide="2"></button>
+            <button type="button" class="gallery-dot" data-gallery-slide="3"></button>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =====================================================
+     COMPANY PROFILE PDF
+========================================================= -->
+
+<section id="company-profile" class="company-profile">
+
+    <h2 class="section-title"
+        data-en="Company Profile"
+        data-fr="Profil de l'entreprise"
+        data-de="Unternehmensprofil"
+        data-es="Perfil de la empresa"
+        data-tw="Company Profile">
+        Company Profile
+    </h2>
+
+    <div class="profile-card">
+
+        <div class="profile-icon">
+            <i class="fa-solid fa-file-pdf"></i>
+        </div>
+
+        <div class="profile-content">
+
+            <h3>Discover Novera Energy & Technologies</h3>
+
+            <p>
+                Learn more about Novera, our services, capabilities,
+                professional approach and technology solutions in our
+                company profile.
+            </p>
+
+            <!--
+                Put your PDF here:
+
+               assets/documents/Company Profile Presentation .pdf
+            -->
+
+            <a href="assets/documents/Company Profile Presentation .pdf"
+               class="profile-btn"
+               target="_blank"
+               rel="noopener noreferrer">
+                <i class="fa-solid fa-file-pdf"></i>
+                View Company Profile
+            </a>
+
+            <a href="assets/documents/Company Profile Presentation .pdf"
+               class="profile-btn profile-btn-outline"
+               download>
+                <i class="fa-solid fa-download"></i>
+                Download PDF
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
 <!-- =====================================================
      ABOUT
 ========================================================= -->
@@ -1783,9 +2227,7 @@ footer{
         data-fr="À propos de Novera"
         data-de="Über Novera"
         data-es="Sobre Novera"
-        data-tw="Novera Ho"
-        data-ee="Novera ŋu"
-        data-da="Novera ŋu">
+        data-tw="Novera Ho">
         About Novera
     </h2>
 
@@ -1801,9 +2243,7 @@ footer{
                 data-fr="Installateurs professionnels, formés et certifiés."
                 data-de="Professionelle, geschulte und zertifizierte Installateure."
                 data-es="Instaladores profesionales, capacitados y certificados."
-                data-tw="Adwumayɛfo a wɔatete wɔn na wɔanya adansedi."
-                data-ee="Dɔwɔla si wɔ trained eye certified."
-                data-da="Dɔwɔla si wɔ trained eye certified.">
+                data-tw="Adwumayɛfo a wɔatete wɔn na wɔanya adansedi.">
                 Professional installers, trained and certified.
             </h3>
 
@@ -1813,9 +2253,7 @@ footer{
                 data-fr="Novera Energy & Technologies est une entreprise ghanéenne spécialisée dans les installations de sécurité, électriques et technologiques."
                 data-de="Novera Energy & Technologies ist ein ghanaisches Unternehmen für Sicherheits-, Elektro- und Technologieinstallationen."
                 data-es="Novera Energy & Technologies es una empresa ghanesa especializada en instalaciones de seguridad, eléctricas y tecnológicas."
-                data-tw="Novera Energy & Technologies yɛ Ghana adwuma a ɛyɛ security, electricity ne technology installation."
-                data-ee="Novera Energy & Technologies nye Ghana ƒe dɔwɔƒe si wɔa security, electricity kple technology installation."
-                data-da="Novera Energy & Technologies yɛ Ghana dɔwɔƒe si yɛ security, electricity kple technology installation.">
+                data-tw="Novera Energy & Technologies yɛ Ghana adwuma a ɛyɛ security, electricity ne technology installation.">
                 Novera Energy & Technologies is a Ghanaian security,
                 electrical and technology installation company.
             </p>
@@ -1826,9 +2264,7 @@ footer{
                 data-fr="Nous concevons, installons et entretenons des systèmes CCTV, interphones vidéo, contrôle d'accès, portails automatiques, clôtures électriques, systèmes électriques, sonorisation et alarmes incendie au Ghana."
                 data-de="Wir planen, installieren und warten CCTV, Video-Gegensprechanlagen, Zutrittskontrollen, automatische Tore, Elektrozäune, elektrische Anlagen, PA-Systeme und Brandmeldesysteme in Ghana."
                 data-es="Diseñamos, instalamos y mantenemos CCTV, videoporteros, control de acceso, portones automáticos, cercas eléctricas, sistemas eléctricos, sistemas PA y alarmas contra incendios en Ghana."
-                data-tw="Yɛyɛ CCTV, video intercom, access control, automatic gates, electric fencing, electrical systems, PA systems ne fire alarm systems ma afie ne nnwuma wɔ Ghana."
-                data-ee="Míeɖoa CCTV, video intercom, access control, automatic gates, electric fencing, electrical systems, PA systems kple fire alarm systems le Ghana."
-                data-da="Mia yɛ CCTV, video intercom, access control, automatic gates, electric fencing, electrical systems, PA systems kple fire alarm systems ma afie kple nnwuma le Ghana.">
+                data-tw="Yɛyɛ CCTV, video intercom, access control, automatic gates, electric fencing, electrical systems, PA systems ne fire alarm systems ma afie ne nnwuma wɔ Ghana.">
                 We design, install and maintain CCTV, video intercom,
                 access control, automatic gates, electric fencing,
                 electrical systems, PA systems and fire alarm systems
@@ -1848,9 +2284,7 @@ footer{
                 data-fr="Chaque projet est réalisé avec discipline, précision, propreté et souci du détail."
                 data-de="Jedes Projekt wird mit Disziplin, Präzision, Sauberkeit und Liebe zum Detail ausgeführt."
                 data-es="Cada proyecto se ejecuta con disciplina, precisión, limpieza y atención al detalle."
-                data-tw="Yɛyɛ project biara wɔ discipline, precision, ahotɔ ne detail ho adwene mu."
-                data-ee="Míewɔ dɔ sia dɔ le dzɔdzɔme, kpɔkpɔme kple ŋugbedodo me."
-                data-da="Mia yɛ project biara wɔ precision kple detail ho adwene mu.">
+                data-tw="Yɛyɛ project biara wɔ discipline, precision, ahotɔ ne detail ho adwene mu.">
                 Every project is executed with discipline,
                 precision, neatness and attention to detail.
             </p>
@@ -1863,9 +2297,7 @@ footer{
                     data-fr="Remarque :"
                     data-de="Hinweis:"
                     data-es="Nota:"
-                    data-tw="Hyɛ no nsow:"
-                    data-ee="Ɖo ŋku edzi:"
-                    data-da="Hyɛ no nsow:">
+                    data-tw="Hyɛ no nsow:">
                     Note:
                 </strong>
 
@@ -1875,9 +2307,7 @@ footer{
                     data-fr=" Novera est une entreprise d'installation professionnelle. Nous ne sommes pas distributeur ou revendeur des produits Hikvision ou Centurion Systems."
                     data-de=" Novera ist ein professionelles Installationsunternehmen und kein Distributor oder Wiederverkäufer von Hikvision- oder Centurion-Systems-Produkten."
                     data-es=" Novera es una empresa profesional de instalaciones. No somos distribuidores ni revendedores de productos Hikvision o Centurion Systems."
-                    data-tw=" Novera yɛ professional installation company. Yɛnyɛ distributor anaa reseller wɔ Hikvision anaa Centurion Systems products ho."
-                    data-ee=" Novera nye professional installation company. Míenye distributor alo reseller na Hikvision alo Centurion Systems products."
-                    data-da=" Novera yɛ professional installation company. Míenye distributor alo reseller wɔ Hikvision ne Centurion Systems products ho.">
+                    data-tw=" Novera yɛ professional installation company. Yɛnyɛ distributor anaa reseller wɔ Hikvision anaa Centurion Systems products ho.">
                     Novera is a professional installation company.
                     We are not a distributor or reseller of Hikvision
                     or Centurion Systems products.
@@ -1898,9 +2328,7 @@ footer{
                     data-fr="Ghana • Installateurs professionnels"
                     data-de="Ghana • Professionelle Installateure"
                     data-es="Ghana • Instaladores profesionales"
-                    data-tw="Ghana • Professional Installers"
-                    data-ee="Ghana • Professional Dɔwɔla"
-                    data-da="Ghana • Professional Dɔwɔla">
+                    data-tw="Ghana • Professional Installers">
                     Ghana • Professional Installers
                 </span>
 
@@ -1910,23 +2338,20 @@ footer{
                     data-fr="Créée en 2026 • Un nouveau standard"
                     data-de="Gegr. 2026 • Ein neuer Standard"
                     data-es="Est. 2026 • Un nuevo estándar"
-                    data-tw="Est. 2026 • Gyinapɛn Foforo"
-                    data-ee="Est. 2026 • Nɔnɔme Yeye"
-                    data-da="Est. 2026 • Nɔnɔme Yeye">
+                    data-tw="Est. 2026 • Gyinapɛn Foforo">
                     Est. 2026 • A New Standard
                 </span>
 
 
-                <a href="https://www.iec.ch/about-standards"
-                   target="_blank"
-                   rel="noopener noreferrer"
-                   class="iec-link">
+                <span class="iec-link novera-standard">
+                    <i class="fa-solid fa-bolt"></i>
+                      IEC Standard
+                </span>
 
-                    <i class="fa-solid fa-globe"></i>
-
-                    IEC Standards
-
-                </a>
+                <span class="iec-link novera-standard nec-standard">
+                    <i class="fa-solid fa-book"></i>
+                    NEC Standard
+                </span>
 
             </div>
 
@@ -1970,9 +2395,7 @@ footer{
         data-fr="Nos Services"
         data-de="Unsere Dienstleistungen"
         data-es="Nuestros Servicios"
-        data-tw="Yɛn Nnwuma"
-        data-ee="Mía ƒe Dɔwɔnuwo"
-        data-da="Mia Dɔwɔnu">
+        data-tw="Yɛn Nnwuma">
         Our Services
     </h2>
 
@@ -1984,9 +2407,7 @@ footer{
             data-fr="Installé avec soin.<br>Maintenance sur demande."
             data-de="Sorgfältig installiert.<br>Wartung auf Anfrage."
             data-es="Instalado con cuidado.<br>Mantenimiento bajo solicitud."
-            data-tw="Yɛde ahotɔ si.<br>Maintenance sɛ ɛho hia."
-            data-ee="Míeɖoa nuwo nyuie.<br>Míewɔ maintenance ne wòhiã."
-            data-da="Mia si wɔ yie.<br>Maintenance sɛ ɛhia.">
+            data-tw="Yɛde ahotɔ si.<br>Maintenance sɛ ɛho hia.">
             Installed with care.<br>
             Maintained on request.
         </h3>
@@ -1997,9 +2418,7 @@ footer{
             data-fr="Nous fournissons des solutions professionnelles de sécurité, d'électricité, d'automatisation, de communication et de sécurité incendie."
             data-de="Wir bieten professionelle Lösungen für Sicherheit, Elektroinstallation, Automatisierung, Kommunikation und Sicherheitstechnik."
             data-es="Ofrecemos soluciones profesionales de seguridad, electricidad, automatización, comunicación y tecnología de seguridad."
-            data-tw="Yɛma professional security, electrical, automation, communication ne safety technology solutions."
-            data-ee="Míena professional security, electrical, automation, communication kple safety technology solutions."
-            data-da="Mia ma professional security, electrical, automation, communication kple safety technology solutions.">
+            data-tw="Yɛma professional security, electrical, automation, communication ne safety technology solutions.">
             We provide professional security, electrical, automation,
             communication and safety technology solutions.
         </p>
@@ -2018,9 +2437,7 @@ footer{
                 data-fr="Installation électrique domestique"
                 data-de="Elektroinstallation für Wohngebäude"
                 data-es="Instalación eléctrica doméstica"
-                data-tw="Domestic Wiring"
-                data-ee="Ŋkɔƒe Electrical Wiring"
-                data-da="Afɔ̃ Electrical Wiring">
+                data-tw="Domestic Wiring">
                 Domestic Wiring
             </h3>
 
@@ -2029,9 +2446,7 @@ footer{
                 data-fr="Nous installons des systèmes électriques sûrs et fiables pour les maisons, notamment l'éclairage, les prises, les interrupteurs et les connexions électriques."
                 data-de="Wir installieren sichere und zuverlässige Elektroinstallationen für Häuser, einschließlich Beleuchtung, Steckdosen, Schalter und Stromanschlüsse."
                 data-es="Instalamos cableado eléctrico seguro y fiable para viviendas, incluyendo iluminación, enchufes, interruptores y conexiones eléctricas."
-                data-tw="Yɛde safe ne reliable electrical wiring si afie mu, a ɛka lighting, sockets, switches ne power connections ho."
-                data-ee="Míeɖoa electricity wiring si le aƒewo me, si ka lighting, sockets, switches kple power connections ho."
-                data-da="Mia si safe electrical wiring ma afie, si ka lighting, sockets ne switches ho.">
+                data-tw="Yɛde safe ne reliable electrical wiring si afie mu, a ɛka lighting, sockets, switches ne power connections ho.">
                 We install safe and reliable electrical wiring for homes,
                 including lighting, sockets, switches and power connections.
             </p>
@@ -2043,9 +2458,7 @@ footer{
                     data-fr="En savoir plus"
                     data-de="Mehr erfahren"
                     data-es="Más información"
-                    data-tw="Kɔ so sua ho"
-                    data-ee="Kpɔ nu geɖe"
-                    data-da="Kɔ nɔɔ nɛ">
+                    data-tw="Kɔ so sua ho">
                 Learn More
             </button>
 
@@ -2087,9 +2500,7 @@ footer{
                 data-fr="CCTV & Vidéosurveillance"
                 data-de="CCTV & Überwachung"
                 data-es="CCTV y Videovigilancia"
-                data-tw="CCTV & Ahotɔ Hwɛ"
-                data-ee="CCTV & Ƒomekpɔkpɔ"
-                data-da="CCTV & Hwɛyeli">
+                data-tw="CCTV & Ahotɔ Hwɛ">
                 CCTV & Surveillance
             </h3>
 
@@ -2098,9 +2509,7 @@ footer{
                 data-fr="Nous installons des systèmes de vidéosurveillance qui vous aident à surveiller et protéger votre maison, votre bureau ou votre entreprise."
                 data-de="Wir installieren Überwachungssysteme, mit denen Sie Ihr Haus, Büro oder Unternehmen überwachen und schützen können."
                 data-es="Instalamos sistemas de vigilancia que le ayudan a supervisar y proteger su hogar, oficina o negocio."
-                data-tw="Yɛde surveillance systems si a ɛboa wo ma wohwɛ na wode wo fie anaa business bɔ ho ban."
-                data-ee="Míeɖoa surveillance systems si akpe ɖe ŋuwɔwɔ kple ŋgɔgɔme ƒe ŋu."
-                data-da="Mia si surveillance systems ma woanya nɔŋɔɔ kple bɔbɔ.">
+                data-tw="Yɛde surveillance systems si a ɛboa wo ma wohwɛ na wode wo fie anaa business bɔ ho ban.">
                 We install surveillance systems that help you monitor
                 and protect your home, office or business.
             </p>
@@ -2112,9 +2521,7 @@ footer{
                     data-fr="En savoir plus"
                     data-de="Mehr erfahren"
                     data-es="Más información"
-                    data-tw="Kɔ so sua ho"
-                    data-ee="Kpɔ nu geɖe"
-                    data-da="Kɔ nɔɔ nɛ">
+                    data-tw="Kɔ so sua ho">
                 Learn More
             </button>
 
@@ -2157,9 +2564,7 @@ footer{
                 data-fr="Interphone vidéo"
                 data-de="Video-Gegensprechanlage"
                 data-es="Videoportero"
-                data-tw="Video Intercom"
-                data-ee="Video Intercom"
-                data-da="Video Intercom">
+                data-tw="Video Intercom">
                 Video Intercom
             </h3>
 
@@ -2175,9 +2580,7 @@ footer{
                     data-fr="En savoir plus"
                     data-de="Mehr erfahren"
                     data-es="Más información"
-                    data-tw="Kɔ so sua ho"
-                    data-ee="Kpɔ nu geɖe"
-                    data-da="Kɔ nɔɔ nɛ">
+                    data-tw="Kɔ so sua ho">
                 Learn More
             </button>
 
@@ -2219,9 +2622,7 @@ footer{
                 data-fr="Contrôle d'accès"
                 data-de="Zutrittskontrolle"
                 data-es="Control de acceso"
-                data-tw="Access Control"
-                data-ee="Access Control"
-                data-da="Access Control">
+                data-tw="Access Control">
                 Access Control
             </h3>
 
@@ -2237,9 +2638,7 @@ footer{
                     data-fr="En savoir plus"
                     data-de="Mehr erfahren"
                     data-es="Más información"
-                    data-tw="Kɔ so sua ho"
-                    data-ee="Kpɔ nu geɖe"
-                    data-da="Kɔ nɔɔ nɛ">
+                    data-tw="Kɔ so sua ho">
                 Learn More
             </button>
 
@@ -2281,9 +2680,7 @@ footer{
                 data-fr="Portails automatiques"
                 data-de="Automatische Tore"
                 data-es="Portones automáticos"
-                data-tw="Automatic Gates"
-                data-ee="Automatic Gates"
-                data-da="Automatic Gates">
+                data-tw="Automatic Gates">
                 Automatic Gates
             </h3>
 
@@ -2299,9 +2696,7 @@ footer{
                     data-fr="En savoir plus"
                     data-de="Mehr erfahren"
                     data-es="Más información"
-                    data-tw="Kɔ so sua ho"
-                    data-ee="Kpɔ nu geɖe"
-                    data-da="Kɔ nɔɔ nɛ">
+                    data-tw="Kɔ so sua ho">
                 Learn More
             </button>
 
@@ -2344,9 +2739,7 @@ footer{
                 data-fr="Clôture électrique"
                 data-de="Elektrozaun"
                 data-es="Cerca eléctrica"
-                data-tw="Electric Fencing"
-                data-ee="Electric Fencing"
-                data-da="Electric Fencing">
+                data-tw="Electric Fencing">
                 Electric Fencing
             </h3>
 
@@ -2362,9 +2755,7 @@ footer{
                     data-fr="En savoir plus"
                     data-de="Mehr erfahren"
                     data-es="Más información"
-                    data-tw="Kɔ so sua ho"
-                    data-ee="Kpɔ nu geɖe"
-                    data-da="Kɔ nɔɔ nɛ">
+                    data-tw="Kɔ so sua ho">
                 Learn More
             </button>
 
@@ -2406,9 +2797,7 @@ footer{
                 data-fr="Systèmes de sonorisation"
                 data-de="Beschallungssysteme"
                 data-es="Sistemas de megafonía"
-                data-tw="PA Systems"
-                data-ee="PA Systems"
-                data-da="PA Systems">
+                data-tw="PA Systems">
                 PA Systems
             </h3>
 
@@ -2424,9 +2813,7 @@ footer{
                     data-fr="En savoir plus"
                     data-de="Mehr erfahren"
                     data-es="Más información"
-                    data-tw="Kɔ so sua ho"
-                    data-ee="Kpɔ nu geɖe"
-                    data-da="Kɔ nɔɔ nɛ">
+                    data-tw="Kɔ so sua ho">
                 Learn More
             </button>
 
@@ -2468,9 +2855,7 @@ footer{
                 data-fr="Systèmes d'alarme incendie"
                 data-de="Brandmeldesysteme"
                 data-es="Sistemas de alarma contra incendios"
-                data-tw="Fire Alarm Systems"
-                data-ee="Fire Alarm Systems"
-                data-da="Fire Alarm Systems">
+                data-tw="Fire Alarm Systems">
                 Fire Alarm Systems
             </h3>
 
@@ -2486,9 +2871,7 @@ footer{
                     data-fr="En savoir plus"
                     data-de="Mehr erfahren"
                     data-es="Más información"
-                    data-tw="Kɔ so sua ho"
-                    data-ee="Kpɔ nu geɖe"
-                    data-da="Kɔ nɔɔ nɛ">
+                    data-tw="Kɔ so sua ho">
                 Learn More
             </button>
 
@@ -2537,9 +2920,7 @@ footer{
         data-fr="Produits et systèmes de sécurité"
         data-de="Sicherheitsprodukte und -systeme"
         data-es="Productos y sistemas de seguridad"
-        data-tw="Security Products ne Systems"
-        data-ee="Security Products kple Systems"
-        data-da="Security Products kple Systems">
+        data-tw="Security Products ne Systems">
         Security Products & Systems
     </h2>
 
@@ -2731,9 +3112,7 @@ footer{
         data-fr="Le processus Novera"
         data-de="Der Novera-Prozess"
         data-es="El proceso Novera"
-        data-tw="Novera Process"
-        data-ee="Novera ƒe Dɔwɔwɔ"
-        data-da="Novera ƒe Dɔwɔwɔ">
+        data-tw="Novera Process">
         The Novera Process
     </h2>
 
@@ -2758,9 +3137,7 @@ footer{
                 data-fr="Consultation"
                 data-de="Beratung"
                 data-es="Consulta"
-                data-tw="Afotu"
-                data-ee="Biabia"
-                data-da="Nɔŋɔ">
+                data-tw="Afotu">
                 Consultation
             </h3>
 
@@ -2783,9 +3160,7 @@ footer{
                 data-fr="Conception et planification"
                 data-de="Design & Planung"
                 data-es="Diseño y planificación"
-                data-tw="Design ne Planning"
-                data-ee="Design kple Planning"
-                data-da="Design kple Planning">
+                data-tw="Design ne Planning">
                 Design & Planning
             </h3>
 
@@ -2808,9 +3183,7 @@ footer{
                 data-fr="Installation"
                 data-de="Installation"
                 data-es="Instalación"
-                data-tw="Installation"
-                data-ee="Installation"
-                data-da="Installation">
+                data-tw="Installation">
                 Installation
             </h3>
 
@@ -2833,9 +3206,7 @@ footer{
                 data-fr="Remise et assistance"
                 data-de="Übergabe & Support"
                 data-es="Entrega y soporte"
-                data-tw="Handover ne Support"
-                data-ee="Handover kple Support"
-                data-da="Handover kple Support">
+                data-tw="Handover ne Support">
                 Handover & Support
             </h3>
 
@@ -2862,9 +3233,7 @@ footer{
         data-fr="Académie Novera"
         data-de="Novera Akademie"
         data-es="Academia Novera"
-        data-tw="Novera Academy"
-        data-ee="Novera ƒe Akɔdada"
-        data-da="Novera ƒe Adesua">
+        data-tw="Novera Academy">
         Novera Academy
     </h2>
 
@@ -2879,9 +3248,7 @@ footer{
                 data-fr="Former les futurs professionnels de la technologie"
                 data-de="Die Technologieexperten von morgen ausbilden"
                 data-es="Formando a los futuros profesionales de la tecnología"
-                data-tw="Yɛnresin technology professionals a wɔbɛba daakye"
-                data-ee="Míeɖoa dɔwɔla siwo ava tso technology me"
-                data-da="Mia yɛ dɔwɔla siwo ava tso technology me">
+                data-tw="Yɛnresin technology professionals a wɔbɛba daakye">
                 Building Future Technology Professionals
             </h3>
 
@@ -2899,17 +3266,17 @@ footer{
             </p>
 
 
-            <a href="#contact"
+            <a href="/training/apply"
                class="academy-btn"
                data-en="Join Our Training Program"
                data-fr="Rejoindre notre programme de formation"
                data-de="An unserem Ausbildungsprogramm teilnehmen"
                data-es="Únase a nuestro programa de formación"
-               data-tw="Kɔ yɛn training program mu"
-               data-ee="Va mia nufiala me"
-               data-da="Kɔ mia adesua me">
+               data-tw="Kɔ yɛn training program mu">
                 Join Our Training Program
             </a>
+            
+            
 
         </div>
 
@@ -2926,9 +3293,7 @@ footer{
                     data-fr="Installation CCTV"
                     data-de="CCTV-Installation"
                     data-es="Instalación CCTV"
-                    data-tw="CCTV Installation"
-                    data-ee="CCTV Installation"
-                    data-da="CCTV Installation">
+                    data-tw="CCTV Installation">
                     CCTV Installation
                 </h4>
 
@@ -2949,9 +3314,7 @@ footer{
                     data-fr="Systèmes électriques"
                     data-de="Elektrische Systeme"
                     data-es="Sistemas eléctricos"
-                    data-tw="Electrical Systems"
-                    data-ee="Electrical Systems"
-                    data-da="Electrical Systems">
+                    data-tw="Electrical Systems">
                     Electrical Systems
                 </h4>
 
@@ -2972,9 +3335,7 @@ footer{
                     data-fr="Réseaux informatiques"
                     data-de="Netzwerke"
                     data-es="Redes"
-                    data-tw="Networking"
-                    data-ee="Networking"
-                    data-da="Networking">
+                    data-tw="Networking">
                     Networking
                 </h4>
 
@@ -3003,9 +3364,7 @@ footer{
         data-fr="Commencer une conversation"
         data-de="Kontakt aufnehmen"
         data-es="Comencemos una conversación"
-        data-tw="Hyɛ Nkitahodi Ase"
-        data-ee="Ɖe nɔnɔmetata gɔme"
-        data-da="Hyɛ nɔŋɔ ase">
+        data-tw="Hyɛ Nkitahodi Ase">
         Start a Conversation
     </h2>
 
@@ -3020,9 +3379,7 @@ footer{
                 data-fr="Prêt à sécuriser votre espace ?"
                 data-de="Bereit, Ihren Raum zu sichern?"
                 data-es="¿Listo para proteger su espacio?"
-                data-tw="Woasiesie sɛ yɛbɛma wo bea no ahotɔ?"
-                data-ee="Èwɔ dzesi be míadzra wò nɔƒe?"
-                data-da="Wo siesie be yɛma wo nɔ̃ɔ ahotɔ?">
+                data-tw="Woasiesie sɛ yɛbɛma wo bea no ahotɔ?">
                 Ready to secure your space?
             </h2>
 
@@ -3081,9 +3438,7 @@ footer{
                     data-fr="Suivez-nous"
                     data-de="Folgen Sie uns"
                     data-es="Síganos"
-                    data-tw="Di Yɛn Akyi"
-                    data-ee="Dzɔ mia yome"
-                    data-da="Di mia yome">
+                    data-tw="Di Yɛn Akyi">
                     Follow Us
                 </strong>
 
@@ -3132,9 +3487,7 @@ footer{
                 data-fr="Formulaire de consultation"
                 data-de="Beratungsformular"
                 data-es="Formulario de consulta"
-                data-tw="Consultation Form"
-                data-ee="Biabia ƒe Form"
-                data-da="Nɔŋɔ ƒe Form">
+                data-tw="Consultation Form">
                 Consultation Form
             </h3>
 
@@ -3157,8 +3510,6 @@ footer{
                        data-placeholder-es="Nombre completo"
                        data-placeholder-tw="Wo Din"
                        data-placeholder-ga="Wo din"
-                       data-placeholder-ee="Ŋkɔ"
-                       data-placeholder-da="Wo Din"
                        required>
 
 
@@ -3170,9 +3521,7 @@ footer{
                        data-placeholder-de="E-Mail"
                        data-placeholder-es="Correo electrónico"
                        data-placeholder-tw="Email"
-                       data-placeholder-ga="Email"
-                       data-placeholder-ee="Email"
-                       data-placeholder-da="Email">
+                       data-placeholder-ga="Email">
 
 
                 <input type="tel"
@@ -3184,8 +3533,6 @@ footer{
                        data-placeholder-es="Número de teléfono"
                        data-placeholder-tw="Phone Number"
                        data-placeholder-ga="Telefon nɔmba"
-                       data-placeholder-ee="Telefon Nɔmba"
-                       data-placeholder-da="Phone Number"
                        required>
 
 
@@ -3197,9 +3544,7 @@ footer{
                             data-fr="Sélectionnez le service requis"
                             data-de="Dienst auswählen"
                             data-es="Seleccione el servicio requerido"
-                            data-tw="Select Service Required"
-                            data-ee="Tia dɔwɔnu"
-                            data-da="Tia dɔwɔnu">
+                            data-tw="Select Service Required">
                         Select Service Required
                     </option>
 
@@ -3209,9 +3554,7 @@ footer{
                             data-fr="Installation électrique domestique"
                             data-de="Elektroinstallation"
                             data-es="Instalación eléctrica doméstica"
-                            data-tw="Domestic Wiring"
-                            data-ee="Domestic Wiring"
-                            data-da="Domestic Wiring">
+                            data-tw="Domestic Wiring">
                         Domestic Wiring
                     </option>
 
@@ -3221,9 +3564,7 @@ footer{
                             data-fr="Vidéosurveillance CCTV"
                             data-de="CCTV-Überwachung"
                             data-es="Videovigilancia CCTV"
-                            data-tw="CCTV Surveillance"
-                            data-ee="CCTV Surveillance"
-                            data-da="CCTV Surveillance">
+                            data-tw="CCTV Surveillance">
                         CCTV Surveillance
                     </option>
 
@@ -3233,9 +3574,7 @@ footer{
                             data-fr="Interphone vidéo"
                             data-de="Video-Gegensprechanlage"
                             data-es="Videoportero"
-                            data-tw="Video Intercom"
-                            data-ee="Video Intercom"
-                            data-da="Video Intercom">
+                            data-tw="Video Intercom">
                         Video Intercom
                     </option>
 
@@ -3245,9 +3584,7 @@ footer{
                             data-fr="Contrôle d'accès"
                             data-de="Zutrittskontrolle"
                             data-es="Control de acceso"
-                            data-tw="Access Control"
-                            data-ee="Access Control"
-                            data-da="Access Control">
+                            data-tw="Access Control">
                         Access Control
                     </option>
 
@@ -3257,9 +3594,7 @@ footer{
                             data-fr="Portails automatiques"
                             data-de="Automatische Tore"
                             data-es="Portones automáticos"
-                            data-tw="Automatic Gates"
-                            data-ee="Automatic Gates"
-                            data-da="Automatic Gates">
+                            data-tw="Automatic Gates">
                         Automatic Gates
                     </option>
 
@@ -3269,9 +3604,7 @@ footer{
                             data-fr="Clôture électrique"
                             data-de="Elektrozaun"
                             data-es="Cerca eléctrica"
-                            data-tw="Electric Fencing"
-                            data-ee="Electric Fencing"
-                            data-da="Electric Fencing">
+                            data-tw="Electric Fencing">
                         Electric Fencing
                     </option>
 
@@ -3281,9 +3614,7 @@ footer{
                             data-fr="Système de sonorisation"
                             data-de="Beschallungssystem"
                             data-es="Sistema de megafonía"
-                            data-tw="PA System"
-                            data-ee="PA System"
-                            data-da="PA System">
+                            data-tw="PA System">
                         PA System
                     </option>
 
@@ -3293,9 +3624,7 @@ footer{
                             data-fr="Système d'alarme incendie"
                             data-de="Brandmeldesystem"
                             data-es="Sistema de alarma contra incendios"
-                            data-tw="Fire Alarm System"
-                            data-ee="Fire Alarm System"
-                            data-da="Fire Alarm System">
+                            data-tw="Fire Alarm System">
                         Fire Alarm System
                     </option>
 
@@ -3305,9 +3634,7 @@ footer{
                             data-fr="Intégration domotique"
                             data-de="Smart-Home-Integration"
                             data-es="Integración de hogar inteligente"
-                            data-tw="Smart Home Integration"
-                            data-ee="Smart Home Integration"
-                            data-da="Smart Home Integration">
+                            data-tw="Smart Home Integration">
                         Smart Home Integration
                     </option>
 
@@ -3317,9 +3644,7 @@ footer{
                             data-fr="Solutions d'énergie solaire"
                             data-de="Solarenergielösungen"
                             data-es="Soluciones de energía solar"
-                            data-tw="Solar Power Solutions"
-                            data-ee="Solar Power Solutions"
-                            data-da="Solar Power Solutions">
+                            data-tw="Solar Power Solutions">
                         Solar Power Solutions
                     </option>
 
@@ -3329,9 +3654,7 @@ footer{
                             data-fr="Maintenance et assistance"
                             data-de="Wartung & Support"
                             data-es="Mantenimiento y soporte"
-                            data-tw="Maintenance & Support"
-                            data-ee="Maintenance & Support"
-                            data-da="Maintenance & Support">
+                            data-tw="Maintenance & Support">
                         Maintenance & Support
                     </option>
 
@@ -3341,9 +3664,7 @@ footer{
                             data-fr="Formation Novera Academy"
                             data-de="Novera Academy Ausbildung"
                             data-es="Formación de Novera Academy"
-                            data-tw="Novera Academy Training"
-                            data-ee="Novera Academy Training"
-                            data-da="Novera Academy Training">
+                            data-tw="Novera Academy Training">
                         Novera Academy Training
                     </option>
 
@@ -3353,9 +3674,7 @@ footer{
                             data-fr="Autres besoins techniques"
                             data-de="Andere technische Anforderungen"
                             data-es="Otros requisitos técnicos"
-                            data-tw="Other Technical Requirements"
-                            data-ee="Other Technical Requirements"
-                            data-da="Other Technical Requirements">
+                            data-tw="Other Technical Requirements">
                         Other Technical Requirements
                     </option>
 
@@ -3370,9 +3689,7 @@ footer{
                           data-placeholder-de="Projektdetails"
                           data-placeholder-es="Detalles del proyecto"
                           data-placeholder-tw="Project Details"
-                          data-placeholder-ga="Dɔ no ho nsɛm"
-                          data-placeholder-ee="Dɔ ŋuti nyawo"
-                          data-placeholder-da="Project Details"></textarea>
+                          data-placeholder-ga="Dɔ no ho nsɛm"></textarea>
 
 
                 <button type="submit"
@@ -3380,9 +3697,7 @@ footer{
                         data-fr="Demander une consultation"
                         data-de="Beratung anfordern"
                         data-es="Solicitar consulta"
-                        data-tw="Bisa yɛn afotu"
-                        data-ee="Ɖe biabia"
-                        data-da="Bisa nɔŋɔ">
+                        data-tw="Bisa yɛn afotu">
                     Request Consultation
                 </button>
 
@@ -3458,9 +3773,7 @@ footer{
                 data-fr="Liens rapides"
                 data-de="Schnellzugriff"
                 data-es="Enlaces rápidos"
-                data-tw="Quick Links"
-                data-ee="Ƒo ƒome"
-                data-da="Nɔŋɔ ƒome">
+                data-tw="Quick Links">
                 Quick Links
             </h3>
 
@@ -3519,9 +3832,7 @@ footer{
                 data-fr="Contactez-nous"
                 data-de="Kontakt"
                 data-es="Contáctenos"
-                data-tw="Yɛka Yɛn Ho"
-                data-ee="Ɖo nɔnɔmetata"
-                data-da="Yɛka Yɛn Ho">
+                data-tw="Yɛka Yɛn Ho">
                 Contact Us
             </h3>
 
@@ -3574,9 +3885,7 @@ footer{
                data-fr="Demander une consultation"
                data-de="Beratung anfordern"
                data-es="Solicitar consulta"
-               data-tw="Bisa yɛn afotu"
-               data-ee="Ɖe biabia"
-               data-da="Bisa nɔŋɔ">
+               data-tw="Bisa yɛn afotu">
                 Request Consultation
             </a>
 
@@ -3629,8 +3938,6 @@ const SUPPORTED_LANGUAGES = [
     "de",
     "es",
     "tw",
-    "ee",
-    "da"
 ];
 
 const LANGUAGE_NAMES = {
@@ -3639,8 +3946,6 @@ const LANGUAGE_NAMES = {
     de: "Deutsch",
     es: "Español",
     tw: "Twi",
-    ee: "Ewe",
-    da: "Dangme"
 };
 
 let currentLanguage =
@@ -3707,25 +4012,6 @@ const formMessages = {
         serviceRequired:"Yɛsrɛ wo, paw service bi."
     },
 
-    ee:{
-        sending:"Ele ɖom...",
-        success:"Akpe. Míxɔ wò biabia la.",
-        error:"Míete ŋu wɔ wò biabia la.",
-        connection:"Míete ŋu kplɔ Novera server la gbɔ.",
-        nameRequired:"Taflatse ŋlɔ wò ŋkɔ.",
-        phoneRequired:"Taflatse ŋlɔ wò telefon nɔmba.",
-        serviceRequired:"Taflatse tia dɔwɔnu aɖe."
-    },
-
-    da:{
-        sending:"Eja...",
-        success:"Oyiwaladɔŋ. Yɛagye wo nɔŋɔ request no.",
-        error:"Yɛantumi anyɛ wo request no.",
-        connection:"Yɛantumi anka Novera server no ho.",
-        nameRequired:"Yɛsrɛ wo, kyerɛ wo din.",
-        phoneRequired:"Yɛsrɛ wo, kyerɛ wo phone number.",
-        serviceRequired:"Yɛsrɛ wo, paw service bi."
-    }
 };
 
 function getFormMessage(language, type){
@@ -3781,8 +4067,6 @@ const serviceLabels = {
     de:{more:"Mehr erfahren",less:"Weniger anzeigen"},
     es:{more:"Más información",less:"Mostrar menos"},
     tw:{more:"Kɔ so sua ho",less:"Fa no"},
-    ee:{more:"Kpɔ nu geɖe",less:"Fa nu"},
-    da:{more:"Kɔ nɔɔ nɛ",less:"Fa nɛ"}
 };
 
 function updateServiceButtons(language){
@@ -4172,6 +4456,106 @@ if(consultationForm){
 }
 
 
+
+/* =========================================================
+   COMPANY GALLERY SLIDESHOW
+========================================================= */
+
+function initializeCompanyGallery(){
+
+    const slides = document.querySelectorAll(".company-slide");
+    const dots = document.querySelectorAll(".gallery-dot");
+    const previousButton = document.querySelector(".gallery-prev");
+    const nextButton = document.querySelector(".gallery-next");
+
+    if(!slides.length){
+        return;
+    }
+
+    let currentGallerySlide = 0;
+    let galleryTimer = null;
+
+    function showGallerySlide(index){
+
+        if(index < 0){
+            index = slides.length - 1;
+        }
+
+        if(index >= slides.length){
+            index = 0;
+        }
+
+        slides.forEach((slide, slideIndex) => {
+            slide.classList.toggle(
+                "active",
+                slideIndex === index
+            );
+        });
+
+        dots.forEach((dot, dotIndex) => {
+            dot.classList.toggle(
+                "active",
+                dotIndex === index
+            );
+        });
+
+        currentGallerySlide = index;
+    }
+
+    function nextGallerySlide(){
+        showGallerySlide(currentGallerySlide + 1);
+    }
+
+    function previousGallerySlide(){
+        showGallerySlide(currentGallerySlide - 1);
+    }
+
+    function startGalleryTimer(){
+
+        if(galleryTimer){
+            clearInterval(galleryTimer);
+        }
+
+        galleryTimer = setInterval(
+            nextGallerySlide,
+            5000
+        );
+    }
+
+    if(nextButton){
+        nextButton.addEventListener("click", function(){
+            nextGallerySlide();
+            startGalleryTimer();
+        });
+    }
+
+    if(previousButton){
+        previousButton.addEventListener("click", function(){
+            previousGallerySlide();
+            startGalleryTimer();
+        });
+    }
+
+    dots.forEach(dot => {
+
+        dot.addEventListener("click", function(){
+
+            const index = Number(
+                this.dataset.gallerySlide
+            );
+
+            if(index >= 0 && index < slides.length){
+                showGallerySlide(index);
+                startGalleryTimer();
+            }
+        });
+    });
+
+    showGallerySlide(0);
+    startGalleryTimer();
+}
+
+
 /* =========================================================
    START
 ========================================================= */
@@ -4181,6 +4565,7 @@ document.addEventListener("DOMContentLoaded", function(){
     setLanguage(currentLanguage);
     initializeNavigation();
     initializeHeroSlideshow();
+    initializeCompanyGallery();
 
 });
 
