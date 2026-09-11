@@ -350,6 +350,124 @@
                 translateX(2px);
         }
 
+        .consultation-nav-link {
+            position: relative;
+        }
+
+        .nav-link-label {
+            min-width: 0;
+            flex: 1;
+        }
+
+        .nav-badge {
+            min-width: 22px;
+            height: 22px;
+            padding: 0 6px;
+            border-radius: 999px;
+            background: #ffffff;
+            color: var(--novera-blue);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 800;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+
+        .nav-badge[hidden] {
+            display: none;
+        }
+
+        .new-request-banner {
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            margin-bottom: 22px;
+            padding: 14px 17px;
+            border: 1px solid #b9dcff;
+            border-radius: 14px;
+            background: #f0f7ff;
+            color: var(--novera-dark-blue);
+            box-shadow: 0 8px 24px rgba(7,87,166,0.07);
+        }
+
+        .new-request-banner.show {
+            display: flex;
+        }
+
+        .new-request-banner-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+        }
+
+        .new-request-banner-icon {
+            width: 36px;
+            height: 36px;
+            flex-shrink: 0;
+            border-radius: 10px;
+            background: var(--novera-blue);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .new-request-banner strong {
+            display: block;
+            font-size: 12px;
+        }
+
+        .new-request-banner p {
+            margin-top: 3px;
+            font-size: 10px;
+            color: var(--text-muted);
+        }
+
+        .new-request-banner a {
+            flex-shrink: 0;
+            padding: 9px 13px;
+            border-radius: 9px;
+            background: var(--novera-blue);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .new-request-banner a:hover {
+            background: var(--novera-dark-blue);
+        }
+
+        .stat-card.new-request-card {
+            position: relative;
+            border-color: #c7e2ff;
+        }
+
+        .stat-card.new-request-card::after {
+            content: "";
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--novera-blue);
+            box-shadow: 0 0 0 5px rgba(7,87,166,0.08);
+            opacity: 0;
+        }
+
+        .stat-card.new-request-card.has-new::after {
+            opacity: 1;
+            animation: pulseNew 1.7s infinite;
+        }
+
+        @keyframes pulseNew {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.35); opacity: 0.45; }
+        }
+
         .nav-link.active {
             background: white;
 
@@ -1336,6 +1454,16 @@
 
         @media (max-width: 600px) {
 
+            .new-request-banner {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .new-request-banner a {
+                width: 100%;
+                text-align: center;
+            }
+
             .stats-grid {
                 grid-template-columns:
                     1fr;
@@ -1495,13 +1623,24 @@
 
             <a
                 href="{{ url_for('md_consultations') }}"
-                class="nav-link"
+                class="nav-link consultation-nav-link"
+                id="consultationNavLink"
             >
 
                 <i class="fa-solid fa-clipboard-list"></i>
 
-                <span>
+                <span class="nav-link-label">
                     Consultations
+                </span>
+
+                <span
+                    class="nav-badge"
+                    id="newConsultationBadge"
+                    {% if not new_consultations|default(0) %}
+                        hidden
+                    {% endif %}
+                >
+                    {{ new_consultations|default(0) }}
                 </span>
 
             </a>
@@ -1675,6 +1814,35 @@
             </section>
 
 
+            <!-- LIVE NEW REQUEST NOTICE -->
+            <div
+                class="new-request-banner"
+                id="newRequestBanner"
+                role="status"
+                aria-live="polite"
+            >
+                <div class="new-request-banner-content">
+                    <div class="new-request-banner-icon">
+                        <i class="fa-solid fa-bell"></i>
+                    </div>
+
+                    <div>
+                        <strong id="newRequestBannerTitle">
+                            New consultation request received
+                        </strong>
+
+                        <p id="newRequestBannerText">
+                            A new client request is waiting for management review.
+                        </p>
+                    </div>
+                </div>
+
+                <a href="{{ url_for('md_consultations') }}">
+                    View Request
+                </a>
+            </div>
+
+
             <!-- =================================================
                  PRIMARY STATISTICS
             ================================================== -->
@@ -1702,7 +1870,7 @@
                     </div>
 
 
-                    <div class="stat-value">
+                    <div class="stat-value" id="totalStaffValue">
                         {{ total_staff|default(0) }}
                     </div>
 
@@ -1735,7 +1903,7 @@
                     </div>
 
 
-                    <div class="stat-value">
+                    <div class="stat-value" id="activeStaffValue">
                         {{ active_staff|default(0) }}
                     </div>
 
@@ -1768,7 +1936,7 @@
                     </div>
 
 
-                    <div class="stat-value">
+                    <div class="stat-value" id="pendingStaffValue">
                         {{ pending_staff|default(0) }}
                     </div>
 
@@ -1795,7 +1963,7 @@
                     </div>
 
 
-                    <div class="stat-value">
+                    <div class="stat-value" id="totalConsultationsValue">
                         {{ total_consultations|default(0) }}
                     </div>
 
@@ -1813,7 +1981,7 @@
 
                 <!-- NEW -->
 
-                <div class="stat-card">
+                <div class="stat-card new-request-card{% if new_consultations|default(0) > 0 %} has-new{% endif %}" id="newRequestCard">
 
                     <div class="stat-top">
 
@@ -1831,7 +1999,7 @@
                     </div>
 
 
-                    <div class="stat-value">
+                    <div class="stat-value" id="newConsultationsValue">
                         {{ new_consultations|default(0) }}
                     </div>
 
@@ -1864,7 +2032,7 @@
                     </div>
 
 
-                    <div class="stat-value">
+                    <div class="stat-value" id="inProgressConsultationsValue">
                         {{ in_progress_consultations|default(0) }}
                     </div>
 
@@ -1897,7 +2065,7 @@
                     </div>
 
 
-                    <div class="stat-value">
+                    <div class="stat-value" id="closedConsultationsValue">
                         {{ closed_consultations|default(0) }}
                     </div>
 
@@ -1930,7 +2098,7 @@
                     </div>
 
 
-                    <div class="stat-value">
+                    <div class="stat-value" id="unassignedConsultationsValue">
                         {{ unassigned_consultations|default(0) }}
                     </div>
 
@@ -2178,7 +2346,10 @@
                      RECENT CONSULTATIONS
                 ================================================== -->
 
-                <section class="section">
+                <section
+                    class="section"
+                    id="recentConsultationsSection"
+                >
 
                     <div class="section-header">
 
@@ -2407,6 +2578,32 @@
             </div>
 
 
+            <div
+                id="dashboardLiveStatus"
+                style="
+                    display:flex;
+                    align-items:center;
+                    justify-content:flex-end;
+                    gap:7px;
+                    margin:4px 2px 14px;
+                    color:#8a95a5;
+                    font-size:10px;
+                "
+            >
+                <span
+                    id="dashboardLiveDot"
+                    style="
+                        width:7px;
+                        height:7px;
+                        border-radius:50%;
+                        background:#16845b;
+                        display:inline-block;
+                    "
+                ></span>
+                <span id="dashboardLiveText">Live dashboard</span>
+            </div>
+
+
             <!-- =================================================
                  FOOTER
             ================================================== -->
@@ -2558,6 +2755,385 @@
 
             }
         );
+
+
+    /* =========================================================
+       LIVE DASHBOARD UPDATES
+       The dashboard checks the same dashboard route every 5 seconds.
+       No separate API route is required.
+    ========================================================= */
+
+    (function () {
+
+        const POLL_INTERVAL = 5000;
+
+        const valueIds = [
+            "totalStaffValue",
+            "activeStaffValue",
+            "pendingStaffValue",
+            "totalConsultationsValue",
+            "newConsultationsValue",
+            "inProgressConsultationsValue",
+            "closedConsultationsValue",
+            "unassignedConsultationsValue"
+        ];
+
+        const newValue =
+            document.getElementById("newConsultationsValue");
+
+        const badge =
+            document.getElementById("newConsultationBadge");
+
+        const newCard =
+            document.getElementById("newRequestCard");
+
+        const banner =
+            document.getElementById("newRequestBanner");
+
+        const bannerTitle =
+            document.getElementById("newRequestBannerTitle");
+
+        const bannerText =
+            document.getElementById("newRequestBannerText");
+
+        const recentSection =
+            document.getElementById(
+                "recentConsultationsSection"
+            );
+
+        const liveText =
+            document.getElementById("dashboardLiveText");
+
+        const liveDot =
+            document.getElementById("dashboardLiveDot");
+
+        let lastNewCount =
+            Number(
+                newValue
+                    ? newValue.textContent.trim()
+                    : "0"
+            );
+
+        let firstPoll = true;
+        let checking = false;
+
+
+        function setLiveStatus(
+            online,
+            message
+        ) {
+
+            if (liveText) {
+                liveText.textContent =
+                    message;
+            }
+
+            if (liveDot) {
+                liveDot.style.background =
+                    online
+                        ? "#16845b"
+                        : "#c73636";
+            }
+
+        }
+
+
+        function updateValue(
+            id,
+            sourceDocument
+        ) {
+
+            const current =
+                document.getElementById(id);
+
+            const incoming =
+                sourceDocument.getElementById(id);
+
+            if (
+                current &&
+                incoming
+            ) {
+
+                current.textContent =
+                    incoming.textContent.trim();
+
+            }
+
+        }
+
+
+        function updateBadge(
+            count
+        ) {
+
+            if (!badge) {
+                return;
+            }
+
+            const numericCount =
+                Number(count) || 0;
+
+            badge.textContent =
+                numericCount;
+
+            badge.hidden =
+                numericCount <= 0;
+
+        }
+
+
+        function updateNewCard(
+            count
+        ) {
+
+            if (!newCard) {
+                return;
+            }
+
+            const numericCount =
+                Number(count) || 0;
+
+            newCard.classList.toggle(
+                "has-new",
+                numericCount > 0
+            );
+
+        }
+
+
+        function showNewRequestNotice(
+            count,
+            previousCount
+        ) {
+
+            if (!banner) {
+                return;
+            }
+
+            const increase =
+                count - previousCount;
+
+            if (
+                !firstPoll &&
+                increase > 0
+            ) {
+
+                bannerTitle.textContent =
+                    increase === 1
+                        ? "New consultation request received"
+                        : increase + " new consultation requests received";
+
+                bannerText.textContent =
+                    increase === 1
+                        ? "A new client request is waiting for management review."
+                        : "New client requests are waiting for management review.";
+
+                banner.classList.add("show");
+
+                try {
+                    document.title =
+                        "(" + count + ") New Request · MD Dashboard";
+                } catch (error) {
+                    // Ignore title update errors.
+                }
+
+            }
+
+        }
+
+
+        async function refreshDashboard() {
+
+            if (checking) {
+                return;
+            }
+
+            checking = true;
+
+            try {
+
+                const response =
+                    await fetch(
+                        window.location.pathname +
+                        "?dashboard_refresh=" +
+                        Date.now(),
+                        {
+                            method: "GET",
+                            cache: "no-store",
+                            credentials: "same-origin",
+                            headers: {
+                                "X-Requested-With":
+                                    "XMLHttpRequest"
+                            }
+                        }
+                    );
+
+                if (!response.ok) {
+                    throw new Error(
+                        "Dashboard refresh failed: " +
+                        response.status
+                    );
+                }
+
+                const html =
+                    await response.text();
+
+                const parser =
+                    new DOMParser();
+
+                const incomingDocument =
+                    parser.parseFromString(
+                        html,
+                        "text/html"
+                    );
+
+                const incomingNewElement =
+                    incomingDocument.getElementById(
+                        "newConsultationsValue"
+                    );
+
+                if (!incomingNewElement) {
+                    throw new Error(
+                        "Dashboard data was not returned."
+                    );
+                }
+
+                const incomingNewCount =
+                    Number(
+                        incomingNewElement
+                            .textContent
+                            .trim()
+                    ) || 0;
+
+                const previousCount =
+                    lastNewCount;
+
+                valueIds.forEach(
+                    function (id) {
+                        updateValue(
+                            id,
+                            incomingDocument
+                        );
+                    }
+                );
+
+                updateBadge(
+                    incomingNewCount
+                );
+
+                updateNewCard(
+                    incomingNewCount
+                );
+
+                showNewRequestNotice(
+                    incomingNewCount,
+                    previousCount
+                );
+
+
+                /*
+                 * Replace the recent consultations section
+                 * so a newly received request can appear
+                 * on the dashboard immediately.
+                 */
+                const incomingRecentSection =
+                    incomingDocument.getElementById(
+                        "recentConsultationsSection"
+                    );
+
+                if (
+                    recentSection &&
+                    incomingRecentSection
+                ) {
+
+                    recentSection.replaceWith(
+                        incomingRecentSection
+                    );
+
+                }
+
+
+                lastNewCount =
+                    incomingNewCount;
+
+                firstPoll = false;
+
+                setLiveStatus(
+                    true,
+                    "Live · updated just now"
+                );
+
+            } catch (error) {
+
+                console.warn(
+                    "Live dashboard update failed:",
+                    error
+                );
+
+                setLiveStatus(
+                    false,
+                    "Live update temporarily unavailable"
+                );
+
+            } finally {
+
+                checking = false;
+
+            }
+
+        }
+
+
+        /*
+         * Start after the page is loaded, then repeat
+         * every five seconds.
+         */
+        setTimeout(
+            refreshDashboard,
+            1500
+        );
+
+        setInterval(
+            refreshDashboard,
+            POLL_INTERVAL
+        );
+
+
+        /*
+         * If the MD opens the consultations page,
+         * reset the browser title when returning.
+         */
+        window.addEventListener(
+            "focus",
+            function () {
+
+                refreshDashboard();
+
+            }
+        );
+
+
+        /*
+         * Hide the notice when the MD chooses View Request.
+         */
+        if (banner) {
+
+            banner
+                .querySelector("a")
+                ?.addEventListener(
+                    "click",
+                    function () {
+
+                        banner.classList.remove(
+                            "show"
+                        );
+
+                    }
+                );
+
+        }
+
+    })();
 
 </script>
 

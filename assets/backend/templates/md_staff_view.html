@@ -3,7 +3,7 @@
 
 <head>
 
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
 
     <meta
         name="viewport"
@@ -11,8 +11,9 @@
     >
 
     <title>
-        Staff Details | {{ company_name|default('Novera Energy & Technologies Ltd') }}
+        Staff Details | {{ company_name|default('Novera Energy & Technologies') }}
     </title>
+
 
     <style>
 
@@ -20,9 +21,11 @@
             box-sizing: border-box;
         }
 
+
         html {
             scroll-behavior: smooth;
         }
+
 
         body {
             margin: 0;
@@ -57,13 +60,16 @@
                 rgba(0, 0, 0, 0.10);
 
             position: sticky;
+
             top: 0;
+
             z-index: 100;
         }
 
 
         .container {
             width: min(920px, 92%);
+
             margin: auto;
         }
 
@@ -83,6 +89,7 @@
 
         .brand {
             width: 170px;
+
             height: 64px;
 
             display: block;
@@ -93,9 +100,14 @@
 
         .brand img {
             width: 100%;
+
             height: 100%;
 
             object-fit: contain;
+
+            object-position: center;
+
+            display: block;
         }
 
 
@@ -103,6 +115,7 @@
             display: inline-flex;
 
             align-items: center;
+
             justify-content: center;
 
             gap: 7px;
@@ -132,9 +145,11 @@
 
         .back:hover {
             background: #0b3d91;
+
             color: #ffffff;
 
-            transform: translateY(-1px);
+            transform:
+                translateY(-1px);
         }
 
 
@@ -159,12 +174,13 @@
                 rgba(0, 20, 60, 0.20);
 
             border:
-                1px solid rgba(255,255,255,0.6);
+                1px solid
+                rgba(255,255,255,0.6);
         }
 
 
         /* =====================================================
-           HEADER
+           PROFILE HEADER
         ===================================================== */
 
         .profile-header {
@@ -183,18 +199,78 @@
         }
 
 
-        .avatar {
-            width: 70px;
-            height: 70px;
+        /* =====================================================
+           PROFILE PHOTO
+        ===================================================== */
 
-            flex-shrink: 0;
+        .avatar {
+            width: 96px;
+
+            height: 96px;
+
+            flex: 0 0 96px;
+
+            border-radius: 50%;
+
+            overflow: hidden;
 
             display: flex;
 
             align-items: center;
+
             justify-content: center;
 
-            border-radius: 18px;
+            background:
+                linear-gradient(
+                    135deg,
+                    #0b3d91,
+                    #155dcc
+                );
+
+            border:
+                3px solid #dbe8f8;
+
+            color: #ffffff;
+
+            font-size: 29px;
+
+            font-weight: 800;
+
+            box-shadow:
+                0 10px 25px
+                rgba(11, 61, 145, 0.25);
+
+            position: relative;
+        }
+
+
+        .avatar img {
+            width: 100%;
+
+            height: 100%;
+
+            object-fit: contain;
+
+            object-position: center;
+
+            display: block;
+
+            background: #f4f8ff;
+
+            border-radius: 50%;
+        }
+
+
+        .avatar-fallback {
+            width: 100%;
+
+            height: 100%;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
 
             background:
                 linear-gradient(
@@ -205,18 +281,20 @@
 
             color: #ffffff;
 
-            font-size: 25px;
+            font-size: 29px;
 
             font-weight: 800;
-
-            box-shadow:
-                0 10px 25px
-                rgba(11, 61, 145, 0.25);
         }
 
 
+        /* =====================================================
+           PROFILE HEADING
+        ===================================================== */
+
         .profile-heading {
             min-width: 0;
+
+            flex: 1;
         }
 
 
@@ -256,6 +334,19 @@
             color: #667085;
 
             font-size: 14px;
+
+            line-height: 1.5;
+        }
+
+
+        .photo-status {
+            margin-top: 7px;
+
+            color: #98a2b3;
+
+            font-size: 11px;
+
+            font-weight: 600;
         }
 
 
@@ -305,7 +396,8 @@
         .detail:hover {
             border-color: #c8d9f1;
 
-            transform: translateY(-1px);
+            transform:
+                translateY(-1px);
         }
 
 
@@ -373,6 +465,7 @@
             content: "";
 
             width: 7px;
+
             height: 7px;
 
             border-radius: 50%;
@@ -383,36 +476,41 @@
 
         .status-active {
             background: #dcfce7;
+
             color: #166534;
         }
 
 
         .status-pending {
             background: #fff7d6;
+
             color: #8a6200;
         }
 
 
         .status-disabled {
             background: #fee2e2;
+
             color: #b42318;
         }
 
 
         .status-rejected {
             background: #f3e8ff;
+
             color: #7e22ce;
         }
 
 
         .status-default {
             background: #eef2f7;
+
             color: #475467;
         }
 
 
         /* =====================================================
-           FOOTER ACTION
+           BOTTOM ACTION
         ===================================================== */
 
         .bottom-actions {
@@ -472,7 +570,8 @@
         .return-btn:hover {
             background: #092d68;
 
-            transform: translateY(-1px);
+            transform:
+                translateY(-1px);
         }
 
 
@@ -489,6 +588,7 @@
 
             .brand {
                 width: 140px;
+
                 height: 54px;
             }
 
@@ -501,7 +601,8 @@
 
 
             main {
-                padding: 35px 0 50px;
+                padding:
+                    35px 0 50px;
             }
 
 
@@ -520,12 +621,18 @@
 
 
             .avatar {
-                width: 58px;
-                height: 58px;
+                width: 76px;
 
-                border-radius: 15px;
+                height: 76px;
 
-                font-size: 21px;
+                flex-basis: 76px;
+
+                border-width: 2px;
+            }
+
+
+            .avatar-fallback {
+                font-size: 23px;
             }
 
 
@@ -569,6 +676,7 @@
                 font-size: 0;
 
                 width: 40px;
+
                 height: 40px;
 
                 padding: 0;
@@ -591,6 +699,22 @@
                 padding-bottom: 22px;
 
                 margin-bottom: 22px;
+
+                gap: 13px;
+            }
+
+
+            .avatar {
+                width: 64px;
+
+                height: 64px;
+
+                flex-basis: 64px;
+            }
+
+
+            .avatar-fallback {
+                font-size: 19px;
             }
 
 
@@ -616,6 +740,7 @@
 
     <div class="container nav-inner">
 
+
         <a
             class="brand"
             href="{{ url_for('md_dashboard') }}"
@@ -624,7 +749,7 @@
 
             <img
                 src="{{ url_for('logo') }}"
-                alt="{{ company_name|default('Novera Energy & Technologies Ltd') }} Logo"
+                alt="{{ company_name|default('Novera Energy & Technologies') }} Logo"
             >
 
         </a>
@@ -643,6 +768,7 @@
 </nav>
 
 
+
 <!-- =========================================================
      MAIN CONTENT
 ========================================================= -->
@@ -654,52 +780,131 @@
         <div class="card">
 
 
-            <!-- PROFILE HEADER -->
+            <!-- =================================================
+                 PROFILE HEADER
+            ================================================== -->
 
             <div class="profile-header">
 
+
                 <div class="avatar">
 
-                    {% set first_name = staff["first_name"]|default("", true) %}
-                    {% set last_name = staff["last_name"]|default("", true) %}
+                    {% if staff["profile_photo"] %}
 
-                    {{
-                        (
-                            first_name[:1] ~
-                            last_name[:1]
-                        )|upper
-                    }}
+                        <img
+                            src="{{ url_for(
+                                'md_staff_photo',
+                                staff_id=staff['id']
+                            ) }}"
+                            alt="{{ staff['first_name']|default('', true) }} {{ staff['last_name']|default('', true) }} profile photo"
+                            loading="eager"
+                            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                        >
+
+                        <div
+                            class="avatar-fallback"
+                            style="display:none;"
+                        >
+
+                            {% set first_name =
+                                staff["first_name"]|default("", true)
+                            %}
+
+                            {% set last_name =
+                                staff["last_name"]|default("", true)
+                            %}
+
+                            {{
+                                (
+                                    first_name[:1] ~
+                                    last_name[:1]
+                                )|upper
+                            }}
+
+                        </div>
+
+                    {% else %}
+
+                        {% set first_name =
+                            staff["first_name"]|default("", true)
+                        %}
+
+                        {% set last_name =
+                            staff["last_name"]|default("", true)
+                        %}
+
+                        <div class="avatar-fallback">
+
+                            {{
+                                (
+                                    first_name[:1] ~
+                                    last_name[:1]
+                                )|upper
+                            }}
+
+                        </div>
+
+                    {% endif %}
 
                 </div>
 
 
+
                 <div class="profile-heading">
+
 
                     <span class="eyebrow">
                         Staff Record
                     </span>
 
+
                     <h1>
-                        {{ first_name }}
-                        {{ last_name }}
+
+                        {{ staff["first_name"]|default("", true) }}
+
+                        {{ staff["last_name"]|default("", true) }}
+
                     </h1>
+
 
                     <div class="subtitle">
 
                         {{ staff["position"]|default("Staff Member", true) }}
 
                         {% if staff["department"] %}
+
                             · {{ staff["department"] }}
+
                         {% endif %}
 
                     </div>
 
+
+                    {% if staff["profile_photo"] %}
+
+                        <div class="photo-status">
+                            Profile photo uploaded
+                        </div>
+
+                    {% else %}
+
+                        <div class="photo-status">
+                            No profile photo uploaded
+                        </div>
+
+                    {% endif %}
+
+
                 </div>
+
 
             </div>
 
 
-            <!-- STAFF INFORMATION -->
+
+            <!-- =================================================
+                 STAFF INFORMATION
+            ================================================== -->
 
             <h2 class="section-title">
                 Staff Information
@@ -709,8 +914,6 @@
             <div class="details">
 
 
-                <!-- STAFF ID -->
-
                 <div class="detail">
 
                     <span class="label">
@@ -718,13 +921,17 @@
                     </span>
 
                     <strong>
-                        {{ staff["staff_id"]|default("Not assigned", true) }}
+
+                        {{ staff["staff_id"]|default(
+                            "Not assigned",
+                            true
+                        ) }}
+
                     </strong>
 
                 </div>
 
 
-                <!-- STATUS -->
 
                 <div class="detail">
 
@@ -732,12 +939,17 @@
                         Status
                     </span>
 
+
                     {% set current_status =
-                        staff["status"]|default("Unknown", true)|lower
+                        staff["status"]|default(
+                            "Unknown",
+                            true
+                        )|lower
                     %}
 
 
                     <strong>
+
 
                         {% if current_status == "active" %}
 
@@ -745,11 +957,13 @@
                                 Active
                             </span>
 
+
                         {% elif current_status == "pending" %}
 
                             <span class="status status-pending">
                                 Pending
                             </span>
+
 
                         {% elif current_status == "disabled" %}
 
@@ -757,32 +971,40 @@
                                 Disabled
                             </span>
 
+
                         {% elif current_status == "rejected" %}
 
                             <span class="status status-rejected">
                                 Rejected
                             </span>
 
+
                         {% else %}
 
                             <span class="status status-default">
-                                {{ staff["status"]|default("Unknown", true) }}
+
+                                {{ staff["status"]|default(
+                                    "Unknown",
+                                    true
+                                ) }}
+
                             </span>
 
                         {% endif %}
+
 
                     </strong>
 
                 </div>
 
 
-                <!-- EMAIL -->
 
                 <div class="detail">
 
                     <span class="label">
                         Work Email
                     </span>
+
 
                     {% if staff["email"] %}
 
@@ -801,13 +1023,13 @@
                 </div>
 
 
-                <!-- PHONE -->
 
                 <div class="detail">
 
                     <span class="label">
                         Phone
                     </span>
+
 
                     {% if staff["phone"] %}
 
@@ -826,13 +1048,13 @@
                 </div>
 
 
-                <!-- DEPARTMENT -->
 
                 <div class="detail">
 
                     <span class="label">
                         Department
                     </span>
+
 
                     {% if staff["department"] %}
 
@@ -851,13 +1073,13 @@
                 </div>
 
 
-                <!-- POSITION -->
 
                 <div class="detail">
 
                     <span class="label">
                         Position
                     </span>
+
 
                     {% if staff["position"] %}
 
@@ -876,13 +1098,13 @@
                 </div>
 
 
-                <!-- REGISTERED -->
 
                 <div class="detail">
 
                     <span class="label">
                         Registered
                     </span>
+
 
                     {% if staff["created_at"] %}
 
@@ -901,13 +1123,13 @@
                 </div>
 
 
-                <!-- APPROVED -->
 
                 <div class="detail">
 
                     <span class="label">
                         Approved
                     </span>
+
 
                     {% if staff["approved_at"] %}
 
@@ -926,13 +1148,13 @@
                 </div>
 
 
-                <!-- LAST LOGIN -->
 
                 <div class="detail">
 
                     <span class="label">
                         Last Login
                     </span>
+
 
                     {% if staff["last_login"] %}
 
@@ -954,18 +1176,28 @@
             </div>
 
 
-            <!-- BOTTOM ACTIONS -->
+
+            <!-- =================================================
+                 BOTTOM ACTIONS
+            ================================================== -->
 
             <div class="bottom-actions">
+
 
                 <div class="record-note">
 
                     Staff record for
+
                     <strong>
-                        {{ first_name }} {{ last_name }}
+                        {{ staff["first_name"]|default("", true) }}
+                        {{ staff["last_name"]|default("", true) }}
                     </strong>
 
-                    · {{ company_name|default('Novera Energy & Technologies Ltd') }}
+                    ·
+
+                    {{ company_name|default(
+                        'Novera Energy & Technologies'
+                    ) }}
 
                 </div>
 
@@ -976,6 +1208,7 @@
                 >
                     Return to Staff
                 </a>
+
 
             </div>
 

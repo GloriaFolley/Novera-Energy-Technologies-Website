@@ -69,7 +69,9 @@
         }
 
 
-        /* Decorative background circle */
+        /* =====================================================
+           DECORATIVE BACKGROUND
+           ===================================================== */
 
         body::after {
             content: "";
@@ -139,7 +141,9 @@
         }
 
 
-        /* Blue top accent */
+        /* =====================================================
+           BLUE TOP ACCENT
+           ===================================================== */
 
         .form-card::before {
             content: "";
@@ -334,6 +338,37 @@
 
         .form-group input::placeholder {
             color: #9aa7b8;
+        }
+
+
+        /* =====================================================
+           FORGOT PASSWORD
+           ===================================================== */
+
+        .password-help {
+            display: flex;
+
+            justify-content: flex-end;
+
+            margin-top: -8px;
+
+            margin-bottom: 20px;
+        }
+
+
+        .password-help a {
+            color: #0b3d91;
+
+            font-size: 13px;
+
+            font-weight: 700;
+
+            text-decoration: none;
+        }
+
+
+        .password-help a:hover {
+            text-decoration: underline;
         }
 
 
@@ -572,6 +607,19 @@
             </div>
 
 
+            <!-- =============================================
+                 FORGOT PASSWORD
+                 ============================================= -->
+
+            <div class="password-help">
+
+                <a href="{{ url_for('forgot_password') }}">
+                    Forgot Password?
+                </a>
+
+            </div>
+
+
             <button
                 class="btn"
                 type="submit"
@@ -588,13 +636,18 @@
 
         <div class="login-links">
 
-            First MD setup?
+            {% if not md_exists %}
 
-            <a href="{{ url_for('md_register') }}">
-                Register MD
-            </a>
+                First MD setup?
 
-            <br>
+                <a href="{{ url_for('md_register') }}">
+                    Register MD
+                </a>
+
+                <br>
+
+            {% endif %}
+
 
             <a href="{{ url_for('staff_login') }}">
                 Staff Login
@@ -628,5 +681,3 @@
 
 </body>
 </html>
-```
-

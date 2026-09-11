@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -38,6 +39,7 @@
 
         body {
             min-height: 100vh;
+
             font-family:
                 Inter,
                 -apple-system,
@@ -64,11 +66,14 @@
             padding: 30px 18px;
 
             position: relative;
+
             overflow-x: hidden;
         }
 
+
         body::before {
             content: "";
+
             position: fixed;
 
             width: 420px;
@@ -85,8 +90,10 @@
             pointer-events: none;
         }
 
+
         body::after {
             content: "";
+
             position: fixed;
 
             width: 350px;
@@ -103,12 +110,16 @@
             pointer-events: none;
         }
 
+
         .page {
             width: 100%;
+
             max-width: 1080px;
 
             display: grid;
-            grid-template-columns: 0.85fr 1.15fr;
+
+            grid-template-columns:
+                0.85fr 1.15fr;
 
             background: #ffffff;
 
@@ -120,8 +131,10 @@
                 0 25px 70px rgba(0, 0, 0, 0.30);
 
             position: relative;
+
             z-index: 1;
         }
+
 
         /* =====================================================
            BRAND PANEL
@@ -141,13 +154,16 @@
             padding: 48px 40px;
 
             display: flex;
+
             flex-direction: column;
+
             justify-content: space-between;
 
             min-height: 680px;
 
             position: relative;
         }
+
 
         .brand-panel::before {
             content: "";
@@ -159,18 +175,24 @@
 
             border-radius: 50%;
 
-            border: 1px solid rgba(255,255,255,0.08);
+            border:
+                1px solid
+                rgba(255,255,255,0.08);
 
             top: 50%;
             left: 50%;
 
-            transform: translate(-50%, -50%);
+            transform:
+                translate(-50%, -50%);
         }
+
 
         .brand-content {
             position: relative;
+
             z-index: 2;
         }
+
 
         .logo-wrapper {
             width: 90px;
@@ -181,6 +203,7 @@
             background: #ffffff;
 
             display: flex;
+
             align-items: center;
             justify-content: center;
 
@@ -189,8 +212,10 @@
             margin-bottom: 28px;
 
             box-shadow:
-                0 10px 30px rgba(0,0,0,0.22);
+                0 10px 30px
+                rgba(0,0,0,0.22);
         }
+
 
         .logo-wrapper img {
             width: 100%;
@@ -201,8 +226,10 @@
             border-radius: 12px;
         }
 
+
         .brand-panel h1 {
             font-size: 30px;
+
             line-height: 1.15;
 
             margin-bottom: 12px;
@@ -210,10 +237,12 @@
             letter-spacing: -0.5px;
         }
 
+
         .tagline {
             color: #ffc107;
 
             font-size: 15px;
+
             font-weight: 600;
 
             letter-spacing: 1.2px;
@@ -221,8 +250,10 @@
             margin-bottom: 25px;
         }
 
+
         .brand-description {
-            color: rgba(255,255,255,0.78);
+            color:
+                rgba(255,255,255,0.78);
 
             line-height: 1.7;
 
@@ -230,6 +261,7 @@
 
             max-width: 380px;
         }
+
 
         .portal-features {
             margin-top: 35px;
@@ -239,12 +271,15 @@
             gap: 16px;
         }
 
+
         .feature {
             display: flex;
+
             align-items: flex-start;
 
             gap: 13px;
         }
+
 
         .feature-icon {
             width: 36px;
@@ -260,9 +295,11 @@
             color: #ffc107;
 
             display: flex;
+
             align-items: center;
             justify-content: center;
         }
+
 
         .feature strong {
             display: block;
@@ -272,28 +309,34 @@
             margin-bottom: 3px;
         }
 
+
         .feature span {
             display: block;
 
             font-size: 12px;
 
-            color: rgba(255,255,255,0.65);
+            color:
+                rgba(255,255,255,0.65);
 
             line-height: 1.5;
         }
 
+
         .brand-footer {
             position: relative;
+
             z-index: 2;
 
             padding-top: 30px;
 
-            color: rgba(255,255,255,0.55);
+            color:
+                rgba(255,255,255,0.55);
 
             font-size: 12px;
 
             line-height: 1.6;
         }
+
 
         /* =====================================================
            FORM PANEL
@@ -305,9 +348,11 @@
             background: #ffffff;
         }
 
+
         .form-header {
             margin-bottom: 30px;
         }
+
 
         .form-header .eyebrow {
             color: #0b6e8e;
@@ -323,6 +368,7 @@
             margin-bottom: 8px;
         }
 
+
         .form-header h2 {
             font-size: 30px;
 
@@ -331,6 +377,7 @@
             margin-bottom: 8px;
         }
 
+
         .form-header p {
             color: #6b7280;
 
@@ -338,6 +385,7 @@
 
             line-height: 1.6;
         }
+
 
         /* =====================================================
            INFORMATION NOTICE
@@ -354,10 +402,12 @@
 
             background: #f0f7fa;
 
-            border: 1px solid #d7eaf0;
+            border:
+                1px solid #d7eaf0;
 
             margin-bottom: 25px;
         }
+
 
         .notice-icon {
             color: #0b6e8e;
@@ -366,6 +416,7 @@
 
             margin-top: 2px;
         }
+
 
         .notice strong {
             display: block;
@@ -377,6 +428,7 @@
             margin-bottom: 4px;
         }
 
+
         .notice p {
             color: #60717c;
 
@@ -385,13 +437,15 @@
             line-height: 1.6;
         }
 
+
         /* =====================================================
-           FLASH MESSAGES
+           VALIDATION / FLASH MESSAGES
         ===================================================== */
 
         .flash-container {
             margin-bottom: 20px;
         }
+
 
         .flash {
             padding: 13px 15px;
@@ -409,35 +463,50 @@
             margin-bottom: 10px;
         }
 
+
         .flash.success {
             background: #ecfdf3;
+
             color: #146c43;
-            border: 1px solid #b7ebc6;
+
+            border:
+                1px solid #b7ebc6;
         }
+
 
         .flash.danger {
             background: #fff1f2;
+
             color: #b42318;
-            border: 1px solid #fecdd3;
+
+            border:
+                1px solid #fecdd3;
         }
+
 
         .flash.warning {
             background: #fff8e6;
+
             color: #8a5a00;
-            border: 1px solid #f5d98b;
+
+            border:
+                1px solid #f5d98b;
         }
 
+
         /* =====================================================
-           FORM GRID
+           FORM
         ===================================================== */
 
         .form-grid {
             display: grid;
 
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns:
+                1fr 1fr;
 
             gap: 18px;
         }
+
 
         .form-group {
             display: flex;
@@ -445,9 +514,11 @@
             flex-direction: column;
         }
 
+
         .form-group.full {
             grid-column: 1 / -1;
         }
+
 
         label {
             font-size: 12px;
@@ -459,13 +530,16 @@
             margin-bottom: 7px;
         }
 
+
         .required {
             color: #d92d20;
         }
 
+
         .input-wrapper {
             position: relative;
         }
+
 
         .input-icon {
             position: absolute;
@@ -474,14 +548,18 @@
 
             top: 50%;
 
-            transform: translateY(-50%);
+            transform:
+                translateY(-50%);
 
             color: #98a2b3;
 
             font-size: 14px;
 
             pointer-events: none;
+
+            z-index: 2;
         }
+
 
         input,
         select {
@@ -489,7 +567,8 @@
 
             height: 48px;
 
-            border: 1px solid #d0d5dd;
+            border:
+                1px solid #d0d5dd;
 
             border-radius: 10px;
 
@@ -511,21 +590,26 @@
                 box-shadow 0.2s ease;
         }
 
+
         select {
             cursor: pointer;
         }
+
 
         input:focus,
         select:focus {
             border-color: #0b6e8e;
 
             box-shadow:
-                0 0 0 3px rgba(11,110,142,0.10);
+                0 0 0 3px
+                rgba(11,110,142,0.10);
         }
+
 
         input::placeholder {
             color: #98a2b3;
         }
+
 
         .password-toggle {
             position: absolute;
@@ -534,7 +618,8 @@
 
             top: 50%;
 
-            transform: translateY(-50%);
+            transform:
+                translateY(-50%);
 
             border: none;
 
@@ -545,11 +630,15 @@
             cursor: pointer;
 
             padding: 5px;
+
+            z-index: 3;
         }
+
 
         .password-toggle:hover {
             color: #344054;
         }
+
 
         .password-hint {
             font-size: 11px;
@@ -558,6 +647,7 @@
 
             margin-top: 6px;
         }
+
 
         /* =====================================================
            SUBMIT
@@ -604,16 +694,33 @@
                 box-shadow 0.2s ease;
         }
 
+
         .submit-btn:hover {
-            transform: translateY(-1px);
+            transform:
+                translateY(-1px);
 
             box-shadow:
-                0 8px 20px rgba(8,76,97,0.22);
+                0 8px 20px
+                rgba(8,76,97,0.22);
         }
 
+
         .submit-btn:active {
-            transform: translateY(0);
+            transform:
+                translateY(0);
         }
+
+
+        .submit-btn:disabled {
+            opacity: 0.75;
+
+            cursor: not-allowed;
+
+            transform: none;
+
+            box-shadow: none;
+        }
+
 
         /* =====================================================
            LINKS
@@ -629,6 +736,7 @@
             color: #667085;
         }
 
+
         .login-link a {
             color: #0b6e8e;
 
@@ -637,9 +745,11 @@
             font-weight: 700;
         }
 
+
         .login-link a:hover {
             text-decoration: underline;
         }
+
 
         .bottom-links {
             display: flex;
@@ -654,8 +764,10 @@
 
             padding-top: 20px;
 
-            border-top: 1px solid #eaecf0;
+            border-top:
+                1px solid #eaecf0;
         }
+
 
         .bottom-links a {
             color: #667085;
@@ -671,9 +783,11 @@
             gap: 5px;
         }
 
+
         .bottom-links a:hover {
             color: #0b6e8e;
         }
+
 
         /* =====================================================
            RESPONSIVE
@@ -687,24 +801,29 @@
                 max-width: 650px;
             }
 
+
             .brand-panel {
                 min-height: auto;
 
                 padding: 35px 30px;
             }
 
+
             .portal-features {
                 display: none;
             }
+
 
             .brand-footer {
                 margin-top: 30px;
             }
 
+
             .form-panel {
                 padding: 35px 30px;
             }
         }
+
 
         @media (max-width: 560px) {
 
@@ -712,31 +831,38 @@
                 padding: 0;
             }
 
+
             .page {
                 border-radius: 0;
 
                 min-height: 100vh;
             }
 
+
             .brand-panel {
                 padding: 30px 22px;
             }
+
 
             .form-panel {
                 padding: 30px 22px;
             }
 
+
             .form-grid {
                 grid-template-columns: 1fr;
             }
+
 
             .form-group.full {
                 grid-column: auto;
             }
 
+
             .form-header h2 {
                 font-size: 26px;
             }
+
 
             .brand-panel h1 {
                 font-size: 25px;
@@ -744,15 +870,18 @@
         }
 
     </style>
+
 </head>
+
 
 <body>
 
 <div class="page">
 
+
     <!-- =====================================================
          BRAND PANEL
-         ===================================================== -->
+    ====================================================== -->
 
     <section class="brand-panel">
 
@@ -767,36 +896,49 @@
 
             </div>
 
+
             <h1>
                 {{ company_name or "Novera Energy & Technologies Ltd" }}
             </h1>
+
 
             <div class="tagline">
                 {{ company_tagline or "Light · Motion · Intelligence" }}
             </div>
 
+
             <p class="brand-description">
+
                 Join the Novera staff portal and gain access to
                 company resources, consultation assignments,
                 internal communication and staff services.
+
             </p>
 
 
             <div class="portal-features">
 
+
                 <div class="feature">
 
                     <div class="feature-icon">
+
                         <i class="fa-solid fa-user-shield"></i>
+
                     </div>
 
+
                     <div>
-                        <strong>Secure Staff Access</strong>
+
+                        <strong>
+                            Secure Staff Access
+                        </strong>
 
                         <span>
                             Your account is reviewed before
                             access is granted.
                         </span>
+
                     </div>
 
                 </div>
@@ -805,16 +947,23 @@
                 <div class="feature">
 
                     <div class="feature-icon">
+
                         <i class="fa-solid fa-id-badge"></i>
+
                     </div>
 
+
                     <div>
-                        <strong>Staff Identification</strong>
+
+                        <strong>
+                            Staff Identification
+                        </strong>
 
                         <span>
                             A unique Novera Staff ID is generated
                             for every registration.
                         </span>
+
                     </div>
 
                 </div>
@@ -823,19 +972,27 @@
                 <div class="feature">
 
                     <div class="feature-icon">
+
                         <i class="fa-solid fa-envelope"></i>
+
                     </div>
 
+
                     <div>
-                        <strong>Company Email</strong>
+
+                        <strong>
+                            Company Email
+                        </strong>
 
                         <span>
                             Your official company email can be
                             assigned after approval and domain setup.
                         </span>
+
                     </div>
 
                 </div>
+
 
             </div>
 
@@ -845,7 +1002,9 @@
         <div class="brand-footer">
 
             © {{ current_year or "2026" }}
+
             {{ company_name or "Novera Energy & Technologies Ltd" }}.
+
             All rights reserved.
 
         </div>
@@ -854,10 +1013,11 @@
 
 
     <!-- =====================================================
-         REGISTRATION FORM
-         ===================================================== -->
+         FORM PANEL
+    ====================================================== -->
 
     <section class="form-panel">
+
 
         <div class="form-header">
 
@@ -865,9 +1025,11 @@
                 Staff Portal
             </div>
 
+
             <h2>
                 Create Staff Account
             </h2>
+
 
             <p>
                 Complete the registration form below.
@@ -879,8 +1041,36 @@
 
 
         <!-- =================================================
-             FLASH MESSAGES
-             ================================================= -->
+             VALIDATION ERROR FROM staff_register()
+        ================================================== -->
+
+        {% if registration_error %}
+
+            <div class="flash-container">
+
+                <div
+                    class="flash danger"
+                    role="alert"
+                >
+
+                    <i
+                        class="fa-solid fa-circle-exclamation"
+                    ></i>
+
+                    <span>
+                        {{ registration_error }}
+                    </span>
+
+                </div>
+
+            </div>
+
+        {% endif %}
+
+
+        <!-- =================================================
+             EXISTING FLASH MESSAGES
+        ================================================== -->
 
         {% with messages = get_flashed_messages(with_categories=true) %}
 
@@ -890,15 +1080,31 @@
 
                     {% for category, message in messages %}
 
-                        <div class="flash {{ category }}">
+                        <div
+                            class="flash {{ category }}"
+                            role="alert"
+                        >
 
                             {% if category == "success" %}
-                                <i class="fa-solid fa-circle-check"></i>
+
+                                <i
+                                    class="fa-solid fa-circle-check"
+                                ></i>
+
                             {% elif category == "warning" %}
-                                <i class="fa-solid fa-triangle-exclamation"></i>
+
+                                <i
+                                    class="fa-solid fa-triangle-exclamation"
+                                ></i>
+
                             {% else %}
-                                <i class="fa-solid fa-circle-exclamation"></i>
+
+                                <i
+                                    class="fa-solid fa-circle-exclamation"
+                                ></i>
+
                             {% endif %}
+
 
                             <span>
                                 {{ message }}
@@ -917,19 +1123,25 @@
 
         <!-- =================================================
              EMAIL NOTICE
-             ================================================= -->
+        ================================================== -->
 
         <div class="notice">
 
             <div class="notice-icon">
-                <i class="fa-solid fa-circle-info"></i>
+
+                <i
+                    class="fa-solid fa-circle-info"
+                ></i>
+
             </div>
+
 
             <div>
 
                 <strong>
                     Your company email is assigned after approval
                 </strong>
+
 
                 <p>
                     You do not need to provide an email address
@@ -947,29 +1159,38 @@
 
         <!-- =================================================
              FORM
-             ================================================= -->
+        ================================================== -->
 
         <form
             method="POST"
             action="{{ url_for('staff_register') }}"
             id="staffRegistrationForm"
-            novalidate
         >
 
             <div class="form-grid">
+
 
                 <!-- FIRST NAME -->
 
                 <div class="form-group">
 
                     <label for="first_name">
+
                         First Name
-                        <span class="required">*</span>
+
+                        <span class="required">
+                            *
+                        </span>
+
                     </label>
+
 
                     <div class="input-wrapper">
 
-                        <i class="fa-solid fa-user input-icon"></i>
+                        <i
+                            class="fa-solid fa-user input-icon"
+                        ></i>
+
 
                         <input
                             type="text"
@@ -977,6 +1198,7 @@
                             name="first_name"
                             placeholder="Enter first name"
                             autocomplete="given-name"
+                            value="{{ form_data.get('first_name', '') if form_data else '' }}"
                             required
                         >
 
@@ -990,13 +1212,22 @@
                 <div class="form-group">
 
                     <label for="last_name">
+
                         Last Name
-                        <span class="required">*</span>
+
+                        <span class="required">
+                            *
+                        </span>
+
                     </label>
+
 
                     <div class="input-wrapper">
 
-                        <i class="fa-solid fa-user input-icon"></i>
+                        <i
+                            class="fa-solid fa-user input-icon"
+                        ></i>
+
 
                         <input
                             type="text"
@@ -1004,6 +1235,7 @@
                             name="last_name"
                             placeholder="Enter last name"
                             autocomplete="family-name"
+                            value="{{ form_data.get('last_name', '') if form_data else '' }}"
                             required
                         >
 
@@ -1017,13 +1249,22 @@
                 <div class="form-group">
 
                     <label for="phone">
+
                         Phone Number
-                        <span class="required">*</span>
+
+                        <span class="required">
+                            *
+                        </span>
+
                     </label>
+
 
                     <div class="input-wrapper">
 
-                        <i class="fa-solid fa-phone input-icon"></i>
+                        <i
+                            class="fa-solid fa-phone input-icon"
+                        ></i>
+
 
                         <input
                             type="tel"
@@ -1031,6 +1272,7 @@
                             name="phone"
                             placeholder="+233 XX XXX XXXX"
                             autocomplete="tel"
+                            value="{{ form_data.get('phone', '') if form_data else '' }}"
                             required
                         >
 
@@ -1044,13 +1286,22 @@
                 <div class="form-group">
 
                     <label for="department">
+
                         Department
-                        <span class="required">*</span>
+
+                        <span class="required">
+                            *
+                        </span>
+
                     </label>
+
 
                     <div class="input-wrapper">
 
-                        <i class="fa-solid fa-building input-icon"></i>
+                        <i
+                            class="fa-solid fa-building input-icon"
+                        ></i>
+
 
                         <select
                             id="department"
@@ -1058,51 +1309,101 @@
                             required
                         >
 
-                            <option value="" selected disabled>
+                            <option
+                                value=""
+                                disabled
+                                {% if not form_data or not form_data.get('department') %}
+                                    selected
+                                {% endif %}
+                            >
                                 Select department
                             </option>
 
-                            <option value="Engineering">
+
+                            <option
+                                value="Engineering"
+                                {% if form_data and form_data.get('department') == 'Engineering' %}selected{% endif %}
+                            >
                                 Engineering
                             </option>
 
-                            <option value="Electrical">
+
+                            <option
+                                value="Electrical"
+                                {% if form_data and form_data.get('department') == 'Electrical' %}selected{% endif %}
+                            >
                                 Electrical
                             </option>
 
-                            <option value="Security Systems">
+
+                            <option
+                                value="Security Systems"
+                                {% if form_data and form_data.get('department') == 'Security Systems' %}selected{% endif %}
+                            >
                                 Security Systems
                             </option>
 
-                            <option value="Safety Systems">
+
+                            <option
+                                value="Safety Systems"
+                                {% if form_data and form_data.get('department') == 'Safety Systems' %}selected{% endif %}
+                            >
                                 Safety Systems
                             </option>
 
-                            <option value="Automation">
+
+                            <option
+                                value="Automation"
+                                {% if form_data and form_data.get('department') == 'Automation' %}selected{% endif %}
+                            >
                                 Automation
                             </option>
 
-                            <option value="Administration">
+
+                            <option
+                                value="Administration"
+                                {% if form_data and form_data.get('department') == 'Administration' %}selected{% endif %}
+                            >
                                 Administration
                             </option>
 
-                            <option value="Finance">
+
+                            <option
+                                value="Finance"
+                                {% if form_data and form_data.get('department') == 'Finance' %}selected{% endif %}
+                            >
                                 Finance
                             </option>
 
-                            <option value="Operations">
+
+                            <option
+                                value="Operations"
+                                {% if form_data and form_data.get('department') == 'Operations' %}selected{% endif %}
+                            >
                                 Operations
                             </option>
 
-                            <option value="Marketing">
+
+                            <option
+                                value="Marketing"
+                                {% if form_data and form_data.get('department') == 'Marketing' %}selected{% endif %}
+                            >
                                 Marketing
                             </option>
 
-                            <option value="Information Technology">
+
+                            <option
+                                value="Information Technology"
+                                {% if form_data and form_data.get('department') == 'Information Technology' %}selected{% endif %}
+                            >
                                 Information Technology
                             </option>
 
-                            <option value="Other">
+
+                            <option
+                                value="Other"
+                                {% if form_data and form_data.get('department') == 'Other' %}selected{% endif %}
+                            >
                                 Other
                             </option>
 
@@ -1118,19 +1419,29 @@
                 <div class="form-group full">
 
                     <label for="position">
+
                         Position / Job Title
-                        <span class="required">*</span>
+
+                        <span class="required">
+                            *
+                        </span>
+
                     </label>
+
 
                     <div class="input-wrapper">
 
-                        <i class="fa-solid fa-briefcase input-icon"></i>
+                        <i
+                            class="fa-solid fa-briefcase input-icon"
+                        ></i>
+
 
                         <input
                             type="text"
                             id="position"
                             name="position"
                             placeholder="e.g. Electrical Technician"
+                            value="{{ form_data.get('position', '') if form_data else '' }}"
                             required
                         >
 
@@ -1144,13 +1455,22 @@
                 <div class="form-group">
 
                     <label for="password">
+
                         Password
-                        <span class="required">*</span>
+
+                        <span class="required">
+                            *
+                        </span>
+
                     </label>
+
 
                     <div class="input-wrapper">
 
-                        <i class="fa-solid fa-lock input-icon"></i>
+                        <i
+                            class="fa-solid fa-lock input-icon"
+                        ></i>
+
 
                         <input
                             type="password"
@@ -1162,16 +1482,22 @@
                             required
                         >
 
+
                         <button
                             type="button"
                             class="password-toggle"
                             onclick="togglePassword('password', this)"
                             aria-label="Show password"
                         >
-                            <i class="fa-solid fa-eye"></i>
+
+                            <i
+                                class="fa-solid fa-eye"
+                            ></i>
+
                         </button>
 
                     </div>
+
 
                     <div class="password-hint">
                         Minimum 8 characters.
@@ -1185,13 +1511,22 @@
                 <div class="form-group">
 
                     <label for="confirm_password">
+
                         Confirm Password
-                        <span class="required">*</span>
+
+                        <span class="required">
+                            *
+                        </span>
+
                     </label>
+
 
                     <div class="input-wrapper">
 
-                        <i class="fa-solid fa-lock input-icon"></i>
+                        <i
+                            class="fa-solid fa-lock input-icon"
+                        ></i>
+
 
                         <input
                             type="password"
@@ -1203,18 +1538,24 @@
                             required
                         >
 
+
                         <button
                             type="button"
                             class="password-toggle"
                             onclick="togglePassword('confirm_password', this)"
                             aria-label="Show password"
                         >
-                            <i class="fa-solid fa-eye"></i>
+
+                            <i
+                                class="fa-solid fa-eye"
+                            ></i>
+
                         </button>
 
                     </div>
 
                 </div>
+
 
             </div>
 
@@ -1227,7 +1568,9 @@
                 id="submitBtn"
             >
 
-                <i class="fa-solid fa-user-plus"></i>
+                <i
+                    class="fa-solid fa-user-plus"
+                ></i>
 
                 <span>
                     Submit Registration
@@ -1240,13 +1583,15 @@
 
         <!-- =================================================
              LOGIN
-             ================================================= -->
+        ================================================== -->
 
         <div class="login-link">
 
             Already have a staff account?
 
-            <a href="{{ url_for('staff_login') }}">
+            <a
+                href="{{ url_for('staff_login') }}"
+            >
                 Staff Login
             </a>
 
@@ -1255,26 +1600,50 @@
 
         <!-- =================================================
              OTHER PORTALS
-             ================================================= -->
+        ================================================== -->
 
         <div class="bottom-links">
 
-            <a href="{{ url_for('home') }}">
-                <i class="fa-solid fa-house"></i>
+            <a
+                href="{{ url_for('home') }}"
+            >
+
+                <i
+                    class="fa-solid fa-house"
+                ></i>
+
                 Website
+
             </a>
 
-            <a href="{{ url_for('md_login') }}">
-                <i class="fa-solid fa-user-tie"></i>
+
+            <a
+                href="{{ url_for('md_login') }}"
+            >
+
+                <i
+                    class="fa-solid fa-user-tie"
+                ></i>
+
                 Management Portal
+
             </a>
 
-            <a href="{{ url_for('admin_login') }}">
-                <i class="fa-solid fa-shield-halved"></i>
+
+            <a
+                href="{{ url_for('admin_login') }}"
+            >
+
+                <i
+                    class="fa-solid fa-shield-halved"
+                ></i>
+
                 Admin Portal
+
             </a>
 
         </div>
+
 
     </section>
 
@@ -1289,17 +1658,24 @@
 
     function togglePassword(inputId, button) {
 
-        const input = document.getElementById(inputId);
+        const input =
+            document.getElementById(inputId);
 
-        const icon = button.querySelector("i");
+        const icon =
+            button.querySelector("i");
+
 
         if (input.type === "password") {
 
             input.type = "text";
 
-            icon.classList.remove("fa-eye");
+            icon.classList.remove(
+                "fa-eye"
+            );
 
-            icon.classList.add("fa-eye-slash");
+            icon.classList.add(
+                "fa-eye-slash"
+            );
 
             button.setAttribute(
                 "aria-label",
@@ -1310,9 +1686,13 @@
 
             input.type = "password";
 
-            icon.classList.remove("fa-eye-slash");
+            icon.classList.remove(
+                "fa-eye-slash"
+            );
 
-            icon.classList.add("fa-eye");
+            icon.classList.add(
+                "fa-eye"
+            );
 
             button.setAttribute(
                 "aria-label",
@@ -1332,14 +1712,32 @@
         );
 
 
+    const submitBtn =
+        document.getElementById(
+            "submitBtn"
+        );
+
+
     form.addEventListener(
         "submit",
         function(event) {
+
+            // Browser required-field validation
+            if (!form.checkValidity()) {
+
+                event.preventDefault();
+
+                form.reportValidity();
+
+                return;
+            }
+
 
             const password =
                 document.getElementById(
                     "password"
                 ).value;
+
 
             const confirmPassword =
                 document.getElementById(
@@ -1371,13 +1769,9 @@
             }
 
 
-            const submitBtn =
-                document.getElementById(
-                    "submitBtn"
-                );
-
-
+            // Prevent double submission
             submitBtn.disabled = true;
+
 
             submitBtn.innerHTML =
                 '<i class="fa-solid fa-spinner fa-spin"></i>' +
@@ -1387,6 +1781,7 @@
     );
 
 </script>
+
 
 </body>
 </html>

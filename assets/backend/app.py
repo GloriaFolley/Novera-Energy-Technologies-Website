@@ -1,11 +1,12 @@
 from pathlib import Path
 from functools import wraps
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from email.message import EmailMessage
 import os
 import smtplib
 import sqlite3
 import secrets
+import hashlib
 
 from dotenv import load_dotenv
 from flask import (
@@ -25,6 +26,7 @@ from werkzeug.security import (
     check_password_hash,
     generate_password_hash,
 )
+from werkzeug.utils import secure_filename
 
 
 # ============================================================
@@ -40,6 +42,15 @@ DATABASE_PATH = BACKEND_DIR / "novera.db"
 
 LOGO_PATH = ASSETS_DIR / "logo.jpg"
 INDEX_FILE = PROJECT_DIR / "index.html"
+
+# Private staff profile photo storage.
+PROFILE_PHOTO_DIR = BACKEND_DIR / "profile_photos"
+PROFILE_PHOTO_DIR.mkdir(parents=True, exist_ok=True)
+ALLOWED_PROFILE_EXTENSIONS = {"jpg", "jpeg", "png", "webp"}
+MAX_PROFILE_PHOTO_SIZE = 5 * 1024 * 1024
+
+PUBLIC_BASE_URL = os.getenv("PUBLIC_BASE_URL", "").strip().rstrip("/")
+RESET_TOKEN_MINUTES = 30
 
 DATABASE_PATH.parent.mkdir(
     parents=True,
@@ -68,7 +79,7 @@ else:
 
 COMPANY_NAME = os.getenv(
     "COMPANY_NAME",
-    "Novera Energy & Technologies Ltd"
+    "Novera Energy & Technologies"
 ).strip()
 
 COMPANY_EMAIL = os.getenv(
@@ -303,7 +314,8 @@ def init_database():
                 status TEXT DEFAULT 'Pending',
                 created_at TEXT,
                 approved_at TEXT,
-                last_login TEXT
+                last_login TEXT,
+                profile_photo TEXT
             )
         """)
 
@@ -436,6 +448,23 @@ def init_database():
 
 
         # ====================================================
+        # PASSWORD RESET TOKENS
+        # ====================================================
+
+        db.execute("""
+            CREATE TABLE IF NOT EXISTS password_reset_tokens (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                account_type TEXT NOT NULL,
+                account_id INTEGER NOT NULL,
+                token_hash TEXT UNIQUE NOT NULL,
+                expires_at TEXT NOT NULL,
+                used_at TEXT,
+                created_at TEXT NOT NULL
+            )
+        """)
+
+
+        # ====================================================
         # SAFE MIGRATIONS
         # ====================================================
 
@@ -485,6 +514,13 @@ def init_database():
             db,
             "staff",
             "last_login",
+            "TEXT"
+        )
+
+        ensure_column(
+            db,
+            "staff",
+            "profile_photo",
             "TEXT"
         )
 
@@ -2999,17 +3035,117 @@ def mark_notification_read(
 
 @app.route(
     "/staff/profile",
-    methods=["GET"]
+    methods=["GET", "POST"]
 )
 @staff_required
 def staff_profile():
-
     staff = current_staff()
 
-    return render_template(
-        "staff_profile.html",
-        staff=staff
-    )
+    if not staff:
+        session.clear()
+        return redirect(url_for("staff_login"))
+
+    if request.method == "POST":
+        uploaded_file = request.files.get("profile_photo")
+
+        if not uploaded_file or not uploaded_file.filename:
+            flash("Please select a profile photo to upload.", "danger")
+            return redirect(url_for("staff_profile"))
+
+        original_name = uploaded_file.filename.strip()
+        if "." not in original_name:
+            flash("Please upload a JPG, JPEG, PNG, or WEBP image.", "danger")
+            return redirect(url_for("staff_profile"))
+
+        extension = original_name.rsplit(".", 1)[1].lower()
+        if extension not in ALLOWED_PROFILE_EXTENSIONS:
+            flash("Only JPG, JPEG, PNG, and WEBP profile photos are allowed.", "danger")
+            return redirect(url_for("staff_profile"))
+
+        try:
+            photo_bytes = uploaded_file.read()
+        except Exception:
+            photo_bytes = b""
+
+        if not photo_bytes:
+            flash("The selected photo could not be read.", "danger")
+            return redirect(url_for("staff_profile"))
+
+        if len(photo_bytes) > MAX_PROFILE_PHOTO_SIZE:
+            flash("Profile photo must not exceed 5 MB.", "danger")
+            return redirect(url_for("staff_profile"))
+
+        filename = f"staff_{staff['id']}_{secrets.token_hex(16)}.{secure_filename(extension)}"
+        photo_path = PROFILE_PHOTO_DIR / filename
+
+        try:
+            photo_path.write_bytes(photo_bytes)
+        except Exception:
+            app.logger.exception("Failed to save staff profile photo.")
+            flash("The profile photo could not be saved. Please try again.", "danger")
+            return redirect(url_for("staff_profile"))
+
+        old_filename = staff["profile_photo"]
+        db = get_db()
+        try:
+            db.execute(
+                "UPDATE staff SET profile_photo = ? WHERE id = ?",
+                (filename, staff["id"])
+            )
+            db.commit()
+        except Exception:
+            db.rollback()
+            try:
+                photo_path.unlink(missing_ok=True)
+            except Exception:
+                pass
+            app.logger.exception("Failed to update staff profile photo record.")
+            flash("The profile photo could not be saved. Please try again.", "danger")
+            return redirect(url_for("staff_profile"))
+        finally:
+            close_db(db)
+
+        if old_filename and old_filename != filename:
+            old_path = PROFILE_PHOTO_DIR / secure_filename(old_filename)
+            try:
+                if old_path.is_file():
+                    old_path.unlink()
+            except Exception:
+                app.logger.warning("Could not remove old profile photo: %s", old_path)
+
+        log_activity(
+            "staff",
+            staff["id"],
+            "profile_photo_updated",
+            "Staff member updated their profile photo."
+        )
+        flash("Profile photo updated successfully.", "success")
+        return redirect(url_for("staff_profile"))
+
+    # Always fetch fresh staff data so a promotion/position change is shown immediately.
+    staff = current_staff()
+    return render_template("staff_profile.html", staff=staff)
+
+
+@app.route("/staff/profile-photo/<filename>")
+@staff_required
+def staff_profile_photo(filename):
+    staff = current_staff()
+    if not staff:
+        abort(404)
+
+    requested_filename = secure_filename(filename)
+    if not requested_filename:
+        abort(404)
+
+    if not staff["profile_photo"] or staff["profile_photo"] != requested_filename:
+        abort(404)
+
+    photo_path = PROFILE_PHOTO_DIR / requested_filename
+    if not photo_path.is_file():
+        abort(404)
+
+    return send_from_directory(PROFILE_PHOTO_DIR, requested_filename)
 
 
 # ============================================================
@@ -3040,6 +3176,191 @@ def staff_logout():
     return redirect(
         url_for("staff_login")
     )
+
+
+# ============================================================
+# PASSWORD RESET
+# ============================================================
+
+def make_reset_token():
+    return secrets.token_urlsafe(32)
+
+def hash_reset_token(token):
+    return hashlib.sha256(token.encode("utf-8")).hexdigest()
+
+def password_reset_url(token):
+    if PUBLIC_BASE_URL:
+        return f"{PUBLIC_BASE_URL}/reset-password/{token}"
+    return url_for("reset_password", token=token, _external=True)
+
+
+@app.route("/forgot-password", methods=["GET", "POST"])
+def forgot_password():
+    if request.method == "GET":
+        return render_template("forgot_password.html")
+
+    email = request.form.get("email", "").strip().lower()
+    if not email:
+        flash("Please enter your email address.", "danger")
+        return render_template("forgot_password.html")
+
+    generic_message = (
+        "If an account with that email exists, a password reset link has been sent. "
+        "Please check the inbox."
+    )
+
+    db = get_db()
+    try:
+        account = db.execute(
+            """SELECT id, first_name, email FROM staff
+               WHERE email IS NOT NULL AND TRIM(email) != ''
+               AND LOWER(TRIM(email)) = LOWER(TRIM(?)) LIMIT 1""",
+            (email,)
+        ).fetchone()
+        account_type = "staff" if account else None
+
+        if not account:
+            account = db.execute(
+                """SELECT id, first_name, email FROM admins
+                   WHERE LOWER(TRIM(email)) = LOWER(TRIM(?)) LIMIT 1""",
+                (email,)
+            ).fetchone()
+            account_type = "admin" if account else None
+
+        if account and account_type:
+            db.execute(
+                """UPDATE password_reset_tokens SET used_at = ?
+                   WHERE account_type = ? AND account_id = ? AND used_at IS NULL""",
+                (utc_now(), account_type, account["id"])
+            )
+
+            raw_token = make_reset_token()
+            db.execute(
+                """INSERT INTO password_reset_tokens
+                   (account_type, account_id, token_hash, expires_at, created_at)
+                   VALUES (?, ?, ?, ?, ?)""",
+                (
+                    account_type,
+                    account["id"],
+                    hash_reset_token(raw_token),
+                    (datetime.now(timezone.utc) + timedelta(minutes=RESET_TOKEN_MINUTES)).isoformat(),
+                    utc_now()
+                )
+            )
+            db.commit()
+
+            reset_link = password_reset_url(raw_token)
+            first_name = account["first_name"] or "there"
+            send_email(
+                account["email"],
+                f"{COMPANY_NAME} - Password Reset",
+                f"""Dear {first_name},
+
+A request was made to reset your {COMPANY_NAME} portal password.
+
+Use the secure link below to create a new password:
+
+{reset_link}
+
+This link expires in {RESET_TOKEN_MINUTES} minutes and can only be used once.
+
+If you did not request this password reset, you can safely ignore this email.
+
+Regards,
+{COMPANY_NAME}
+Portal Administration
+"""
+            )
+
+            log_activity(
+                account_type,
+                account["id"],
+                "password_reset_requested",
+                "Password reset link requested."
+            )
+    except Exception:
+        db.rollback()
+        app.logger.exception("Password reset request failed.")
+    finally:
+        close_db(db)
+
+    flash(generic_message, "success")
+    return render_template("forgot_password.html")
+
+
+@app.route("/reset-password/<token>", methods=["GET", "POST"])
+def reset_password(token):
+    if not token or len(token) > 200:
+        flash("This password reset link is invalid or has expired.", "danger")
+        return redirect(url_for("forgot_password"))
+
+    db = get_db()
+    try:
+        record = db.execute(
+            "SELECT * FROM password_reset_tokens WHERE token_hash = ? LIMIT 1",
+            (hash_reset_token(token),)
+        ).fetchone()
+
+        if not record:
+            flash("This password reset link is invalid or has expired.", "danger")
+            return redirect(url_for("forgot_password"))
+
+        if record["used_at"]:
+            flash("This password reset link has already been used.", "danger")
+            return redirect(url_for("forgot_password"))
+
+        try:
+            expires_at = datetime.fromisoformat(record["expires_at"])
+        except (TypeError, ValueError):
+            expires_at = datetime.min.replace(tzinfo=timezone.utc)
+
+        if expires_at <= datetime.now(timezone.utc):
+            db.execute("UPDATE password_reset_tokens SET used_at = ? WHERE id = ?", (utc_now(), record["id"]))
+            db.commit()
+            flash("This password reset link has expired. Please request a new one.", "danger")
+            return redirect(url_for("forgot_password"))
+
+        if request.method == "GET":
+            return render_template("reset_password.html", token=token)
+
+        password = request.form.get("password", "")
+        confirm_password = request.form.get("confirm_password", "")
+        if len(password) < 8:
+            flash("Password must be at least 8 characters.", "danger")
+            return render_template("reset_password.html", token=token)
+        if password != confirm_password:
+            flash("Passwords do not match.", "danger")
+            return render_template("reset_password.html", token=token)
+
+        password_hash = generate_password_hash(password)
+        account_type = record["account_type"]
+        account_id = record["account_id"]
+
+        if account_type == "staff":
+            db.execute("UPDATE staff SET password_hash = ? WHERE id = ?", (password_hash, account_id))
+            login_endpoint = "staff_login"
+        elif account_type == "admin":
+            db.execute("UPDATE admins SET password_hash = ? WHERE id = ?", (password_hash, account_id))
+            login_endpoint = "admin_login"
+        else:
+            flash("This password reset link is invalid.", "danger")
+            return redirect(url_for("forgot_password"))
+
+        now = utc_now()
+        db.execute("UPDATE password_reset_tokens SET used_at = ? WHERE account_type = ? AND account_id = ? AND used_at IS NULL", (now, account_type, account_id))
+        db.commit()
+
+        log_activity(account_type, account_id, "password_reset_completed", "Portal password was reset successfully.")
+        flash("Your password has been reset successfully. You can now log in.", "success")
+        return redirect(url_for(login_endpoint))
+
+    except Exception:
+        db.rollback()
+        app.logger.exception("Password reset failed.")
+        flash("We could not reset your password. Please request a new reset link.", "danger")
+        return redirect(url_for("forgot_password"))
+    finally:
+        close_db(db)
 
 
 # ============================================================
@@ -3635,6 +3956,43 @@ You can now log in to the staff portal.
             staff_id=staff_id
         )
     )
+
+
+# ============================================================
+# ADMIN STAFF PROMOTION
+# ============================================================
+
+@app.route("/admin/staff/<int:staff_id>/promote", methods=["POST"])
+@admin_required
+def admin_staff_promote(staff_id):
+    new_position = request.form.get("position", "").strip()
+    new_department = request.form.get("department", "").strip()
+    if not new_position:
+        flash("Please enter the new position.", "danger")
+        return redirect(url_for("admin_staff_view", staff_id=staff_id))
+
+    db = get_db()
+    try:
+        staff = db.execute("SELECT * FROM staff WHERE id = ? LIMIT 1", (staff_id,)).fetchone()
+        if not staff:
+            flash("Staff member not found.", "danger")
+            return redirect(url_for("admin_staff"))
+        old_position = staff["position"] or "Not assigned"
+        old_department = staff["department"] or "Not assigned"
+        if new_department:
+            db.execute("UPDATE staff SET position = ?, department = ? WHERE id = ?", (new_position, new_department, staff_id))
+        else:
+            db.execute("UPDATE staff SET position = ? WHERE id = ?", (new_position, staff_id))
+        db.commit()
+    finally:
+        close_db(db)
+
+    log_activity("admin", session["admin_id"], "staff_promoted", f"Staff ID {staff['staff_id']} promoted. Position: {old_position} -> {new_position}. Department: {old_department} -> {new_department or old_department}.")
+    create_notification(staff_id, "Position Updated", f"Your position has been updated to {new_position}." + (f" Department: {new_department}." if new_department else ""))
+    if staff["email"]:
+        send_email(staff["email"], f"{COMPANY_NAME} - Position Updated", f"Dear {staff['first_name']},\n\nYour position in the {COMPANY_NAME} staff portal has been updated.\n\nNew Position:\n{new_position}\n\n" + (f"Department:\n{new_department}\n\n" if new_department else "") + f"Your updated details will appear automatically in your staff portal.\n\nRegards,\n{COMPANY_NAME}\nPortal Administration\n")
+    flash(f"{staff['first_name']} {staff['last_name']} has been promoted successfully.", "success")
+    return redirect(url_for("admin_staff_view", staff_id=staff_id))
 
 
 # ============================================================
@@ -4706,6 +5064,48 @@ def md_staff_view(
 
 
 # ============================================================
+# MD STAFF PROFILE PHOTO
+# ============================================================
+
+@app.route("/md/staff/<int:staff_id>/photo")
+@md_required
+def md_staff_photo(staff_id):
+    db = get_db()
+
+    try:
+        staff = db.execute(
+            """
+            SELECT profile_photo
+            FROM staff
+            WHERE id = ?
+            LIMIT 1
+            """,
+            (staff_id,)
+        ).fetchone()
+    finally:
+        close_db(db)
+
+    # Staff does not exist or has no profile photo
+    if not staff or not staff["profile_photo"]:
+        abort(404)
+
+    filename = secure_filename(staff["profile_photo"])
+
+    if not filename:
+        abort(404)
+
+    photo_path = PROFILE_PHOTO_DIR / filename
+
+    # Uploaded file does not exist
+    if not photo_path.is_file():
+        abort(404)
+
+    return send_from_directory(
+        PROFILE_PHOTO_DIR,
+        filename
+    )
+
+# ============================================================
 # MD STAFF ACTION
 # ============================================================
 
@@ -4900,6 +5300,43 @@ You can now log in to the staff portal.
             staff_id=staff_id
         )
     )
+
+
+# ============================================================
+# ADMIN STAFF PROMOTION
+# ============================================================
+
+@app.route("/md/staff/<int:staff_id>/promote", methods=["POST"])
+@md_required
+def md_staff_promote(staff_id):
+    new_position = request.form.get("position", "").strip()
+    new_department = request.form.get("department", "").strip()
+    if not new_position:
+        flash("Please enter the new position.", "danger")
+        return redirect(url_for("md_staff_view", staff_id=staff_id))
+
+    db = get_db()
+    try:
+        staff = db.execute("SELECT * FROM staff WHERE id = ? LIMIT 1", (staff_id,)).fetchone()
+        if not staff:
+            flash("Staff member not found.", "danger")
+            return redirect(url_for("md_staff"))
+        old_position = staff["position"] or "Not assigned"
+        old_department = staff["department"] or "Not assigned"
+        if new_department:
+            db.execute("UPDATE staff SET position = ?, department = ? WHERE id = ?", (new_position, new_department, staff_id))
+        else:
+            db.execute("UPDATE staff SET position = ? WHERE id = ?", (new_position, staff_id))
+        db.commit()
+    finally:
+        close_db(db)
+
+    log_activity("md", session["md_id"], "staff_promoted", f"Staff ID {staff['staff_id']} promoted. Position: {old_position} -> {new_position}. Department: {old_department} -> {new_department or old_department}.")
+    create_notification(staff_id, "Position Updated", f"Your position has been updated to {new_position}." + (f" Department: {new_department}." if new_department else ""))
+    if staff["email"]:
+        send_email(staff["email"], f"{COMPANY_NAME} - Position Updated", f"Dear {staff['first_name']},\n\nYour position in the {COMPANY_NAME} staff portal has been updated.\n\nNew Position:\n{new_position}\n\n" + (f"Department:\n{new_department}\n\n" if new_department else "") + f"Your updated details will appear automatically in your staff portal.\n\nRegards,\n{COMPANY_NAME}\nPortal Administration\n")
+    flash(f"{staff['first_name']} {staff['last_name']} has been promoted successfully.", "success")
+    return redirect(url_for("md_staff_view", staff_id=staff_id))
 
 
 # ============================================================
@@ -5201,7 +5638,7 @@ if __name__ == "__main__":
 
     print()
     print("=" * 65)
-    print("NOVERA ENERGY & TECHNOLOGIES LTD")
+    print("NOVERA ENERGY & TECHNOLOGIES")
     print("BACKEND SERVER")
     print("=" * 65)
     print(f"Database : {DATABASE_PATH}")
