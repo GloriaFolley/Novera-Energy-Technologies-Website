@@ -4923,6 +4923,10 @@ def md_dashboard():
 
     try:
 
+        # ========================================================
+        # STAFF COUNTS
+        # ========================================================
+
         total_staff = db.execute(
             """
             SELECT COUNT(*)
@@ -4946,13 +4950,69 @@ def md_dashboard():
             """
         ).fetchone()[0]
 
-        consultations = db.execute(
+
+        # ========================================================
+        # CONSULTATION COUNTS
+        # ========================================================
+
+        total_consultations = db.execute(
+            """
+            SELECT COUNT(*)
+            FROM consultations
+            """
+        ).fetchone()[0]
+
+        new_consultations = db.execute(
             """
             SELECT COUNT(*)
             FROM consultations
             WHERE status = 'New'
             """
         ).fetchone()[0]
+
+        in_progress_consultations = db.execute(
+            """
+            SELECT COUNT(*)
+            FROM consultations
+            WHERE status = 'In Progress'
+            """
+        ).fetchone()[0]
+
+        closed_consultations = db.execute(
+            """
+            SELECT COUNT(*)
+            FROM consultations
+            WHERE status = 'Closed'
+            """
+        ).fetchone()[0]
+
+        unassigned_consultations = db.execute(
+            """
+            SELECT COUNT(*)
+            FROM consultations
+            WHERE assigned_staff_id IS NULL
+              AND assigned_to IS NULL
+            """
+        ).fetchone()[0]
+
+
+        # ========================================================
+        # RECENT CONSULTATIONS
+        # ========================================================
+
+        recent_consultations = db.execute(
+            """
+            SELECT *
+            FROM consultations
+            ORDER BY id DESC
+            LIMIT 10
+            """
+        ).fetchall()
+
+
+        # ========================================================
+        # RECENT STAFF
+        # ========================================================
 
         recent_staff = db.execute(
             """
@@ -4968,15 +5028,30 @@ def md_dashboard():
         close_db(db)
 
 
+    # ============================================================
+    # MD DASHBOARD
+    # ============================================================
+
     return render_template(
         "md_dashboard.html",
 
+        # Staff
         total_staff=total_staff,
         pending_staff=pending_staff,
         active_staff=active_staff,
 
-        consultations=consultations,
+        # Compatibility with the existing dashboard/template
+        consultations=new_consultations,
 
+        # Consultations
+        total_consultations=total_consultations,
+        new_consultations=new_consultations,
+        in_progress_consultations=in_progress_consultations,
+        closed_consultations=closed_consultations,
+        unassigned_consultations=unassigned_consultations,
+
+        # Recent data
+        recent_consultations=recent_consultations,
         recent_staff=recent_staff
     )
 
