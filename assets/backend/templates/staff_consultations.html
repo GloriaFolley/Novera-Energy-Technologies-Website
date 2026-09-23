@@ -1,29 +1,50 @@
-<!doctype html>
-
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
-
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
 
     <meta
         name="viewport"
-        content="width=device-width, initial-scale=1"
+        content="width=device-width, initial-scale=1.0"
     >
 
     <title>
-        Consultation Requests | {{ company_name|default("Novera") }}
+        Consultation Requests |
+        {{ company_name|default("Novera Energy & Technologies") }}
     </title>
 
-
     <style>
+        :root {
+            --blue-dark: #07558d;
+            --blue: #0b6fae;
+            --blue-light: #1596d1;
+            --green: #16834f;
+            --green-dark: #0d673e;
 
-        /* =========================================================
-           RESET
-        ========================================================= */
+            --white: #ffffff;
+            --text: #17324d;
+            --muted: #6b7c8f;
+
+            --border: rgba(13, 91, 139, 0.14);
+            --shadow: 0 15px 40px rgba(4, 53, 86, 0.14);
+
+            --new: #d97706;
+            --new-bg: #fff7e8;
+
+            --progress: #1769aa;
+            --progress-bg: #eaf5ff;
+
+            --closed: #16834f;
+            --closed-bg: #eaf8f1;
+
+            --danger: #c0392b;
+        }
 
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         html {
@@ -31,17 +52,72 @@
         }
 
         body {
-            margin: 0;
-
+            min-height: 100vh;
             font-family:
                 Inter,
                 -apple-system,
                 BlinkMacSystemFont,
                 "Segoe UI",
+                Roboto,
+                Arial,
                 sans-serif;
 
-            background: #f5f7fb;
-            color: #172033;
+            color: var(--text);
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #07558d 0%,
+                    #0b6fae 38%,
+                    #1491ca 70%,
+                    #0872a8 100%
+                );
+
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* =========================================================
+           LOGO BACKGROUND
+        ========================================================= */
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+
+            background-image:
+                url("{{ url_for('logo') }}");
+
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: 560px auto;
+
+            opacity: 0.13;
+
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+
+            background:
+                radial-gradient(
+                    circle at 10% 10%,
+                    rgba(255,255,255,0.13),
+                    transparent 32%
+                ),
+                radial-gradient(
+                    circle at 90% 85%,
+                    rgba(0,0,0,0.08),
+                    transparent 35%
+                );
+
+            pointer-events: none;
+            z-index: 0;
         }
 
         a {
@@ -55,127 +131,182 @@
             font: inherit;
         }
 
-
         /* =========================================================
-           TOPBAR
+           TOP BAR
         ========================================================= */
 
         .topbar {
-            min-height: 72px;
+            position: sticky;
+            top: 0;
+            z-index: 20;
+
             width: 100%;
 
-            background: #ffffff;
+            background: rgba(255,255,255,0.97);
 
-            border-bottom: 1px solid #e5e7eb;
+            border-bottom: 1px solid rgba(255,255,255,0.4);
+
+            box-shadow:
+                0 5px 25px rgba(0, 45, 75, 0.12);
+        }
+
+        .topbar-inner {
+            max-width: 1380px;
+            margin: 0 auto;
+
+            min-height: 82px;
+
+            padding: 12px 28px;
 
             display: flex;
             align-items: center;
             justify-content: space-between;
 
-            padding: 10px 32px;
-
-            position: sticky;
-            top: 0;
-
-            z-index: 1000;
+            gap: 25px;
         }
 
-
-        /* =========================================================
-           BRAND
-        ========================================================= */
-
         .brand {
-            display: inline-flex;
+            display: flex;
             align-items: center;
-
-            gap: 12px;
+            gap: 13px;
 
             min-width: 0;
-
-            color: #111827;
-
-            font-size: 20px;
-            font-weight: 800;
         }
 
         .brand-logo {
-            display: block;
-
-            width: auto;
-            height: 42px;
-
-            max-width: 190px;
+            width: 52px;
+            height: 52px;
 
             object-fit: contain;
+
+            border-radius: 12px;
+
+            background: #ffffff;
+
+            box-shadow:
+                0 5px 16px rgba(0, 70, 110, 0.12);
+        }
+
+        .brand-text {
+            min-width: 0;
         }
 
         .brand-name {
-            white-space: nowrap;
+            font-size: 19px;
+            font-weight: 800;
+            color: #07558d;
+            line-height: 1.2;
         }
 
+        .brand-tagline {
+            margin-top: 3px;
+
+            font-size: 11px;
+            font-weight: 600;
+
+            color: #6a7f91;
+
+            letter-spacing: 0.4px;
+        }
 
         /* =========================================================
-           NAVIGATION
+           VERTICAL PROFILE / LOGOUT
         ========================================================= */
 
         .top-actions {
             display: flex;
-            align-items: center;
+            flex-direction: column;
+            align-items: stretch;
 
-            gap: 8px;
+            gap: 6px;
+
+            min-width: 145px;
         }
 
-        .top-link {
+        .top-action {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+
+            min-height: 34px;
+
+            padding: 7px 14px;
+
+            border-radius: 8px;
+
+            font-size: 13px;
+            font-weight: 700;
+
+            transition:
+                background 0.2s ease,
+                color 0.2s ease,
+                transform 0.2s ease;
+        }
+
+        .top-action.profile {
+            color: var(--blue-dark);
+            background: #eef7fc;
+        }
+
+        .top-action.profile:hover {
+            background: #dceefa;
+            transform: translateY(-1px);
+        }
+
+        .top-action.logout {
+            color: #ffffff;
+            background: var(--green);
+        }
+
+        .top-action.logout:hover {
+            background: var(--green-dark);
+            transform: translateY(-1px);
+        }
+
+        .status-pill {
             display: inline-flex;
             align-items: center;
             justify-content: center;
 
-            min-height: 40px;
+            gap: 6px;
 
-            padding: 9px 14px;
+            padding: 5px 11px;
 
-            border-radius: 8px;
+            border-radius: 30px;
 
-            color: #4b5563;
+            background: #eaf8f1;
+            color: var(--green-dark);
 
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 11px;
+            font-weight: 800;
 
-            transition:
-                background-color .2s ease,
-                color .2s ease;
+            margin-bottom: 2px;
         }
 
-        .top-link:hover {
-            background: #f3f4f6;
-            color: #111827;
-        }
+        .status-dot {
+            width: 7px;
+            height: 7px;
 
-        .logout {
-            background: #111827;
-            color: #ffffff;
-        }
+            border-radius: 50%;
 
-        .logout:hover {
-            background: #1f2937;
-            color: #ffffff;
+            background: #1ca565;
         }
-
 
         /* =========================================================
-           PAGE
+           MAIN
         ========================================================= */
 
         .page {
-            width: 100%;
-            max-width: 1250px;
+            position: relative;
+            z-index: 2;
+
+            max-width: 1380px;
 
             margin: 0 auto;
 
-            padding: 32px 24px 60px;
+            padding: 30px 28px 50px;
         }
-
 
         /* =========================================================
            BREADCRUMB
@@ -188,16 +319,16 @@
 
             gap: 8px;
 
-            margin-bottom: 20px;
+            margin-bottom: 22px;
 
-            color: #6b7280;
+            color: rgba(255,255,255,0.86);
 
-            font-size: 14px;
+            font-size: 13px;
+            font-weight: 600;
         }
 
         .breadcrumb a {
-            color: #374151;
-            font-weight: 600;
+            color: #ffffff;
         }
 
         .breadcrumb a:hover {
@@ -205,57 +336,33 @@
         }
 
         .breadcrumb-separator {
-            color: #9ca3af;
+            opacity: 0.55;
         }
 
-
         /* =========================================================
-           FLASH
+           FLASH MESSAGES
         ========================================================= */
 
         .flash-container {
-            margin-bottom: 22px;
+            margin-bottom: 20px;
         }
 
         .flash {
+            padding: 13px 16px;
+
+            border-radius: 10px;
+
+            background: rgba(255,255,255,0.96);
+
+            border-left: 4px solid var(--green);
+
+            box-shadow: var(--shadow);
+
             margin-bottom: 10px;
-
-            padding: 13px 15px;
-
-            border-radius: 9px;
 
             font-size: 14px;
             font-weight: 600;
         }
-
-        .flash:last-child {
-            margin-bottom: 0;
-        }
-
-        .flash-success {
-            background: #ecfdf5;
-            color: #047857;
-            border: 1px solid #a7f3d0;
-        }
-
-        .flash-danger {
-            background: #fef2f2;
-            color: #b91c1c;
-            border: 1px solid #fecaca;
-        }
-
-        .flash-warning {
-            background: #fffbeb;
-            color: #b45309;
-            border: 1px solid #fde68a;
-        }
-
-        .flash-info {
-            background: #eff6ff;
-            color: #1d4ed8;
-            border: 1px solid #bfdbfe;
-        }
-
 
         /* =========================================================
            PAGE HEADER
@@ -263,87 +370,91 @@
 
         .page-header {
             display: flex;
-            align-items: flex-start;
+            align-items: flex-end;
             justify-content: space-between;
 
-            gap: 20px;
+            gap: 25px;
 
             margin-bottom: 28px;
         }
 
-        .page-title {
-            margin: 0 0 8px;
+        .page-header-text {
+            max-width: 780px;
+        }
 
-            color: #111827;
+        .eyebrow {
+            display: inline-block;
 
-            font-size: 30px;
-            line-height: 1.2;
+            margin-bottom: 8px;
+
+            padding: 5px 10px;
+
+            border-radius: 30px;
+
+            background: rgba(255,255,255,0.16);
+            border: 1px solid rgba(255,255,255,0.22);
+
+            color: #ffffff;
+
+            font-size: 10px;
             font-weight: 800;
+
+            letter-spacing: 1.1px;
+            text-transform: uppercase;
         }
 
-        .page-subtitle {
-            margin: 0;
+        .page-header h1 {
+            color: #ffffff;
 
-            color: #6b7280;
+            font-size: clamp(28px, 4vw, 40px);
 
-            font-size: 15px;
-            line-height: 1.5;
+            line-height: 1.12;
+
+            font-weight: 850;
+
+            letter-spacing: -0.7px;
         }
 
-        .header-actions {
-            display: flex;
-            align-items: center;
+        .page-header p {
+            margin-top: 9px;
 
-            gap: 10px;
+            color: rgba(255,255,255,0.86);
 
-            flex-wrap: wrap;
+            font-size: 14px;
+
+            line-height: 1.65;
         }
 
-
-        /* =========================================================
-           BUTTON
-        ========================================================= */
-
-        .btn {
+        .dashboard-button {
             display: inline-flex;
             align-items: center;
             justify-content: center;
 
-            min-height: 42px;
+            gap: 8px;
 
-            padding: 0 16px;
+            padding: 11px 18px;
 
-            border: 1px solid #d1d5db;
+            min-width: 130px;
+
             border-radius: 9px;
 
             background: #ffffff;
-            color: #374151;
+            color: var(--blue-dark);
 
-            font-size: 14px;
-            font-weight: 700;
+            font-size: 13px;
+            font-weight: 800;
 
-            transition:
-                background-color .2s ease,
-                border-color .2s ease,
-                color .2s ease;
+            box-shadow:
+                0 10px 25px rgba(0, 45, 75, 0.13);
+
+            transition: 0.2s ease;
         }
 
-        .btn:hover {
-            background: #f9fafb;
+        .dashboard-button:hover {
+            transform: translateY(-2px);
+            box-shadow:
+                0 13px 30px rgba(0, 45, 75, 0.18);
         }
-
-        .btn-primary {
-            background: #111827;
-            border-color: #111827;
-
-            color: #ffffff;
-        }
-
-        .btn-primary:hover {
-            background: #1f2937;
-            border-color: #1f2937;
-        }
-
 
         /* =========================================================
            SUMMARY CARDS
@@ -353,63 +464,237 @@
             display: grid;
 
             grid-template-columns:
-                repeat(3, minmax(0, 1fr));
+                repeat(4, minmax(0, 1fr));
 
-            gap: 16px;
+            gap: 18px;
 
             margin-bottom: 24px;
         }
 
         .summary-card {
-            background: #ffffff;
+            position: relative;
 
-            border: 1px solid #e5e7eb;
-            border-radius: 14px;
+            overflow: hidden;
+
+            background: rgba(255,255,255,0.96);
+
+            border: 1px solid rgba(255,255,255,0.55);
+
+            border-radius: 15px;
 
             padding: 20px;
+
+            box-shadow: var(--shadow);
+
+            transition:
+                transform 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .summary-card:hover {
+            transform: translateY(-3px);
+
+            box-shadow:
+                0 20px 42px rgba(4, 53, 86, 0.18);
+        }
+
+        .summary-card::after {
+            content: "";
+
+            position: absolute;
+
+            width: 90px;
+            height: 90px;
+
+            right: -35px;
+            bottom: -40px;
+
+            border-radius: 50%;
+
+            background: rgba(10, 111, 174, 0.06);
+        }
+
+        .summary-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 10px;
+
+            margin-bottom: 14px;
         }
 
         .summary-label {
-            margin-bottom: 7px;
+            color: var(--muted);
 
-            color: #6b7280;
+            font-size: 12px;
+            font-weight: 750;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.6px;
+        }
+
+        .summary-icon {
+            width: 38px;
+            height: 38px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 10px;
+
+            background: #edf7fc;
+
+            color: var(--blue);
+
+            font-size: 17px;
+            font-weight: 800;
+        }
+
+        .summary-card.new .summary-icon {
+            background: var(--new-bg);
+            color: var(--new);
+        }
+
+        .summary-card.progress .summary-icon {
+            background: var(--progress-bg);
+            color: var(--progress);
+        }
+
+        .summary-card.closed .summary-icon {
+            background: var(--closed-bg);
+            color: var(--closed);
+        }
+
+        .summary-number {
+            font-size: 31px;
+
+            font-weight: 850;
+
+            color: #143b5b;
+
+            line-height: 1;
+        }
+
+        .summary-description {
+            margin-top: 7px;
+
+            color: #8090a0;
+
+            font-size: 12px;
+        }
+
+        /* =========================================================
+           NEW REQUEST ALERT
+        ========================================================= */
+
+        .new-alert {
+            display: none;
+
+            align-items: center;
+            justify-content: space-between;
+
+            gap: 18px;
+
+            margin-bottom: 20px;
+
+            padding: 14px 18px;
+
+            border-radius: 12px;
+
+            background: rgba(255,247,232,0.98);
+
+            border: 1px solid #f5d69b;
+
+            box-shadow:
+                0 10px 30px rgba(75, 48, 4, 0.08);
+        }
+
+        .new-alert.show {
+            display: flex;
+        }
+
+        .new-alert-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .alert-icon {
+            width: 36px;
+            height: 36px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 9px;
+
+            background: #f5b94d;
+
+            color: #ffffff;
+
+            font-weight: 900;
+        }
+
+        .new-alert strong {
+            display: block;
+
+            color: #865300;
+
+            font-size: 14px;
+        }
+
+        .new-alert span {
+            display: block;
+
+            margin-top: 2px;
+
+            color: #9a6a27;
+
+            font-size: 12px;
+        }
+
+        .alert-refresh {
+            border: 0;
+
+            background: #ffffff;
+
+            color: #885500;
+
+            border-radius: 7px;
+
+            padding: 8px 12px;
 
             font-size: 12px;
             font-weight: 800;
 
-            text-transform: uppercase;
-            letter-spacing: .04em;
+            cursor: pointer;
         }
-
-        .summary-value {
-            color: #111827;
-
-            font-size: 28px;
-            line-height: 1.2;
-            font-weight: 800;
-        }
-
 
         /* =========================================================
            FILTER CARD
         ========================================================= */
 
         .filter-card {
-            margin-bottom: 24px;
+            background: rgba(255,255,255,0.97);
 
-            background: #ffffff;
+            border-radius: 15px;
 
-            border: 1px solid #e5e7eb;
-            border-radius: 14px;
+            padding: 19px;
 
-            padding: 18px;
+            box-shadow: var(--shadow);
+
+            margin-bottom: 20px;
         }
 
         .filter-form {
             display: grid;
 
             grid-template-columns:
-                minmax(0, 1fr)
+                minmax(240px, 1fr)
                 190px
                 auto;
 
@@ -418,22 +703,19 @@
             align-items: end;
         }
 
-        .filter-field {
-            min-width: 0;
-        }
-
-        .filter-label {
+        .filter-field label {
             display: block;
 
             margin-bottom: 7px;
 
-            color: #6b7280;
+            color: #617487;
 
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 800;
 
             text-transform: uppercase;
-            letter-spacing: .04em;
+
+            letter-spacing: 0.55px;
         }
 
         .filter-input,
@@ -442,73 +724,118 @@
 
             min-height: 43px;
 
-            padding: 0 13px;
+            padding: 10px 12px;
 
-            border: 1px solid #d1d5db;
-            border-radius: 9px;
+            border-radius: 8px;
 
-            background: #ffffff;
-            color: #111827;
+            border: 1px solid #d8e3ea;
+
+            background: #fbfdff;
+
+            color: var(--text);
 
             outline: none;
+
+            font-size: 13px;
         }
 
         .filter-input:focus,
         .filter-select:focus {
-            border-color: #2563eb;
+            border-color: var(--blue);
 
             box-shadow:
-                0 0 0 3px rgba(37, 99, 235, .10);
+                0 0 0 3px rgba(11,111,174,0.10);
         }
 
+        .filter-button {
+            min-height: 43px;
+
+            padding: 10px 19px;
+
+            border: 0;
+
+            border-radius: 8px;
+
+            background: var(--blue);
+
+            color: #ffffff;
+
+            font-size: 13px;
+            font-weight: 800;
+
+            cursor: pointer;
+
+            transition: 0.2s ease;
+        }
+
+        .filter-button:hover {
+            background: var(--blue-dark);
+        }
 
         /* =========================================================
            TABLE CARD
         ========================================================= */
 
         .table-card {
-            background: #ffffff;
+            background: rgba(255,255,255,0.98);
 
-            border: 1px solid #e5e7eb;
-            border-radius: 14px;
+            border-radius: 15px;
+
+            box-shadow: var(--shadow);
 
             overflow: hidden;
         }
 
         .table-header {
-            min-height: 64px;
-
-            padding: 18px 22px;
-
-            border-bottom: 1px solid #e5e7eb;
+            padding: 20px 22px;
 
             display: flex;
             align-items: center;
             justify-content: space-between;
 
             gap: 15px;
+
+            border-bottom: 1px solid #e8eef3;
         }
 
-        .table-title {
-            margin: 0;
-
-            color: #111827;
+        .table-title h2 {
+            color: #173d5c;
 
             font-size: 17px;
-            font-weight: 800;
+            font-weight: 850;
         }
 
-        .request-count {
-            color: #6b7280;
+        .table-title p {
+            margin-top: 4px;
 
-            font-size: 13px;
-            font-weight: 600;
+            color: #7c8d9d;
+
+            font-size: 12px;
         }
 
+        .live-status {
+            display: inline-flex;
+            align-items: center;
 
-        /* =========================================================
-           TABLE
-        ========================================================= */
+            gap: 7px;
+
+            color: #5f7181;
+
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+
+            border-radius: 50%;
+
+            background: #1ca565;
+
+            box-shadow:
+                0 0 0 4px rgba(28,165,101,0.12);
+        }
 
         .table-wrapper {
             width: 100%;
@@ -524,1036 +851,1328 @@
             border-collapse: collapse;
         }
 
-        thead {
-            background: #f9fafb;
-        }
+        thead th {
+            padding: 13px 18px;
 
-        th {
-            padding: 13px 16px;
+            background: #f4f9fc;
 
-            border-bottom: 1px solid #e5e7eb;
-
-            color: #6b7280;
-
-            font-size: 11px;
-            line-height: 1.3;
-            font-weight: 800;
+            color: #607587;
 
             text-align: left;
 
+            font-size: 10px;
+
+            font-weight: 850;
+
             text-transform: uppercase;
-            letter-spacing: .04em;
+
+            letter-spacing: 0.65px;
 
             white-space: nowrap;
+
+            border-bottom: 1px solid #e1ebf1;
         }
 
-        td {
-            padding: 17px 16px;
+        tbody tr {
+            transition: background 0.18s ease;
+        }
 
-            border-bottom: 1px solid #f0f1f3;
+        tbody tr:hover {
+            background: #f8fbfd;
+        }
 
-            color: #374151;
+        tbody td {
+            padding: 16px 18px;
 
-            font-size: 14px;
-            line-height: 1.5;
+            border-bottom: 1px solid #edf1f4;
 
             vertical-align: middle;
+
+            font-size: 13px;
         }
 
         tbody tr:last-child td {
             border-bottom: 0;
         }
 
-        tbody tr {
-            transition: background-color .15s ease;
-        }
-
-        tbody tr:hover {
-            background: #fafafa;
-        }
-
-
         /* =========================================================
            REQUEST
         ========================================================= */
 
-        .request-link {
-            color: #111827;
-
-            font-weight: 800;
-        }
-
-        .request-link:hover {
-            color: #2563eb;
-        }
-
         .request-id {
-            margin-top: 3px;
+            display: inline-flex;
+            align-items: center;
 
-            color: #9ca3af;
+            gap: 7px;
 
-            font-size: 12px;
+            color: var(--blue-dark);
+
+            font-weight: 850;
+
+            font-size: 13px;
         }
 
+        .request-id:hover {
+            color: var(--green-dark);
+        }
 
-        /* =========================================================
-           CUSTOMER
-        ========================================================= */
+        .new-badge {
+            display: inline-flex;
+
+            align-items: center;
+
+            padding: 3px 7px;
+
+            border-radius: 20px;
+
+            background: var(--new-bg);
+
+            color: var(--new);
+
+            font-size: 9px;
+
+            font-weight: 900;
+
+            letter-spacing: 0.5px;
+        }
 
         .customer-name {
-            color: #111827;
+            color: #203f58;
 
-            font-weight: 700;
+            font-weight: 750;
         }
 
         .customer-email {
             margin-top: 3px;
 
-            color: #6b7280;
+            color: #8493a1;
 
-            font-size: 12px;
-
-            word-break: break-word;
+            font-size: 11px;
         }
-
-
-        /* =========================================================
-           SERVICE
-        ========================================================= */
 
         .service-name {
-            color: #374151;
+            color: #35566f;
 
-            font-weight: 600;
+            font-weight: 650;
         }
 
+        .date-text {
+            color: #64798b;
 
-        /* =========================================================
-           DATE
-        ========================================================= */
-
-        .date-value {
-            color: #4b5563;
-
-            white-space: nowrap;
+            font-size: 12px;
         }
-
 
         /* =========================================================
            STATUS
         ========================================================= */
 
-        .status {
+        .status-badge {
             display: inline-flex;
+
             align-items: center;
-            justify-content: center;
 
-            padding: 6px 11px;
+            padding: 6px 10px;
 
-            border-radius: 999px;
+            border-radius: 30px;
 
-            font-size: 12px;
-            line-height: 1;
-            font-weight: 800;
+            font-size: 10px;
 
-            text-transform: capitalize;
+            font-weight: 850;
 
             white-space: nowrap;
         }
 
-        .status-new {
-            background: #fff7ed;
-            color: #c2410c;
-        }
-
-        .status-pending {
-            background: #fff7ed;
-            color: #c2410c;
-        }
-
+        .status-new,
+        .status-pending,
         .status-assigned {
-            background: #eff6ff;
-            color: #1d4ed8;
+            background: var(--new-bg);
+            color: var(--new);
         }
 
+        .status-progress,
         .status-in-progress {
-            background: #ecfeff;
-            color: #0e7490;
+            background: var(--progress-bg);
+            color: var(--progress);
         }
 
-        .status-closed {
-            background: #f3f4f6;
-            color: #374151;
+        .status-closed,
+        .status-completed,
+        .status-complete {
+            background: var(--closed-bg);
+            color: var(--closed);
         }
 
-        .status-completed {
-            background: #ecfdf5;
-            color: #047857;
-        }
-
-        .status-default {
-            background: #f3f4f6;
-            color: #374151;
-        }
-
-
-        /* =========================================================
-           ASSIGNMENT
-        ========================================================= */
-
-        .assignment-name {
-            color: #111827;
-
-            font-size: 13px;
-            font-weight: 700;
-        }
-
-        .assignment-meta {
-            margin-top: 3px;
-
-            color: #9ca3af;
+        .assignment {
+            color: #627688;
 
             font-size: 12px;
+
+            line-height: 1.5;
         }
 
-        .unassigned {
-            color: #9ca3af;
+        .assignment strong {
+            color: #294a63;
 
-            font-size: 13px;
-            font-style: italic;
+            display: block;
         }
 
+        .assignment-code {
+            color: #8a99a6;
+        }
 
         /* =========================================================
-           VIEW BUTTON
+           ACTION
         ========================================================= */
 
-        .view-btn {
+        .view-button {
             display: inline-flex;
+
             align-items: center;
             justify-content: center;
 
-            min-height: 36px;
+            min-width: 85px;
 
-            padding: 0 12px;
+            padding: 8px 12px;
 
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
+            border-radius: 7px;
 
-            background: #ffffff;
-            color: #374151;
+            background: #edf7fc;
 
-            font-size: 13px;
-            font-weight: 700;
+            color: var(--blue-dark);
 
-            white-space: nowrap;
+            font-size: 11px;
 
-            transition:
-                background-color .2s ease,
-                border-color .2s ease,
-                color .2s ease;
+            font-weight: 850;
+
+            transition: 0.2s ease;
         }
 
-        .view-btn:hover {
-            background: #f9fafb;
-            border-color: #9ca3af;
-            color: #111827;
-        }
+        .view-button:hover {
+            background: var(--blue);
 
+            color: #ffffff;
+        }
 
         /* =========================================================
            EMPTY STATE
         ========================================================= */
 
         .empty-state {
-            padding: 55px 25px;
+            padding: 65px 25px;
 
             text-align: center;
         }
 
-        .empty-title {
-            margin: 0 0 7px;
+        .empty-icon {
+            width: 58px;
+            height: 58px;
 
-            color: #111827;
+            margin: 0 auto 15px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 15px;
+
+            background: #edf7fc;
+
+            color: var(--blue);
+
+            font-size: 23px;
+            font-weight: 900;
+        }
+
+        .empty-state h3 {
+            color: #294962;
 
             font-size: 17px;
-            font-weight: 800;
+            font-weight: 850;
         }
 
-        .empty-text {
-            margin: 0;
+        .empty-state p {
+            max-width: 440px;
 
-            color: #6b7280;
+            margin: 8px auto 0;
 
-            font-size: 14px;
+            color: #81909d;
+
+            font-size: 13px;
+
             line-height: 1.6;
         }
-
 
         /* =========================================================
            FOOTER
         ========================================================= */
 
-        .footer {
-            padding-top: 40px;
+        footer {
+            position: relative;
+            z-index: 2;
 
-            color: #9ca3af;
+            max-width: 1380px;
 
-            font-size: 13px;
-            line-height: 1.5;
+            margin: 0 auto;
+
+            padding: 0 28px 30px;
 
             text-align: center;
+
+            color: rgba(255,255,255,0.78);
+
+            font-size: 11px;
         }
 
-
         /* =========================================================
-           TABLET
+           RESPONSIVE
         ========================================================= */
 
-        @media (max-width: 850px) {
+        @media (max-width: 1000px) {
 
             .summary-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+            }
+
+            .filter-form {
+                grid-template-columns:
+                    1fr 1fr;
+            }
+
+            .filter-button {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 700px) {
+
+            .topbar-inner {
+                padding: 11px 17px;
+
+                align-items: flex-start;
+            }
+
+            .brand-logo {
+                width: 45px;
+                height: 45px;
+            }
+
+            .brand-name {
+                font-size: 16px;
+            }
+
+            .brand-tagline {
+                font-size: 9px;
+            }
+
+            .top-actions {
+                min-width: 118px;
+            }
+
+            .top-action {
+                font-size: 11px;
+                padding: 6px 10px;
+            }
+
+            .page {
+                padding: 23px 16px 40px;
             }
 
             .page-header {
                 flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .dashboard-button {
+                width: 100%;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 11px;
+            }
+
+            .summary-card {
+                padding: 15px;
+            }
+
+            .summary-number {
+                font-size: 25px;
             }
 
             .filter-form {
                 grid-template-columns: 1fr;
             }
 
-        }
-
-
-        /* =========================================================
-           MOBILE
-        ========================================================= */
-
-        @media (max-width: 600px) {
-
-            .topbar {
-                min-height: 64px;
-
-                padding:
-                    10px 16px;
+            .filter-card {
+                padding: 15px;
             }
 
-            .brand-logo {
-                height: 36px;
-                max-width: 150px;
+            .table-header {
+                padding: 17px;
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            footer {
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            body::before {
+                background-size: 380px auto;
+                opacity: 0.11;
+            }
+        }
+
+        @media (max-width: 450px) {
+
+            .topbar-inner {
+                gap: 10px;
+            }
+
+            .brand {
+                gap: 8px;
+            }
+
+            .brand-text {
+                max-width: 125px;
             }
 
             .brand-name {
+                font-size: 14px;
+            }
+
+            .brand-tagline {
                 display: none;
             }
 
             .top-actions {
-                gap: 5px;
+                min-width: 105px;
             }
 
-            .top-link:not(.logout) {
-                display: none;
+            .status-pill {
+                font-size: 9px;
+                padding: 4px 8px;
             }
 
-            .page {
-                padding:
-                    22px 15px 45px;
-            }
-
-            .page-title {
-                font-size: 25px;
-            }
-
-            .header-actions {
-                width: 100%;
-            }
-
-            .header-actions .btn {
-                width: 100%;
+            .top-action {
+                min-height: 30px;
+                padding: 5px 8px;
             }
 
             .summary-grid {
-                gap: 12px;
+                grid-template-columns: 1fr;
             }
 
-            .summary-card {
-                padding: 17px;
+            .page-header h1 {
+                font-size: 28px;
             }
-
-            .summary-value {
-                font-size: 25px;
-            }
-
-            .table-header {
-                align-items: flex-start;
-
-                padding:
-                    17px;
-            }
-
         }
-
-
-        /* =========================================================
-           SMALL MOBILE
-        ========================================================= */
-
-        @media (max-width: 380px) {
-
-            .page {
-                padding-left: 12px;
-                padding-right: 12px;
-            }
-
-            .topbar {
-                padding-left: 12px;
-                padding-right: 12px;
-            }
-
-            .brand-logo {
-                max-width: 130px;
-            }
-
-            .logout {
-                padding-left: 11px;
-                padding-right: 11px;
-            }
-
-        }
-
     </style>
-
 </head>
-
 
 <body>
 
+    <!-- =========================================================
+         TOP BAR
+    ========================================================== -->
 
-<!-- =========================================================
-     TOPBAR
-========================================================= -->
+    <header class="topbar">
 
-<header class="topbar">
-
-    <a
-        href="{{ url_for('staff_dashboard') }}"
-        class="brand"
-        aria-label="{{ company_name|default('Novera') }} Staff Dashboard"
-    >
-
-        <img
-            src="{{ logo_url }}"
-            alt="{{ company_name|default('Novera') }} logo"
-            class="brand-logo"
-        >
-
-        <span class="brand-name">
-            {{ company_name|default("Novera") }}
-        </span>
-
-    </a>
-
-
-    <nav
-        class="top-actions"
-        aria-label="Staff navigation"
-    >
-
-        <a
-            href="{{ url_for('staff_dashboard') }}"
-            class="top-link"
-        >
-            Dashboard
-        </a>
-
-        <a
-            href="{{ url_for('staff_profile') }}"
-            class="top-link"
-        >
-            Profile
-        </a>
-
-        <a
-            href="{{ url_for('staff_logout') }}"
-            class="top-link logout"
-        >
-            Logout
-        </a>
-
-    </nav>
-
-</header>
-
-
-<!-- =========================================================
-     MAIN
-========================================================= -->
-
-<main class="page">
-
-
-    <!-- =====================================================
-         BREADCRUMB
-    ===================================================== -->
-
-    <nav
-        class="breadcrumb"
-        aria-label="Breadcrumb"
-    >
-
-        <a href="{{ url_for('staff_dashboard') }}">
-            Dashboard
-        </a>
-
-        <span class="breadcrumb-separator">
-            ›
-        </span>
-
-        <span>
-            Consultation Requests
-        </span>
-
-    </nav>
-
-
-    <!-- =====================================================
-         FLASH MESSAGES
-    ===================================================== -->
-
-    {% with messages = get_flashed_messages(with_categories=true) %}
-
-        {% if messages %}
-
-            <div class="flash-container">
-
-                {% for category, message in messages %}
-
-                    <div
-                        class="
-                            flash
-                            {% if category == 'success' %}
-                                flash-success
-                            {% elif category == 'danger' %}
-                                flash-danger
-                            {% elif category == 'warning' %}
-                                flash-warning
-                            {% else %}
-                                flash-info
-                            {% endif %}
-                        "
-                        role="alert"
-                    >
-                        {{ message }}
-                    </div>
-
-                {% endfor %}
-
-            </div>
-
-        {% endif %}
-
-    {% endwith %}
-
-
-    <!-- =====================================================
-         PAGE HEADER
-    ===================================================== -->
-
-    <div class="page-header">
-
-        <div>
-
-            <h1 class="page-title">
-                Consultation Requests
-            </h1>
-
-            <p class="page-subtitle">
-                View and manage consultation requests assigned to you.
-            </p>
-
-        </div>
-
-
-        <div class="header-actions">
+        <div class="topbar-inner">
 
             <a
                 href="{{ url_for('staff_dashboard') }}"
-                class="btn"
+                class="brand"
             >
-                ← Dashboard
+
+                <img
+                    src="{{ url_for('logo') }}"
+                    alt="Novera Energy & Technologies Logo"
+                    class="brand-logo"
+                >
+
+                <div class="brand-text">
+
+                    <div class="brand-name">
+                        {{ company_name|default("Novera Energy & Technologies") }}
+                    </div>
+
+                    <div class="brand-tagline">
+                        Light · Motion · Intelligence
+                    </div>
+
+                </div>
+
             </a>
 
-        </div>
+            <!-- VERTICAL PROFILE / LOGOUT -->
+            <div class="top-actions">
 
-    </div>
+                <div class="status-pill">
+                    <span class="status-dot"></span>
+                    Staff Portal
+                </div>
 
+                <a
+                    href="{{ url_for('staff_profile') }}"
+                    class="top-action profile"
+                >
+                    My Profile
+                </a>
 
-    <!-- =====================================================
-         SUMMARY
-    ===================================================== -->
-
-    <div class="summary-grid">
-
-        <div class="summary-card">
-
-            <div class="summary-label">
-                Total Requests
-            </div>
-
-            <div class="summary-value">
-                {{ consultations|length }}
-            </div>
-
-        </div>
-
-
-        <div class="summary-card">
-
-            <div class="summary-label">
-                In Progress
-            </div>
-
-            <div class="summary-value">
-
-                {{
-                    consultations
-                    |selectattr("status", "equalto", "In Progress")
-                    |list
-                    |length
-                }}
+                <a
+                    href="{{ url_for('staff_logout') }}"
+                    class="top-action logout"
+                >
+                    Sign Out
+                </a>
 
             </div>
 
         </div>
 
-
-        <div class="summary-card">
-
-            <div class="summary-label">
-                Closed
-            </div>
-
-            <div class="summary-value">
-
-                {{
-                    consultations
-                    |selectattr("status", "equalto", "Closed")
-                    |list
-                    |length
-                }}
-
-            </div>
-
-        </div>
-
-    </div>
+    </header>
 
 
-    <!-- =====================================================
-         FILTER
-    ===================================================== -->
+    <!-- =========================================================
+         PAGE
+    ========================================================== -->
 
-    <section class="filter-card">
+    <main class="page">
 
-        <form
-            method="GET"
-            action="{{ url_for('staff_consultations') }}"
-            class="filter-form"
-        >
+        <!-- Breadcrumb -->
 
-            <div class="filter-field">
+        <div class="breadcrumb">
 
-                <label
-                    for="search"
-                    class="filter-label"
-                >
-                    Search
-                </label>
+            <a href="{{ url_for('staff_dashboard') }}">
+                Dashboard
+            </a>
 
-                <input
-                    type="search"
-                    id="search"
-                    name="search"
-                    class="filter-input"
-                    value="{{ request.args.get('search', '') }}"
-                    placeholder="Search customer, company, email or service..."
-                >
+            <span class="breadcrumb-separator">
+                /
+            </span>
 
-            </div>
-
-
-            <div class="filter-field">
-
-                <label
-                    for="status"
-                    class="filter-label"
-                >
-                    Status
-                </label>
-
-                <select
-                    id="status"
-                    name="status"
-                    class="filter-select"
-                >
-
-                    <option
-                        value=""
-                        {% if not request.args.get('status') %}
-                            selected
-                        {% endif %}
-                    >
-                        All Statuses
-                    </option>
-
-                    <option
-                        value="New"
-                        {% if request.args.get('status') == 'New' %}
-                            selected
-                        {% endif %}
-                    >
-                        New
-                    </option>
-
-                    <option
-                        value="In Progress"
-                        {% if request.args.get('status') == 'In Progress' %}
-                            selected
-                        {% endif %}
-                    >
-                        In Progress
-                    </option>
-
-                    <option
-                        value="Closed"
-                        {% if request.args.get('status') == 'Closed' %}
-                            selected
-                        {% endif %}
-                    >
-                        Closed
-                    </option>
-
-                </select>
-
-            </div>
-
-
-            <div class="filter-field">
-
-                <button
-                    type="submit"
-                    class="btn btn-primary"
-                >
-                    Apply Filters
-                </button>
-
-            </div>
-
-        </form>
-
-    </section>
-
-
-    <!-- =====================================================
-         CONSULTATION TABLE
-    ===================================================== -->
-
-    <section class="table-card">
-
-
-        <div class="table-header">
-
-            <h2 class="table-title">
-                Assigned Consultation Requests
-            </h2>
-
-            <div class="request-count">
-
-                {{ consultations|length }}
-
-                {% if consultations|length == 1 %}
-                    request
-                {% else %}
-                    requests
-                {% endif %}
-
-            </div>
+            <span>
+                Consultation Requests
+            </span>
 
         </div>
 
 
-        {% if consultations %}
+        <!-- Flash Messages -->
 
-            <div class="table-wrapper">
+        {% with messages = get_flashed_messages(with_categories=true) %}
 
-                <table>
+            {% if messages %}
 
-                    <thead>
+                <div class="flash-container">
 
-                        <tr>
+                    {% for category, message in messages %}
 
-                            <th>
-                                Request
-                            </th>
+                        <div class="flash">
+                            {{ message }}
+                        </div>
 
-                            <th>
-                                Customer
-                            </th>
+                    {% endfor %}
 
-                            <th>
-                                Service
-                            </th>
+                </div>
 
-                            <th>
-                                Submitted
-                            </th>
+            {% endif %}
 
-                            <th>
-                                Status
-                            </th>
+        {% endwith %}
 
-                            <th>
-                                Assignment
-                            </th>
 
-                            <th>
-                                Action
-                            </th>
+        <!-- =====================================================
+             HEADER
+        ====================================================== -->
 
-                        </tr>
+        <section class="page-header">
 
-                    </thead>
+            <div class="page-header-text">
 
+                <span class="eyebrow">
+                    Staff Workspace
+                </span>
 
-                    <tbody>
+                <h1>
+                    Consultation Requests
+                </h1>
 
-                        {% for consultation in consultations %}
-
-                            {% set request_status =
-                                consultation.status|default("New")
-                            %}
-
-                            {% set status_class =
-                                request_status
-                                |lower
-                                |replace("_", "-")
-                                |replace(" ", "-")
-                            %}
-
-
-                            <tr>
-
-
-                                <!-- REQUEST -->
-
-                                <td>
-
-                                    <a
-                                        href="{{ url_for(
-                                            'staff_consultation_view',
-                                            consultation_id=consultation.id
-                                        ) }}"
-                                        class="request-link"
-                                    >
-                                        Consultation Request
-                                    </a>
-
-                                    <div class="request-id">
-                                        #{{ consultation.id }}
-                                    </div>
-
-                                </td>
-
-
-                                <!-- CUSTOMER -->
-
-                                <td>
-
-                                    <div class="customer-name">
-                                        {{ consultation.name
-                                           |default("Not provided") }}
-                                    </div>
-
-                                    {% if consultation.email %}
-
-                                        <div class="customer-email">
-                                            {{ consultation.email }}
-                                        </div>
-
-                                    {% endif %}
-
-                                </td>
-
-
-                                <!-- SERVICE -->
-
-                                <td>
-
-                                    <div class="service-name">
-                                        {{ consultation.service
-                                           |default("Not specified") }}
-                                    </div>
-
-                                </td>
-
-
-                                <!-- DATE -->
-
-                                <td>
-
-                                    <div class="date-value">
-                                        {{ consultation.created_at
-                                           |default("Not available") }}
-                                    </div>
-
-                                </td>
-
-
-                                <!-- STATUS -->
-
-                                <td>
-
-                                    <span
-                                        class="
-                                            status
-
-                                            {% if status_class == 'new' %}
-                                                status-new
-
-                                            {% elif status_class == 'pending' %}
-                                                status-pending
-
-                                            {% elif status_class == 'assigned' %}
-                                                status-assigned
-
-                                            {% elif status_class == 'in-progress' %}
-                                                status-in-progress
-
-                                            {% elif status_class == 'closed' %}
-                                                status-closed
-
-                                            {% elif status_class == 'completed'
-                                                  or status_class == 'complete' %}
-                                                status-completed
-
-                                            {% else %}
-                                                status-default
-                                            {% endif %}
-                                        "
-                                    >
-                                        {{ request_status }}
-                                    </span>
-
-                                </td>
-
-
-                                <!-- ASSIGNMENT -->
-
-                                <td>
-
-                                    {% if consultation.assigned_first_name
-                                          or consultation.assigned_last_name %}
-
-                                        <div class="assignment-name">
-
-                                            {{
-                                                consultation.assigned_first_name
-                                                |default("")
-                                            }}
-
-                                            {{
-                                                consultation.assigned_last_name
-                                                |default("")
-                                            }}
-
-                                        </div>
-
-
-                                        {% if consultation.assigned_staff_code %}
-
-                                            <div class="assignment-meta">
-                                                {{ consultation.assigned_staff_code }}
-                                            </div>
-
-                                        {% endif %}
-
-                                    {% else %}
-
-                                        <div class="unassigned">
-                                            Unassigned
-                                        </div>
-
-                                    {% endif %}
-
-                                </td>
-
-
-                                <!-- ACTION -->
-
-                                <td>
-
-                                    <a
-                                        href="{{ url_for(
-                                            'staff_consultation_view',
-                                            consultation_id=consultation.id
-                                        ) }}"
-                                        class="view-btn"
-                                    >
-                                        View Request
-                                    </a>
-
-                                </td>
-
-
-                            </tr>
-
-                        {% endfor %}
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-
-        {% else %}
-
-            <div class="empty-state">
-
-                <h3 class="empty-title">
-                    No consultation requests
-                </h3>
-
-                <p class="empty-text">
-                    There are currently no consultation requests assigned
-                    to you.
+                <p>
+                    Review, monitor and manage consultation requests
+                    assigned to you.
                 </p>
 
             </div>
 
-        {% endif %}
+            <a
+                href="{{ url_for('staff_dashboard') }}"
+                class="dashboard-button"
+            >
+                ← Dashboard
+            </a>
+
+        </section>
 
 
-    </section>
+        <!-- =====================================================
+             SUMMARY
+        ====================================================== -->
+
+        <section class="summary-grid">
+
+            <!-- Total -->
+
+            <div class="summary-card">
+
+                <div class="summary-top">
+
+                    <span class="summary-label">
+                        Total Requests
+                    </span>
+
+                    <div class="summary-icon">
+                        #
+                    </div>
+
+                </div>
+
+                <div class="summary-number">
+                    {{ consultations|length }}
+                </div>
+
+                <div class="summary-description">
+                    Assigned consultation requests
+                </div>
+
+            </div>
+
+
+            <!-- New -->
+
+            <div class="summary-card new">
+
+                <div class="summary-top">
+
+                    <span class="summary-label">
+                        New Requests
+                    </span>
+
+                    <div class="summary-icon">
+                        !
+                    </div>
+
+                </div>
+
+                <div
+                    class="summary-number"
+                    id="newCount"
+                >
+                    {{
+                        consultations
+                        |selectattr('status', 'equalto', 'New')
+                        |list
+                        |length
+                    }}
+                </div>
+
+                <div class="summary-description">
+                    Awaiting attention
+                </div>
+
+            </div>
+
+
+            <!-- In Progress -->
+
+            <div class="summary-card progress">
+
+                <div class="summary-top">
+
+                    <span class="summary-label">
+                        In Progress
+                    </span>
+
+                    <div class="summary-icon">
+                        ↻
+                    </div>
+
+                </div>
+
+                <div
+                    class="summary-number"
+                    id="progressCount"
+                >
+                    {{
+                        consultations
+                        |selectattr('status', 'equalto', 'In Progress')
+                        |list
+                        |length
+                    }}
+                </div>
+
+                <div class="summary-description">
+                    Currently being handled
+                </div>
+
+            </div>
+
+
+            <!-- Closed -->
+
+            <div class="summary-card closed">
+
+                <div class="summary-top">
+
+                    <span class="summary-label">
+                        Closed
+                    </span>
+
+                    <div class="summary-icon">
+                        ✓
+                    </div>
+
+                </div>
+
+                <div
+                    class="summary-number"
+                    id="closedCount"
+                >
+                    {{
+                        consultations
+                        |selectattr('status', 'equalto', 'Closed')
+                        |list
+                        |length
+                    }}
+                </div>
+
+                <div class="summary-description">
+                    Completed requests
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             NEW REQUEST ALERT
+        ====================================================== -->
+
+        <div
+            class="new-alert"
+            id="newRequestAlert"
+        >
+
+            <div class="new-alert-content">
+
+                <div class="alert-icon">
+                    !
+                </div>
+
+                <div>
+
+                    <strong>
+                        New consultation request received
+                    </strong>
+
+                    <span>
+                        A new request has been assigned to you.
+                    </span>
+
+                </div>
+
+            </div>
+
+            <button
+                type="button"
+                class="alert-refresh"
+                onclick="window.location.reload()"
+            >
+                View Updates
+            </button>
+
+        </div>
+
+
+        <!-- =====================================================
+             FILTERS
+        ====================================================== -->
+
+        <section class="filter-card">
+
+            <form
+                method="GET"
+                action="{{ url_for('staff_consultations') }}"
+                class="filter-form"
+            >
+
+                <div class="filter-field">
+
+                    <label for="search">
+                        Search Requests
+                    </label>
+
+                    <input
+                        type="search"
+                        id="search"
+                        name="search"
+                        class="filter-input"
+                        value="{{ request.args.get('search', '') }}"
+                        placeholder="Client, email, company or service..."
+                    >
+
+                </div>
+
+
+                <div class="filter-field">
+
+                    <label for="status">
+                        Status
+                    </label>
+
+                    <select
+                        id="status"
+                        name="status"
+                        class="filter-select"
+                    >
+
+                        <option
+                            value=""
+                            {% if not request.args.get('status') %}
+                                selected
+                            {% endif %}
+                        >
+                            All Statuses
+                        </option>
+
+                        <option
+                            value="New"
+                            {% if request.args.get('status') == 'New' %}
+                                selected
+                            {% endif %}
+                        >
+                            New
+                        </option>
+
+                        <option
+                            value="In Progress"
+                            {% if request.args.get('status') == 'In Progress' %}
+                                selected
+                            {% endif %}
+                        >
+                            In Progress
+                        </option>
+
+                        <option
+                            value="Closed"
+                            {% if request.args.get('status') == 'Closed' %}
+                                selected
+                            {% endif %}
+                        >
+                            Closed
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="filter-button"
+                >
+                    Apply Filters
+                </button>
+
+            </form>
+
+        </section>
+
+
+        <!-- =====================================================
+             CONSULTATION TABLE
+        ====================================================== -->
+
+        <section class="table-card">
+
+            <div class="table-header">
+
+                <div class="table-title">
+
+                    <h2>
+                        Assigned Consultation Requests
+                    </h2>
+
+                    <p>
+                        Requests currently assigned to your staff account.
+                    </p>
+
+                </div>
+
+                <div class="live-status">
+
+                    <span class="live-dot"></span>
+
+                    <span id="liveStatusText">
+                        Live monitoring
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            {% if consultations %}
+
+                <div class="table-wrapper">
+
+                    <table id="consultationTable">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Request
+                                </th>
+
+                                <th>
+                                    Customer
+                                </th>
+
+                                <th>
+                                    Service
+                                </th>
+
+                                <th>
+                                    Submitted
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                                <th>
+                                    Assignment
+                                </th>
+
+                                <th>
+                                    Action
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            {% for consultation in consultations %}
+
+                                <tr
+                                    data-consultation-id="{{ consultation.id }}"
+                                    data-status="{{ consultation.status|default('') }}"
+                                >
+
+                                    <!-- Request -->
+
+                                    <td>
+
+                                        <a
+                                            href="{{ url_for(
+                                                'staff_consultation_view',
+                                                consultation_id=consultation.id
+                                            ) }}"
+                                            class="request-id"
+                                        >
+
+                                            #{{ consultation.id }}
+
+                                        </a>
+
+                                        {% if consultation.status|default('')|lower in ['new', 'pending'] %}
+
+                                            <span class="new-badge">
+                                                NEW
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+
+                                    <!-- Customer -->
+
+                                    <td>
+
+                                        <div class="customer-name">
+                                            {{ consultation.name|default("Unknown Client") }}
+                                        </div>
+
+                                        {% if consultation.email %}
+
+                                            <div class="customer-email">
+                                                {{ consultation.email }}
+                                            </div>
+
+                                        {% endif %}
+
+                                    </td>
+
+
+                                    <!-- Service -->
+
+                                    <td>
+
+                                        <div class="service-name">
+                                            {{ consultation.service|default("General Consultation") }}
+                                        </div>
+
+                                    </td>
+
+
+                                    <!-- Submitted -->
+
+                                    <td>
+
+                                        <div class="date-text">
+                                            {{ consultation.created_at|default("—") }}
+                                        </div>
+
+                                    </td>
+
+
+                                    <!-- Status -->
+
+                                    <td>
+
+                                        {% set status =
+                                            consultation.status|default("New")
+                                        %}
+
+                                        {% set status_lower =
+                                            status|lower
+                                        %}
+
+                                        {% if status_lower == "new" %}
+
+                                            <span class="status-badge status-new">
+                                                New
+                                            </span>
+
+                                        {% elif status_lower == "pending" %}
+
+                                            <span class="status-badge status-pending">
+                                                Pending
+                                            </span>
+
+                                        {% elif status_lower == "assigned" %}
+
+                                            <span class="status-badge status-assigned">
+                                                Assigned
+                                            </span>
+
+                                        {% elif status_lower == "in progress" %}
+
+                                            <span class="status-badge status-progress">
+                                                In Progress
+                                            </span>
+
+                                        {% elif status_lower == "closed" %}
+
+                                            <span class="status-badge status-closed">
+                                                Closed
+                                            </span>
+
+                                        {% elif status_lower in ["completed", "complete"] %}
+
+                                            <span class="status-badge status-completed">
+                                                Completed
+                                            </span>
+
+                                        {% else %}
+
+                                            <span class="status-badge">
+                                                {{ status }}
+                                            </span>
+
+                                        {% endif %}
+
+                                    </td>
+
+
+                                    <!-- Assignment -->
+
+                                    <td>
+
+                                        <div class="assignment">
+
+                                            {% if consultation.assigned_first_name
+                                                or consultation.assigned_last_name %}
+
+                                                <strong>
+                                                    {{
+                                                        consultation.assigned_first_name|default("")
+                                                    }}
+                                                    {{
+                                                        consultation.assigned_last_name|default("")
+                                                    }}
+                                                </strong>
+
+                                            {% elif consultation.assigned_staff_code %}
+
+                                                <strong>
+                                                    Assigned Staff
+                                                </strong>
+
+                                            {% else %}
+
+                                                <strong>
+                                                    You
+                                                </strong>
+
+                                            {% endif %}
+
+                                            {% if consultation.assigned_staff_code %}
+
+                                                <span class="assignment-code">
+                                                    {{ consultation.assigned_staff_code }}
+                                                </span>
+
+                                            {% endif %}
+
+                                        </div>
+
+                                    </td>
+
+
+                                    <!-- Action -->
+
+                                    <td>
+
+                                        <a
+                                            href="{{ url_for(
+                                                'staff_consultation_view',
+                                                consultation_id=consultation.id
+                                            ) }}"
+                                            class="view-button"
+                                        >
+                                            View Request
+                                        </a>
+
+                                    </td>
+
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            {% else %}
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+                        ✓
+                    </div>
+
+                    <h3>
+                        No consultation requests
+                    </h3>
+
+                    <p>
+                        There are currently no consultation requests
+                        assigned to your staff account. New requests will
+                        appear here automatically.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </section>
+
+    </main>
 
 
     <!-- =========================================================
          FOOTER
-    ========================================================= -->
+    ========================================================== -->
 
-    <footer class="footer">
+    <footer>
 
-        © {{ current_year|default(2026) }}
-        {{ company_name|default("Novera") }}.
-        All rights reserved.
+        {{ company_name|default("Novera Energy & Technologies") }}
+        · Light · Motion · Intelligence
 
     </footer>
 
 
-</main>
+    <!-- =========================================================
+         LIVE REQUEST MONITORING
+    ========================================================== -->
 
+    <script>
+
+        let previousSignature = null;
+        let firstCheck = true;
+
+        function getTableSignature(documentObject) {
+
+            const rows =
+                documentObject.querySelectorAll(
+                    "#consultationTable tbody tr[data-consultation-id]"
+                );
+
+            return Array.from(rows)
+                .map(row => {
+
+                    return [
+                        row.dataset.consultationId || "",
+                        row.dataset.status || "",
+                        row.innerText.trim()
+                    ].join("|");
+
+                })
+                .join("||");
+        }
+
+
+        function checkForUpdates() {
+
+            fetch(window.location.href, {
+                method: "GET",
+                cache: "no-store",
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest"
+                }
+            })
+            .then(response => {
+
+                if (!response.ok) {
+                    throw new Error("Unable to check dashboard.");
+                }
+
+                return response.text();
+
+            })
+            .then(html => {
+
+                const parser = new DOMParser();
+
+                const newDocument =
+                    parser.parseFromString(
+                        html,
+                        "text/html"
+                    );
+
+                const newSignature =
+                    getTableSignature(newDocument);
+
+                const liveStatus =
+                    document.getElementById("liveStatusText");
+
+                if (firstCheck) {
+
+                    previousSignature = newSignature;
+
+                    firstCheck = false;
+
+                    if (liveStatus) {
+                        liveStatus.textContent =
+                            "Live monitoring";
+                    }
+
+                    return;
+                }
+
+
+                if (newSignature !== previousSignature) {
+
+                    const alert =
+                        document.getElementById(
+                            "newRequestAlert"
+                        );
+
+                    if (alert) {
+                        alert.classList.add("show");
+                    }
+
+                    if (liveStatus) {
+                        liveStatus.textContent =
+                            "Update detected";
+                    }
+
+                    /*
+                     * Reload after a short delay so the
+                     * newest consultation/status is displayed.
+                     */
+
+                    setTimeout(() => {
+
+                        window.location.reload();
+
+                    }, 900);
+
+                } else {
+
+                    if (liveStatus) {
+                        liveStatus.textContent =
+                            "Live monitoring";
+                    }
+
+                }
+
+            })
+            .catch(error => {
+
+                console.warn(
+                    "Consultation monitoring:",
+                    error
+                );
+
+                const liveStatus =
+                    document.getElementById(
+                        "liveStatusText"
+                    );
+
+                if (liveStatus) {
+                    liveStatus.textContent =
+                        "Checking connection...";
+                }
+
+            });
+
+        }
+
+
+        /*
+         * Check every 5 seconds.
+         * This allows a newly assigned consultation or
+         * status change to appear without manually refreshing.
+         */
+
+        setInterval(
+            checkForUpdates,
+            5000
+        );
+
+
+        /*
+         * Initial check shortly after page load.
+         */
+
+        setTimeout(
+            checkForUpdates,
+            1200
+        );
+
+    </script>
 
 </body>
 

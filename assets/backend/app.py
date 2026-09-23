@@ -1497,8 +1497,43 @@ def company_profile():
         mimetype="application/pdf",
         as_attachment=False
     )
+ 
+# ============================================================
+# LEGAL PAGES
+# ============================================================
+
+@app.route("/privacy-policy", methods=["GET"], strict_slashes=False)
+def privacy_policy():
+    """Public Privacy Policy page."""
+    privacy_file = TEMPLATES_DIR / "privacy_policy.html"
+
+    if not privacy_file.is_file():
+        app.logger.error("Privacy Policy template not found: %s", privacy_file)
+        return "Privacy Policy page not found.", 404
+
+    return render_template(
+        "privacy_policy.html",
+        company_name=COMPANY_NAME,
+        company_email=COMPANY_EMAIL,
+        company_tagline=COMPANY_TAGLINE
+    )
 
 
+@app.route("/terms", methods=["GET"], strict_slashes=False)
+def terms():
+    """Public Terms and Conditions page."""
+    terms_file = TEMPLATES_DIR / "terms.html"
+
+    if not terms_file.is_file():
+        app.logger.error("Terms template not found: %s", terms_file)
+        return "Terms page not found.", 404
+
+    return render_template(
+        "terms.html",
+        company_name=COMPANY_NAME,
+        company_email=COMPANY_EMAIL,
+        company_tagline=COMPANY_TAGLINE
+    )
 # ============================================================
 # TRAINING PROGRAM APPLICATION
 # ============================================================
@@ -5470,7 +5505,6 @@ def md_consultations():
 
 # ============================================================
 # MD CONSULTATION VIEW
-# READ ONLY
 # ============================================================
 
 @app.route(
